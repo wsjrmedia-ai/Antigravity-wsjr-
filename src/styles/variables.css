@@ -1,0 +1,61 @@
+@import './animations.css';
+
+:root {
+  /* Original Dark Theme */
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #121212;
+  --bg-card: #1a1a1a;
+
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --text-muted: #666666;
+
+  /* Accents - WSJ Identity */
+  --accent-gold: #d4af37;
+  --accent-gold-light: #f4d03f;
+  --accent-blue: #002366;
+  --accent-blue-light: #003d99;
+  --color-primary: var(--accent-blue);
+
+  /* Gradient Accents */
+  --gradient-gold: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+  --gradient-purple: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-pink: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --gradient-cyan: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+
+  /* Spacing */
+  --section-spacing: 5vh;
+
+  /* Typography */
+  --font-hero: 'Manrope', 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.7);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.8);
+
+  /* Animation */
+  --ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Breakpoints */
+  --mobile: 480px;
+  --tablet: 768px;
+  --desktop: 1024px;
+  --container-padding: 2rem;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --container-padding: 1rem;
+    --section-spacing: 3vh;
+  }
+}
+
+body {
+  background-color: var(--bg-primary, #0a0a0a);
+  color: var(--text-primary, #ffffff);
+}

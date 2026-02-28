@@ -1,0 +1,50 @@
+/* Glazing Gold Button Animation */
+@keyframes glaze-shine {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+.glaze-button {
+    background: linear-gradient(135deg,
+            #d4af37,
+            #f9e58a 30%,
+            #d4af37 60%,
+            #b88a1e 100%);
+    background-size: 300% 100%;
+    animation: glaze-shine 3s infinite linear;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    border-radius: 50px;
+    box-shadow:
+        inset 0 2px 3px rgba(255, 255, 255, 0.6),
+        inset 0 -2px 5px rgba(0, 0, 0, 0.2),
+        0 5px 15px rgba(212, 175, 55, 0.4);
+    border: none !important;
+    /* Override jsx border */
+}
+
+.glaze-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.4),
+            transparent);
+    transition: 0.5s;
+    z-index: 2;
+}
+
+.glaze-button:hover::before {
+    left: 100%;
+    transition: 0.5s;
+}
