@@ -16,17 +16,31 @@ import '@google/model-viewer';
 //    2. Overview: dead-centre horizontally, sandwiched in the text block
 //    3. Schools:  drift back right, below the "Four World-Class Schools" intro
 // ───────────────────────────────────────────────────────────────────────────
-const STOPS    = [0,    0.06, 0.15, 0.23, 0.33, 0.55];
+// ── Fine-tuned from section layout analysis ──────────────────────────────
+//
+//  Block 1 · Hero
+//    Grid: 1fr [ENROLL btn ~220px] 1fr  inside padding: 0 8%.
+//    Right 1fr gap starts ≈ 60 vw on 1440 px screen.
+//    500 px model centred in that gap → left ≈ 58 vw, upper half of screen.
+//
+//  Block 2 · Institutional Overview
+//    flex-row: heading flex-1 LEFT | paragraphs flex-1 RIGHT, gap 80px.
+//    Model sits in the seam between the two columns → left ≈ 32 vw.
+//    Section is min-height 100vh with content centred → top ≈ 25 vh.
+//
+//  Block 3 · Schools Header  (SchoolsHeader.jsx)
+//    All text hard-left (padding 0 8%, maxWidth 800px), right half empty.
+//    Model floats in the open right space → left ≈ 55 vw, top ≈ 30 vh.
+// ─────────────────────────────────────────────────────────────────────────
 
-// Left edge of the 500 × 500 model box, as a viewport-width percentage.
-// Hero right gap ≈ 60 vw  |  Overview centre ≈ 28 vw  |  Schools right ≈ 57 vw
-const LEFT_VW  = [60,   60,   28,   28,   57,   57  ];
+const STOPS    = [0,    0.06, 0.15, 0.23, 0.31, 0.52];
 
-// Top edge, as a viewport-height percentage.
-const TOP_VH   = [13,   13,   27,   27,   19,   19  ];
+//                 Hero        Overview      Schools
+const LEFT_VW  = [58,   58,   32,   32,   55,   55  ];
+const TOP_VH   = [15,   15,   25,   25,   30,   30  ];
 
-// Scale: shrink slightly while crossing the text-heavy Overview section.
-const SCALE_V  = [1.0,  1.0,  0.78, 0.78, 0.95, 0.95];
+// Scale: shrink while crossing the dense Overview text columns.
+const SCALE_V  = [1.0,  1.0,  0.80, 0.80, 0.95, 0.95];
 
 export default function SimpleModelViewer() {
   const { scrollYProgress } = useScroll();
