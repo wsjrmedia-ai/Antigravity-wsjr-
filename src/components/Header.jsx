@@ -60,7 +60,15 @@ const Header = () => {
 
     const navLinks = [
         { label: 'Home', href: '/' },
-        { label: 'who we are', href: '#about' },
+        { label: 'Who We Are', href: '/who-we-are' },
+        {
+            label: 'Products',
+            href: '#products',
+            dropdown: [
+                { label: 'TopStocX Platform', href: '/topstocx' },
+                { label: 'Copy Trade', href: '/topstocx?view=copytrade' },
+            ]
+        },
         {
             label: 'Organisations',
             href: '#organisations',
@@ -68,8 +76,7 @@ const Header = () => {
                 { label: 'Wall Street Investments', href: 'https://www.wallstreetjrinvestments.com/', external: true }
             ]
         },
-        { label: 'Syllabus', href: '#syllabus' },
-        { label: 'Signals', href: '#signals' },
+        { label: 'Syllabus', href: '/school-of-finance/syllabus' },
     ]
 
     // Magnetic Hover Effect
@@ -115,8 +122,8 @@ const Header = () => {
             top: 20,
             left: '50%',
             transform: 'translateX(-50%)',
-            width: '95%',
-            maxWidth: '1400px',
+            width: '98%',
+            maxWidth: '1600px',
             height: isScrolled ? '70px' : '90px',
             borderRadius: '50px',
             display: 'flex',
@@ -155,7 +162,7 @@ const Header = () => {
             }}>
                 <ul ref={navRef} style={{
                     display: 'flex',
-                    gap: '2.5rem',
+                    gap: '5rem',
                     alignItems: 'center',
                     margin: 0,
                     padding: 0,
@@ -336,7 +343,7 @@ const Header = () => {
                     .mobile-toggle { display: flex !important; }
                     .desktop-nav { display: none !important; }
                     header { 
-                        width: 90% !important; 
+                        width: 95% !important; 
                         padding: 0 1.5rem !important;
                     }
                 }

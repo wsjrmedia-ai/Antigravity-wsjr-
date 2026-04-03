@@ -1,0 +1,298 @@
+import React, { useRef } from 'react'
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+
+const schoolsData = [
+    {
+        id: 'sof',
+        color: '#50000B',
+        tabLeft: '10%',
+        title: 'School of Finance',
+        acronym: 'SOF',
+        subtitle: 'Mastering Markets, Valuation &\nCapital Allocation',
+        desc: 'The School of Finance prepares students to think and act like institutional capital allocators. You will develop a deep...',
+        ideal: 'Ideal for:\nAspiring analysts, investment\nprofessionals, and anyone building a...',
+        image: '/images/figma/school-finance.jpg'
+    },
+    {
+        id: 'sot',
+        color: '#003E62',
+        tabLeft: '35%',
+        title: 'School of\nTechnology',
+        acronym: 'SOT',
+        subtitle: 'Building the Future with Code, AI &\nSystems Architecture',
+        desc: 'The School of Technology bridges the gap between software development and business impact. Students gain hands-...',
+        ideal: 'Ideal for:\nDevelopers, aspiring tech entrepreneurs,\nand professionals looking to integrate...',
+        image: '/images/figma/school-technology.jpg'
+    },
+    {
+        id: 'sod',
+        color: '#040001',
+        tabLeft: '60%',
+        title: 'School of Design',
+        acronym: 'SOD',
+        subtitle: 'Crafting Experiences That Shape\nHuman Behavior',
+        desc: 'Good design is not decoration. It is strategy made visible. The School of Design trains students to approach visu...',
+        ideal: 'Ideal for:\nAspiring designers, brand strategists,\nand product thinkers looking to elevate...',
+        image: '/images/figma/school-design.jpg'
+    },
+    {
+        id: 'som',
+        color: '#50000B',
+        tabLeft: '80%',
+        title: 'School of\nManagement',
+        acronym: 'SOM',
+        subtitle: 'Leading Teams & Organizations to\nGlobal Impact',
+        desc: 'The School of Management focuses on the human side of organizational performance. From strategic decision-...',
+        ideal: 'Ideal for:\nCurrent and aspiring managers, team\nleads, and professionals building towa...',
+        image: '/images/figma/school-management.jpg'
+    }
+]
+
+const SchoolCard = ({ school, index, total }) => {
+    const containerRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start start", "end start"] // 0 when card hits top, 1 when next card hits top
+    });
+
+    const isLast = index === total - 1;
+    
+    // Smooth the progress for premium "smooth transition motion"
+    const smoothProgress = useSpring(scrollYProgress, { stiffness: 300, damping: 30, restDelta: 0.001 });
+
+    // Use only darkening as it goes into the background to avoid height scaling bugs
+    const filter = useTransform(smoothProgress, [0, 1], ['brightness(1)', isLast ? 'brightness(1)' : 'brightness(0.6)']);
+
+    return (
+        <div ref={containerRef} style={{
+            position: 'sticky',
+            top: 0,
+            width: '100%',
+            height: '100vh', 
+            marginTop: index === 0 ? '-60px' : '0px', 
+            zIndex: index + 1 // Ensure subsequent folders stack on top
+        }}>
+            <motion.div style={{
+                filter,
+                transformOrigin: 'top center',
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column'
+            }}>
+                {/* The protruding Folder Tab */}
+                <div style={{
+                    position: 'relative',
+                    height: '60px',
+                    width: '100%'
+                }}>
+                    <div style={{
+                        position: 'absolute',
+                        left: school.tabLeft,
+                        bottom: 0,
+                        width: '320px',
+                        height: '100px', // slightly taller to blend into main body
+                        backgroundColor: school.color,
+                        borderRadius: '30px 30px 0 0',
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        justifyContent: 'center',
+                        paddingTop: '15px'
+                    }}>
+                        <span style={{
+                            fontFamily: 'var(--font-hero)',
+                            fontSize: '2.5rem',
+                            color: '#FFF',
+                            fontStyle: 'italic',
+                            fontWeight: 600,
+                            letterSpacing: '-1px'
+                        }}>
+                            {school.acronym}
+                        </span>
+                    </div>
+                </div>
+
+                {/* Main Body of the Folder */}
+                <div style={{
+                    backgroundColor: school.color,
+                    borderRadius: '40px 40px 0 0',
+                    position: 'relative',
+                    display: 'flex',
+                    height: 'calc(100vh - 60px)', // Forces exact viewport fit underneath the tab
+                    boxShadow: '0 -15px 30px rgba(0,0,0,0.15)', // Shadow to sell the folder overlap effect
+                    overflow: 'hidden',
+                    paddingTop: '60px' // spacing after border radius
+                }}>
+                    
+                    {/* LEFT Content Column */}
+                    <div style={{
+                        flex: 1,
+                        padding: '40px 8%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between', // pushes title to bottom
+                        position: 'relative',
+                        zIndex: 5
+                    }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '60px' }}>
+                            <h4 style={{
+                                fontFamily: 'var(--font-hero)',
+                                fontSize: 'clamp(1.5rem, 2.3vw, 2.3rem)', // ~38px
+                                color: '#FFF',
+                                fontWeight: 500,
+                                margin: 0,
+                                whiteSpace: 'pre-line',
+                                lineHeight: 1.2
+                            }}>
+                                {school.subtitle}
+                            </h4>
+
+                            <p style={{
+                                fontFamily: 'var(--font-hero)',
+                                fontSize: 'clamp(1.5rem, 2.5vw, 2.8rem)', // ~45px
+                                color: '#FFF',
+                                fontWeight: 600,
+                                margin: 0,
+                                maxWidth: '800px',
+                                lineHeight: 1.1,
+                                opacity: 0.95
+                            }}>
+                                {school.desc}
+                            </p>
+                        </div>
+
+                        {/* Bottom Title aligned to bottom of flex column */}
+                        <h3 style={{
+                            fontFamily: 'var(--font-hero)',
+                            fontSize: 'clamp(3.5rem, 5vw, 5.5rem)', // ~75px
+                            color: '#FFF',
+                            fontWeight: 500,
+                            letterSpacing: '-2px',
+                            margin: 0,
+                            whiteSpace: 'pre-line',
+                            lineHeight: 1,
+                            paddingBottom: '40px'
+                        }}>
+                            {school.title}
+                        </h3>
+                    </div>
+
+                    {/* RIGHT Content Column (Fixed width for image / info blocks) */}
+                    <div style={{
+                        width: '45%',
+                        minWidth: '600px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        position: 'relative'
+                    }}>
+                        
+                        {/* Top Text Block (Ideal For / Explore) */}
+                        <div style={{
+                            padding: '40px 60px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '80px', // Spacing between ideal and explore
+                            zIndex: 5
+                        }}>
+                            <p style={{
+                                fontFamily: 'var(--font-hero)',
+                                fontSize: 'clamp(1.5rem, 2vw, 2.3rem)', // ~38px
+                                color: '#FFF',
+                                fontWeight: 500,
+                                lineHeight: 1.2,
+                                whiteSpace: 'pre-line',
+                                margin: 0
+                            }}>
+                                {school.ideal}
+                            </p>
+
+                            <div style={{ 
+                                cursor: 'pointer', 
+                                display: 'inline-flex', 
+                                alignItems: 'center' 
+                            }}>
+                                <span style={{ 
+                                    fontFamily: 'var(--font-hero)',
+                                    fontSize: 'clamp(1.5rem, 2vw, 2.3rem)', 
+                                    color: '#FFF', 
+                                    fontWeight: 500 
+                                }}>EXPLORE PROGRAM →</span>
+                            </div>
+                        </div>
+
+                        {/* Image perfectly flushed to bottom right */}
+                        <div style={{
+                            flex: 1,
+                            position: 'relative',
+                            width: '100%',
+                            marginTop: '40px',
+                            borderTopLeftRadius: '50px',
+                            overflow: 'visible' // To let the acronym bleed out if needed
+                        }}>
+                            {/* The actual background image block */}
+                            <div style={{
+                                position: 'absolute',
+                                top: 0, left: 0, right: 0, bottom: 0,
+                                borderTopLeftRadius: '50px',
+                                overflow: 'hidden'
+                            }}>
+                                <img 
+                                    src={school.image} 
+                                    alt={school.title} 
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        filter: 'grayscale(20%) brightness(0.8)' // Adding some dim to match Figma mood
+                                    }}
+                                />
+                            </div>
+
+                            {/* The massive overlapping Acronym (SOF) */}
+                            <div style={{
+                                position: 'absolute',
+                                top: '20%',
+                                left: '10%',
+                                fontFamily: 'var(--font-body)',
+                                fontSize: 'clamp(10rem, 18vw, 22rem)', // ~317px
+                                color: '#FFF',
+                                fontWeight: 500,
+                                letterSpacing: '-15px',
+                                lineHeight: 1,
+                                zIndex: 10,
+                                pointerEvents: 'none'
+                            }}>
+                                {school.acronym}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </motion.div>
+        </div>
+    )
+}
+
+const SchoolsSection = () => {
+    return (
+        <section style={{ position: 'relative', display: 'block' }}>
+            {schoolsData.map((school, index) => (
+                <SchoolCard key={school.id} school={school} index={index} total={schoolsData.length} />
+            ))}
+
+            <style>{`
+                @media (max-width: 1200px) {
+                    .school-main-body {
+                        flex-direction: column !important;
+                    }
+                    .school-right-col {
+                        width: 100% !important;
+                        min-width: 0 !important;
+                    }
+                }
+            `}</style>
+        </section>
+    )
+}
+
+export default SchoolsSection

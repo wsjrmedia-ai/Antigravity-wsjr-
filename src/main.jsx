@@ -7,12 +7,16 @@ import App from './App.jsx'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
+import { AuthProvider } from './contexts/AuthContext.jsx'
+
 gsap.registerPlugin(ScrollTrigger)
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </BrowserRouter>
   </StrictMode>,
 )

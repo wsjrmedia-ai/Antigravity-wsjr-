@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import GalaxyBackground from '../components/GalaxyBackground'
 
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
+
 const SignupPage = () => {
     const containerRef = useRef(null)
     const headerRef = useRef(null)
@@ -17,6 +20,10 @@ const SignupPage = () => {
         confirmPassword: ''
     })
     const [currentStep, setCurrentStep] = useState(1)
+    const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
+    const { signUp } = useAuth()
+    const navigate = useNavigate()
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -43,10 +50,32 @@ const SignupPage = () => {
         return () => ctx.revert()
     }, [])
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log('Signup attempt:', formData)
-        // Add signup logic here
+        if (formData.password !== formData.confirmPassword) {
+            return setError('Passwords do not match')
+        }
+        
+        setError('')
+        setLoading(true)
+
+        try {
+            const { data, error } = await signUp(formData.email, formData.password, {
+                data: {
+                    full_name: formData.fullName,
+                    mobile: formData.mobile,
+                    course: formData.course,
+                    dob: formData.dob
+                }
+            })
+            if (error) throw error
+
+            navigate('/login') // Or show a success message to check email
+        } catch (err) {
+            setError(err.message || 'Failed to create an account')
+        } finally {
+            setLoading(false)
+        }
     }
 
     const inputStyle = {
@@ -179,6 +208,11 @@ const SignupPage = () => {
                 </div>
 
                 <form onSubmit={handleSubmit}>
+                    {error && (
+                        <div style={{ padding: '1rem', background: 'rgba(255, 77, 109, 0.1)', border: '1px solid #ff4d6d', borderRadius: '12px', color: '#ff4d6d', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                            {error}
+                        </div>
+                    )}
                     {/* Personal Information Section */}
                     <div ref={el => formSectionsRef.current[0] = el} style={sectionStyle}>
                         <h3 style={{
@@ -354,7 +388,7 @@ const SignupPage = () => {
                         onMouseEnter={(e) => gsap.to(e.target, { scale: 1.02, duration: 0.3 })}
                         onMouseLeave={(e) => gsap.to(e.target, { scale: 1, duration: 0.3 })}
                     >
-                        Complete Enrollment
+                        {loading ? 'Processing...' : 'Complete Enrollment'}
                     </button>
                 </form>
 

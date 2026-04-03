@@ -1,103 +1,166 @@
-import { useEffect } from 'react'
-import Section from './Section'
+import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
+import ScrollTrigger from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
+
+const metricsData = [
+    {
+        num: 4,
+        suffix: '+',
+        title: 'SPECIALIZED SCHOOLS',
+        desc: 'Finance, Technology, Design, and Management, each with its own curriculum, faculty, and real-world focus.'
+    },
+    {
+        num: 10000,
+        suffix: '+',
+        title: 'STUDENTS',
+        desc: 'A growing community of learners from Dubai, India, and beyond, building careers with institutional-grade knowledge.'
+    },
+    {
+        num: 15,
+        suffix: '+ years',
+        title: 'MENTORSHIP EXPERIENCE',
+        desc: 'Faculty and mentors who have operated at leading global institutions and bring that experience directly into the classroom.'
+    },
+    {
+        num: 6,
+        suffix: '+',
+        title: 'GLOBAL LOCATIONS',
+        desc: 'Dubai (HQ), Kerala, Mumbai, Bangalore, Delhi, and Chicago, creating a truly international learning network.'
+    }
+]
 
 const KeyMetrics = () => {
-    useEffect(() => {
-        const counters = document.querySelectorAll('.metric-number')
-        const ctx = gsap.context(() => {
-            counters.forEach((counter) => {
-                const targetValue = parseInt(counter.getAttribute('data-value'))
-                const obj = { value: 0 }
+    const sectionRef = useRef(null)
 
-                gsap.to(obj, {
-                    value: targetValue,
-                    duration: 2,
-                    ease: "power2.out",
+    useEffect(() => {
+        const ctx = gsap.context(() => {
+            // 1. Stagger the entry of the cards
+            gsap.from('.metric-stat', {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.15,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: sectionRef.current,
+                    start: 'top 80%',
+                }
+            })
+
+            // 2. Animate the numbers natively using GSAP tweening
+            const numberElements = document.querySelectorAll('.metric-number');
+            numberElements.forEach((el) => {
+                const endValue = parseInt(el.getAttribute('data-val'), 10);
+                const counter = { val: 0 }; // Starting value for the tween
+
+                gsap.to(counter, {
+                    val: endValue, // Target value
+                    duration: 4.5, // Slower 4.5s count duration
+                    ease: 'power2.out',
                     scrollTrigger: {
-                        trigger: counter,
-                        start: "top 90%",
-                        toggleActions: "play none none none"
+                        trigger: sectionRef.current,
+                        start: 'top 80%', // Triggers identical to the card entry
                     },
                     onUpdate: () => {
-                        counter.innerText = Math.floor(obj.value)
+                        // Math.round strips decimals, toLocaleString injects the commas!
+                        el.innerHTML = Math.round(counter.val).toLocaleString();
                     }
-                })
-            })
-        })
+                });
+            });
+
+        }, sectionRef)
         return () => ctx.revert()
     }, [])
 
-    const metrics = [
-        { label: 'Specialized Schools', value: 4, suffix: '+' },
-        { label: 'Students', value: 2000, suffix: '+' },
-        { label: 'Experienced Mentors', value: 10, suffix: '+ Years' },
-        { label: 'Global Locations', value: 6, suffix: '+' }
-    ]
-
     return (
-        <Section id="metrics" style={{ padding: '3rem var(--container-padding)', background: 'var(--bg-primary)', borderTop: '1px solid rgba(212, 175, 55, 0.1)', borderBottom: '1px solid rgba(212, 175, 55, 0.1)' }}>
-            <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-                <h2 style={{
-                    fontSize: 'clamp(2rem, 5vw, 3rem)',
-                    color: '#ffffff',
-                    marginBottom: '4rem',
-                    textAlign: 'center',
-                    textTransform: 'uppercase',
-                    letterSpacing: '4px'
-                }}>
-                    Facts & <span style={{ color: 'var(--accent-gold)' }}>Figures</span>
-                </h2>
+        <section ref={sectionRef} style={{
+            backgroundColor: '#50000B',
+            padding: '120px 5%',
+            minHeight: '600px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden'
+        }}>
+            {/* Heading */}
+            <h2 style={{
+                fontFamily: 'var(--font-hero)',
+                fontSize: 'clamp(3rem, 5vw, 4.5rem)',
+                color: '#FFF',
+                textAlign: 'center',
+                marginBottom: '100px',
+                fontWeight: 400
+            }}>
+                <span style={{ fontFamily: 'var(--font-body)', fontWeight: 700, color: 'var(--accent-gold)' }}>Wall Street Jr.</span> by the numbers
+            </h2>
 
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                    gap: '1rem',
-                    textAlign: 'center',
-                    marginTop: '2rem'
-                }}>
-                    {metrics.map((metric, i) => (
-                        <div key={i} style={{ padding: '2rem 1rem' }}>
-                            <div style={{
-                                fontSize: 'clamp(2.5rem, 5vw, 3.5rem)',
-                                fontWeight: 800,
-                                color: 'var(--accent-gold)',
-                                marginBottom: '0.2rem',
-                                lineHeight: 1,
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'baseline'
-                            }}>
-                                <span
-                                    className="metric-number"
-                                    data-value={metric.value}
-                                    style={{ display: 'inline-block' }}
-                                >
-                                    0
-                                </span>
-                                <span style={{
-                                    fontSize: '0.45em',
-                                    marginLeft: '4px',
-                                    fontWeight: 600,
-                                    opacity: 0.8
-                                }}>
-                                    {metric.suffix}
-                                </span>
-                            </div>
-                            <div style={{
-                                fontSize: '0.9rem',
-                                color: 'var(--text-secondary)',
-                                textTransform: 'uppercase',
-                                letterSpacing: '2px',
-                                fontWeight: 600
-                            }}>
-                                {metric.label}
-                            </div>
+            {/* Metrics Grid */}
+            <div style={{
+                width: '100%',
+                maxWidth: '1600px',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                gap: '60px',
+                alignItems: 'start'
+            }}>
+                {metricsData.map((metric, i) => (
+                    <div key={i} className="metric-stat" style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        textAlign: 'center',
+                        gap: '20px' // Separates number from text block
+                    }}>
+                        {/* Huge Gold Number with animated counting span */}
+                        <div style={{
+                            fontFamily: 'var(--font-body)',
+                            fontSize: 'clamp(3.5rem, 5vw, 4.5rem)', // ~70px max
+                            color: 'var(--accent-gold)',
+                            fontWeight: 500,
+                            letterSpacing: '-1px',
+                            lineHeight: 1
+                        }}>
+                            <span className="metric-number" data-val={metric.num}>
+                                0
+                            </span>
+                            <span>{metric.suffix}</span>
                         </div>
-                    ))}
-                </div>
+                        
+                        {/* Inner Divider - simulated via a gap or just white line */}
+                        <div style={{ width: '100%', height: '1px', background: 'rgba(255,255,255,0.2)', margin: '15px 0' }} />
+
+                        {/* Title */}
+                        <h4 style={{
+                            fontFamily: 'var(--font-hero)',
+                            fontSize: '1.45rem', // 23px
+                            color: '#FFF',
+                            fontWeight: 600,
+                            letterSpacing: '-0.5px',
+                            margin: 0
+                        }}>
+                            {metric.title}
+                        </h4>
+
+                        {/* Description */}
+                        <p style={{
+                            fontFamily: 'var(--font-hero)',
+                            fontSize: '1.2rem', // ~19px
+                            color: '#FFF',
+                            fontWeight: 500,
+                            lineHeight: 1.4,
+                            margin: 0,
+                            maxWidth: '320px',
+                            opacity: 0.9
+                        }}>
+                            {metric.desc}
+                        </p>
+                    </div>
+                ))}
             </div>
-        </Section>
+        </section>
     )
 }
 

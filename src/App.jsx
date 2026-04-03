@@ -1,32 +1,38 @@
 import { useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import Lenis from 'lenis'
-import Header from './components/Header'
 import Footer from './components/Footer'
-import ParticleField from './components/ParticleField'
-import Floating3DShapes from './components/Floating3DShapes'
-import GalaxyBackground from './components/GalaxyBackground'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import HomePage from './pages/HomePage'
 import SchoolOfFinance from './pages/SchoolOfFinance'
+import SyllabusPage from './pages/SyllabusPage'
+import WhoWeArePage from './pages/WhoWeArePage'
+import TopStocxPage from './pages/TopStocxPage'
+import EnrollPage from './pages/EnrollPage'
 
 import CustomScrollbar from './components/CustomScrollbar'
+import FinAIChatbot from './components/FinAIChatbot'
 
 function App() {
   const location = useLocation()
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup'
+  const isTopStocx = location.pathname.startsWith('/topstocx')
 
   useEffect(() => {
-    // Initialize Lenis for smooth scrolling
+    if (isTopStocx) return // TopStocx has its own layout, skip Lenis
+
     const lenis = new Lenis({
-      duration: 1.2,
+      lerp: 0.06, // Physics-based linear interpolation for buttery smoothness
+      duration: 1.5, // Fallback for browsers that don't support lerp well
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      direction: 'vertical',
-      gestureDirection: 'vertical',
-      smooth: true,
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 0.9, // Slightly heavier wheel feel
       smoothTouch: false,
       touchMultiplier: 2,
+      infinite: false,
     })
 
     function raf(time) {
@@ -37,7 +43,7 @@ function App() {
     requestAnimationFrame(raf)
 
     return () => lenis.destroy()
-  }, [])
+  }, [isTopStocx])
 
   if (isAuthPage) {
     return (
@@ -48,19 +54,27 @@ function App() {
     )
   }
 
+  if (isTopStocx) {
+    return (
+      <Routes>
+        <Route path="/topstocx/*" element={<TopStocxPage />} />
+      </Routes>
+    )
+  }
+
   return (
     <div className="layout" style={{ background: 'var(--bg-primary)', minHeight: '100vh', position: 'relative' }}>
       <CustomScrollbar />
-      <GalaxyBackground />
-      <ParticleField />
-      <Floating3DShapes />
-      <Header />
       <main style={{ position: 'relative', zIndex: 1 }}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/school-of-finance" element={<SchoolOfFinance />} />
+          <Route path="/school-of-finance/syllabus" element={<SyllabusPage />} />
+          <Route path="/who-we-are" element={<WhoWeArePage />} />
+          <Route path="/enroll" element={<EnrollPage />} />
         </Routes>
       </main>
+      <FinAIChatbot />
       <Footer />
     </div>
   )

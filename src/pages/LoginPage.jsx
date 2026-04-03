@@ -3,24 +3,41 @@ import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import GalaxyBackground from '../components/GalaxyBackground'
 
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
+
 const LoginPage = () => {
     const formRef = useRef(null)
     const [formData, setFormData] = useState({ email: '', password: '' })
+    const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
+    const { signIn } = useAuth()
+    const navigate = useNavigate()
 
     useEffect(() => {
         gsap.from(formRef.current, {
             y: 30,
-            // opacity: 0, REMOVED for visibility
             duration: 1,
             ease: 'power3.out',
             delay: 0.2
         })
     }, [])
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log('Login attempt:', formData)
-        // Add auth logic here
+        setError('')
+        setLoading(true)
+
+        try {
+            const { data, error } = await signIn(formData.email, formData.password)
+            if (error) throw error
+            
+            navigate('/dashboard') // Or wherever you route authenticated users
+        } catch (err) {
+            setError(err.message || 'Failed to sign in')
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
@@ -79,6 +96,11 @@ const LoginPage = () => {
                 </div>
 
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                    {error && (
+                        <div style={{ padding: '1rem', background: 'rgba(255, 77, 109, 0.1)', border: '1px solid #ff4d6d', borderRadius: '12px', color: '#ff4d6d', fontSize: '0.9rem' }}>
+                            {error}
+                        </div>
+                    )}
                     <div>
                         <input
                             type="email"
@@ -140,7 +162,7 @@ const LoginPage = () => {
                         onMouseEnter={(e) => gsap.to(e.target, { scale: 1.02 })}
                         onMouseLeave={(e) => gsap.to(e.target, { scale: 1 })}
                     >
-                        Sign In
+                        {loading ? 'Signing in...' : 'Sign In'}
                     </button>
                 </form>
 

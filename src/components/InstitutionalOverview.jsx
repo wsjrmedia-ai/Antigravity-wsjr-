@@ -1,6 +1,4 @@
 import { useEffect, useRef } from 'react'
-import Section from './Section'
-import Globe3D from './Globe3D'
 import gsap from 'gsap'
 
 const InstitutionalOverview = () => {
@@ -8,23 +6,27 @@ const InstitutionalOverview = () => {
     const line1 = useRef(null)
     const line2 = useRef(null)
     const line3 = useRef(null)
+    const line4 = useRef(null)
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            const lines = [line1.current, line2.current, line3.current]
+            const lines = [line1.current, line2.current, line3.current, line4.current]
             lines.forEach((line, i) => {
                 if (line) {
-                    gsap.from(line, {
-                        opacity: 0,
-                        y: 30,
-                        duration: 1,
-                        ease: "power2.out",
-                        delay: 0.2 + (i * 0.1),
-                        scrollTrigger: {
-                            trigger: line,
-                            start: "top 90%"
+                    gsap.fromTo(line, 
+                        { opacity: 0, y: 40 },
+                        {
+                            opacity: 1,
+                            y: 0,
+                            duration: 1.2,
+                            ease: "power3.out",
+                            delay: i * 0.15,
+                            scrollTrigger: {
+                                trigger: sectionRef.current,
+                                start: "top 75%"
+                            }
                         }
-                    })
+                    )
                 }
             })
         }, sectionRef)
@@ -32,66 +34,120 @@ const InstitutionalOverview = () => {
     }, [])
 
     return (
-        <Section id="about" style={{
+        <section ref={sectionRef} style={{
             position: 'relative',
-            padding: 'var(--section-spacing) var(--container-padding)',
-            background: 'var(--bg-primary)'
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'transparent',
         }}>
+            {/* Background Image Layer */}
             <div style={{
-                maxWidth: '1400px',
-                margin: '0 auto',
-                display: 'grid',
-                gridTemplateColumns: 'minmax(300px, 1.2fr) 1fr',
-                gap: '4rem',
-                alignItems: 'center',
-                position: 'relative',
-                zIndex: 5
+                position: 'absolute',
+                top: 0, left: 0, right: 0, bottom: 0,
+                zIndex: -1, // Sits deeply in the back so the global Emblem can interleave
+                backgroundColor: '#050505',
+                overflow: 'hidden'
             }}>
-                {/* Globe Column (Left) */}
-                <div style={{
-                    height: '500px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    position: 'relative'
-                }}>
-                    <div style={{
+                <img 
+                    src="/images/figma/bg-qatar-museum.jpg" 
+                    alt="National Museum of Qatar Architecture" 
+                    style={{
                         width: '100%',
                         height: '100%',
-                        transform: 'scale(1.4)'
-                    }}>
-                        <Globe3D />
-                    </div>
+                        objectFit: 'cover',
+                        objectPosition: 'center',
+                        opacity: 1.0 // Fully visible architectural background
+                    }}
+                />
+                
+                {/* Figma precise blurred maroon SVG gradients - Turned down natively so architecture is visible! */}
+                <div style={{
+                    position: 'absolute',
+                    top: '10%',
+                    right: '-20%',
+                    width: '100vw',
+                    height: '100vh',
+                    background: 'radial-gradient(ellipse at center, rgba(80,0,11,0.2) 0%, rgba(80,0,11,0) 60%)',
+                    zIndex: 1,
+                    filter: 'blur(100px)'
+                }} />
+                <div style={{
+                    position: 'absolute',
+                    top: '20%',
+                    left: '-30%',
+                    width: '100vw',
+                    height: '100vh',
+                    background: 'radial-gradient(ellipse at center, rgba(80,0,11,0.2) 0%, rgba(80,0,11,0) 60%)',
+                    zIndex: 1,
+                    filter: 'blur(100px)'
+                }} />
+            </div>
+
+            {/* Content Container */}
+            <div style={{
+                position: 'relative',
+                zIndex: 10,
+                width: '100%',
+                maxWidth: '1800px',
+                padding: '120px 8%',
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                gap: '80px',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+            }}>
+                {/* Left Heading */}
+                <div style={{ flex: '1 1 500px', maxWidth: '800px' }}>
+                   <h2 ref={line1} style={{
+                       fontFamily: 'var(--font-body)',
+                       fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', // Matches Figma 78px
+                       color: '#FFF',
+                       lineHeight: '1.1',
+                       fontWeight: 600,
+                       letterSpacing: '-2px'
+                   }}>
+                       A <span style={{ fontFamily: 'var(--font-hero)', fontStyle: 'italic', fontWeight: 400 }}>GLOBAL ACADEMY</span><br/> BUILT ON <span style={{ fontFamily: 'var(--font-hero)', fontStyle: 'italic', fontWeight: 400 }}>INSTITUTIONAL PRINCIPLES</span>
+                   </h2>
                 </div>
 
-                {/* Text Column (Right) */}
-                <div ref={sectionRef} style={{ textAlign: 'left' }}>
-                    <h2 ref={line1} style={{
-                        fontSize: 'clamp(2.5rem, 5vw, 3.5rem)',
-                        color: '#ffffff',
-                        marginBottom: '2rem',
-                        fontWeight: 800
-                    }}>
-                        Institutional <span style={{ color: 'var(--accent-gold)' }}>Overview</span>
-                    </h2>
-                    <p ref={line2} style={{
-                        fontSize: '1.25rem',
-                        color: 'var(--text-secondary)',
-                        lineHeight: 1.8,
-                        marginBottom: '2.5rem'
-                    }}>
-                        As a <strong>global professional academy</strong>, education is delivered through specialized schools within the <strong>WALL STREET Jr.</strong> unified academic framework. We focus on <strong>real-world skill development</strong> in the modern economy, emphasizing clarity of thought, ethical judgment, and practical relevance.
-                    </p>
-                    <p ref={line3} style={{
-                        fontSize: '1.25rem',
-                        color: 'var(--text-secondary)',
-                        lineHeight: 1.8
-                    }}>
-                        At our <strong>Dubai-based global academy</strong>, we offer <strong>applied learning programs</strong> and an <strong>industry-aligned curriculum</strong>. Our framework integrates disciplinary depth with cross-functional understanding, ensuring students develop <strong>career-focused learning</strong> skills relevant to 21st-century leadership.
-                    </p>
+                {/* Right Paragraphs */}
+                <div style={{ flex: '1 1 500px', maxWidth: '650px', display: 'flex', flexDirection: 'column', gap: '35px' }}>
+                     <p ref={line2} style={{
+                            fontFamily: 'var(--font-hero)',
+                            fontSize: 'clamp(1.2rem, 1.5vw, 1.45rem)', // Matches Figma 23px
+                            color: '#FFF',
+                            lineHeight: '1.4',
+                            fontWeight: 600,
+                            letterSpacing: '-0.4px'
+                        }}>
+                            WallStreet Jr. Academy is a Dubai-based global institution that operates at the intersection of finance, technology, design and management. We believe that the most capable professionals of the next decade will not be narrow specialists; they will be disciplined thinkers who understand how capital, technology and human behaviour interact.
+                        </p>
+                        <p ref={line3} style={{
+                            fontFamily: 'var(--font-hero)',
+                            fontSize: 'clamp(1.2rem, 1.5vw, 1.45rem)',
+                            color: '#FFF',
+                            lineHeight: '1.4',
+                            fontWeight: 600,
+                            letterSpacing: '-0.4px'
+                        }}>
+                            Our curriculum is built around one core idea: real-world relevance. Every program we offer is designed not around academic benchmarks, but around the demands of modern institutions; from investment banks and private equity firms to technology companies and designated organizations.
+                        </p>
+                        <p ref={line4} style={{
+                            fontFamily: 'var(--font-hero)',
+                            fontSize: 'clamp(1.2rem, 1.5vw, 1.45rem)',
+                            color: '#FFF',
+                            lineHeight: '1.4',
+                            fontWeight: 600,
+                            letterSpacing: '-0.4px'
+                        }}>
+                            Led by a faculty with direct experience at institutions including JP Morgan and Bank of America, our academic framework brings banking-grade rigor into an education-first environment. Students graduate not just with knowledge, but with the mental models and practical tools they need to perform.
+                        </p>
                 </div>
             </div>
-        </Section>
+        </section>
     )
 }
 

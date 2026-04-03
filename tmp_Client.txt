@@ -1,0 +1,460 @@
+﻿//+------------------------------------------------------------------+
+//|                               CopySlave.mq5                      |
+//|     Slave side of file-based trade copier for MT5 (ROBUST)       |
+//+------------------------------------------------------------------+
+#property strict
+#property version   "1.02"
+#property description "Slave EA: copies positions from master via common file (atomic read + better mapping)."
+
+#include <Trade/Trade.mqh>
+CTrade trade;
+
+//--- inputs
+input string  CopyChannel       = "DEFAULT"; // Must match master's channel
+input double  RiskMultiplier    = 1.0;       // 1.0 = same % of equity as master
+input long    SlaveMagic        = 987654;    // Magic for copied trades
+input int     SyncSeconds       = 1;         // How often to sync (seconds)
+input double  MaxVolumeDiffLots = 0.05;      // Avoid constant close/open (increase tolerance)
+
+//--- structure to hold master positions read from file
+struct MasterPos
+{
+   ulong  ticket;
+   string symbol;
+   int    type;           // 0=BUY, 1=SELL
+   double volume;
+   double open_price;
+   double sl;
+   double tp;
+   double master_equity;
+   long   magic;
+   string comment;
+};
+
+//--- forward decl
+bool   ReadMasterFile(MasterPos &master_positions[]);
+string NormalizeSymbol(string s);
+string MapSymbol(const string master_symbol);
+ulong  FindSlavePositionByMasterTicket(ulong master_ticket, const string symbol);
+double CalculateSlaveVolume(const MasterPos &mp, double slave_equity, const string slave_symbol);
+void   OpenSlavePosition(const MasterPos &mp, const string slave_symbol, double volume);
+void   UpdateSlavePosition(ulong slave_ticket, const MasterPos &mp, const string slave_symbol, double slave_equity);
+void   CloseOrphanSlavePositions(const MasterPos &master_positions[]);
+
+//+------------------------------------------------------------------+
+int OnInit()
+{
+   trade.SetExpertMagicNumber(SlaveMagic);
+   EventSetTimer(SyncSeconds);
+   return(INIT_SUCCEEDED);
+}
+//+------------------------------------------------------------------+
+void OnDeinit(const int reason)
+{
+   EventKillTimer();
+}
+//+------------------------------------------------------------------+
+void OnTimer()
+{
+   // Make sure algo trading is enabled
+   if(!TerminalInfoInteger(TERMINAL_TRADE_ALLOWED))
+      return;
+
+   SyncWithMaster();
+}
+//+------------------------------------------------------------------+
+void SyncWithMaster()
+{
+   MasterPos master_positions[];
+   if(!ReadMasterFile(master_positions))
+      return;
+
+   double slave_equity = AccountInfoDouble(ACCOUNT_EQUITY);
+   int master_count = ArraySize(master_positions);
+
+   //--- open / update
+   for(int i = 0; i < master_count; i++)
+   {
+      const MasterPos mp = master_positions[i];
+
+      // map symbol
+      string slave_symbol = MapSymbol(mp.symbol);
+      if(slave_symbol == "")
+      {
+         PrintFormat("CopySlave: Could not map master symbol '%s' on this broker", mp.symbol);
+         continue;
+      }
+
+      // position exists?
+      ulong slave_ticket = FindSlavePositionByMasterTicket(mp.ticket, slave_symbol);
+
+      if(slave_ticket == 0)
+      {
+         double vol = CalculateSlaveVolume(mp, slave_equity, slave_symbol);
+         if(vol <= 0.0)
+         {
+            PrintFormat("CopySlave: volume <= 0 (ticket %I64u, master vol=%.2f, eq=%.2f/%.2f)",
+                        mp.ticket, mp.volume, slave_equity, mp.master_equity);
+            continue;
+         }
+         OpenSlavePosition(mp, slave_symbol, vol);
+      }
+      else
+      {
+         UpdateSlavePosition(slave_ticket, mp, slave_symbol, slave_equity);
+      }
+   }
+
+   //--- close orphaned
+   CloseOrphanSlavePositions(master_positions);
+}
+
+//+------------------------------------------------------------------+
+//| Read master snapshot file (robust against partial writes)        |
+//+------------------------------------------------------------------+
+bool ReadMasterFile(MasterPos &master_positions[])
+{
+   string filename = "CopyMaster_" + CopyChannel + ".csv";
+
+   int handle = FileOpen(filename, FILE_COMMON | FILE_READ | FILE_CSV | FILE_ANSI);
+   if(handle == INVALID_HANDLE)
+      return(false);
+
+   ArrayResize(master_positions, 0);
+
+   // Read first field; if it's a header ("ticket"), skip the whole header row (10 cols)
+   if(!FileIsEnding(handle))
+   {
+      string first = FileReadString(handle);
+      if(StringToLower(first) == "ticket")
+      {
+         // already consumed 1 col, consume remaining 9
+         for(int k=0; k<9 && !FileIsEnding(handle); k++)
+            FileReadString(handle);
+      }
+      else
+      {
+         // Not a header -> rewind to start so we can read properly
+         FileSeek(handle, 0, SEEK_SET);
+      }
+   }
+
+   while(!FileIsEnding(handle))
+   {
+      MasterPos mp;
+      ResetLastError();
+
+      // If file is being updated mid-read, any of these can fail/EOF -> we break safely
+      mp.ticket = (ulong)FileReadNumber(handle);     if(FileIsEnding(handle)) break;
+      mp.symbol = FileReadString(handle);            if(FileIsEnding(handle)) break;
+      mp.type   = (int)FileReadNumber(handle);       if(FileIsEnding(handle)) break;
+      mp.volume = FileReadNumber(handle);            if(FileIsEnding(handle)) break;
+      mp.open_price = FileReadNumber(handle);        if(FileIsEnding(handle)) break;
+      mp.sl     = FileReadNumber(handle);            if(FileIsEnding(handle)) break;
+      mp.tp     = FileReadNumber(handle);            if(FileIsEnding(handle)) break;
+      mp.master_equity = FileReadNumber(handle);     if(FileIsEnding(handle)) break;
+      mp.magic  = (long)FileReadNumber(handle);      if(FileIsEnding(handle)) break;
+      mp.comment= FileReadString(handle);
+
+      // basic validation (prevents garbage mapping to EURUSD)
+      if(mp.ticket == 0 || mp.symbol == "" || (mp.type != 0 && mp.type != 1) || mp.volume <= 0.0)
+         continue;
+
+      int new_size = ArraySize(master_positions) + 1;
+      ArrayResize(master_positions, new_size);
+      master_positions[new_size - 1] = mp;
+   }
+
+   FileClose(handle);
+   return(true);
+}
+
+//+------------------------------------------------------------------+
+//| Normalize symbol name (safe)                                     |
+//+------------------------------------------------------------------+
+string NormalizeSymbol(string s)
+{
+   s = StringToUpper(s);
+   // remove separators
+   StringReplace(s, ".", "");
+   StringReplace(s, "-", "");
+   StringReplace(s, "_", "");
+   StringReplace(s, " ", "");
+   return s;
+}
+
+//+------------------------------------------------------------------+
+//| Map master symbol to slave symbol automatically (scored)         |
+//+------------------------------------------------------------------+
+string MapSymbol(const string master_symbol)
+{
+   if(master_symbol == "")
+      return("");
+
+   // 1) exact try
+   if(SymbolInfoInteger(master_symbol, SYMBOL_SELECT) || SymbolSelect(master_symbol, true))
+      return(master_symbol);
+
+   string nm = NormalizeSymbol(master_symbol);
+   if(StringLen(nm) < 4)
+      return("");
+
+   // score-based best match (prevents random EURUSD mapping)
+   string best = "";
+   int bestScore = -100000;
+
+   // search Market Watch first
+   int total = SymbolsTotal(true);
+   for(int pass = 0; pass < 2; pass++)
+   {
+      for(int i=0; i<total; i++)
+      {
+         string sym = SymbolName(i, true);
+         string ns  = NormalizeSymbol(sym);
+
+         int score = -100000;
+
+         if(ns == nm) score = 1000;                          // perfect
+         else if(StringFind(ns, nm) == 0) score = 800;        // starts with
+         else if(StringFind(nm, ns) == 0) score = 700;        // master starts with slave
+         else if(StringFind(ns, nm) >= 0) score = 600;        // contains
+
+         if(score > -100000)
+         {
+            // prefer closer length to reduce wrong matches
+            score -= MathAbs((int)StringLen(ns) - (int)StringLen(nm));
+            if(score > bestScore)
+            {
+               bestScore = score;
+               best = sym;
+            }
+         }
+      }
+
+      if(best != "" && bestScore >= 700) // good enough
+         return(best);
+
+      // pass 2: search all symbols
+      if(pass == 0)
+      {
+         total = SymbolsTotal(false);
+         // rebuild loop with SymbolName(i,false)
+         best = "";
+         bestScore = -100000;
+         for(int j=0; j<total; j++)
+         {
+            string sym2 = SymbolName(j, false);
+            string ns2  = NormalizeSymbol(sym2);
+
+            int score2 = -100000;
+            if(ns2 == nm) score2 = 1000;
+            else if(StringFind(ns2, nm) == 0) score2 = 800;
+            else if(StringFind(nm, ns2) == 0) score2 = 700;
+            else if(StringFind(ns2, nm) >= 0) score2 = 600;
+
+            if(score2 > -100000)
+            {
+               score2 -= MathAbs((int)StringLen(ns2) - (int)StringLen(nm));
+               if(score2 > bestScore)
+               {
+                  bestScore = score2;
+                  best = sym2;
+               }
+            }
+         }
+         // if we found something in “all symbols”, select it to allow trading
+         if(best != "")
+         {
+            SymbolSelect(best, true);
+            return(best);
+         }
+      }
+   }
+
+   return("");
+}
+
+//+------------------------------------------------------------------+
+//| Find slave position by master ticket in comment                  |
+//+------------------------------------------------------------------+
+ulong FindSlavePositionByMasterTicket(ulong master_ticket, const string symbol)
+{
+   string key = "COPY_" + IntegerToString((long)master_ticket);
+
+   int total = PositionsTotal();
+   for(int i=0; i<total; i++)
+   {
+      ulong ticket = PositionGetTicket(i);
+      if(!PositionSelectByTicket(ticket))
+         continue;
+
+      if((long)PositionGetInteger(POSITION_MAGIC) != SlaveMagic)
+         continue;
+
+      if(PositionGetString(POSITION_SYMBOL) != symbol)
+         continue;
+
+      string comment = PositionGetString(POSITION_COMMENT);
+      if(StringFind(comment, key, 0) == 0)
+         return(ticket);
+   }
+   return(0);
+}
+
+//+------------------------------------------------------------------+
+//| Volume calc: same % equity as master                             |
+//+------------------------------------------------------------------+
+double CalculateSlaveVolume(const MasterPos &mp, double slave_equity, const string slave_symbol)
+{
+   if(mp.master_equity <= 0.0)
+      return(0.0);
+
+   double ratio = slave_equity / mp.master_equity;
+   double vol   = mp.volume * ratio * RiskMultiplier;
+
+   double step_vol = SymbolInfoDouble(slave_symbol, SYMBOL_VOLUME_STEP);
+   double min_vol  = SymbolInfoDouble(slave_symbol, SYMBOL_VOLUME_MIN);
+   double max_vol  = SymbolInfoDouble(slave_symbol, SYMBOL_VOLUME_MAX);
+
+   // digits from step (no SymbolInfoInteger needed)
+   int vol_digits = 2;
+   if(step_vol > 0.0)
+   {
+      double d = MathAbs(step_vol);
+      int dg = 0;
+      while(d < 1.0 && dg < 8)
+      {
+         d *= 10.0;
+         dg++;
+      }
+      vol_digits = dg;
+   }
+
+   vol = NormalizeDouble(vol, vol_digits);
+
+   if(step_vol > 0.0)
+   {
+      vol = MathFloor(vol / step_vol) * step_vol;
+      vol = NormalizeDouble(vol, vol_digits);
+   }
+
+   if(vol < min_vol)
+      return(0.0);
+   if(vol > max_vol)
+      vol = max_vol;
+
+   return(vol);
+}
+
+//+------------------------------------------------------------------+
+//| Open slave position (SL/TP same as master)                       |
+//+------------------------------------------------------------------+
+void OpenSlavePosition(const MasterPos &mp, const string slave_symbol, double volume)
+{
+   string comment = "COPY_" + IntegerToString((long)mp.ticket);
+   bool ok=false;
+
+   if(mp.type == 0)
+      ok = trade.Buy(volume, slave_symbol, 0.0, mp.sl, mp.tp, comment);
+   else
+      ok = trade.Sell(volume, slave_symbol, 0.0, mp.sl, mp.tp, comment);
+
+   if(!ok)
+   {
+      PrintFormat("CopySlave: open failed %s vol=%.2f SL=%.5f TP=%.5f err=%d",
+                  slave_symbol, volume, mp.sl, mp.tp, GetLastError());
+   }
+}
+
+//+------------------------------------------------------------------+
+//| Update position: keep SL/TP same; avoid constant close/open      |
+//+------------------------------------------------------------------+
+void UpdateSlavePosition(ulong slave_ticket, const MasterPos &mp, const string slave_symbol, double slave_equity)
+{
+   if(!PositionSelectByTicket(slave_ticket))
+      return;
+
+   double curVol = PositionGetDouble(POSITION_VOLUME);
+   double curSL  = PositionGetDouble(POSITION_SL);
+   double curTP  = PositionGetDouble(POSITION_TP);
+
+   double point = SymbolInfoDouble(slave_symbol, SYMBOL_POINT);
+
+   // SL/TP sync
+   bool needModify = false;
+   double newSL = curSL;
+   double newTP = curTP;
+
+   if(MathAbs(curSL - mp.sl) > point)
+   {
+      newSL = mp.sl;
+      needModify = true;
+   }
+   if(MathAbs(curTP - mp.tp) > point)
+   {
+      newTP = mp.tp;
+      needModify = true;
+   }
+
+   if(needModify)
+   {
+      // safer to modify by symbol in MT5 CTrade
+      if(!trade.PositionModify(slave_symbol, newSL, newTP))
+         PrintFormat("CopySlave: modify failed %s err=%d", slave_symbol, GetLastError());
+   }
+
+   // volume resync (only if big difference to prevent oscillation)
+   double target = CalculateSlaveVolume(mp, slave_equity, slave_symbol);
+   if(target <= 0.0)
+      return;
+
+   if(MathAbs(curVol - target) > MaxVolumeDiffLots)
+   {
+      // close & reopen (MT5 can't directly change position volume)
+      if(trade.PositionClose(slave_symbol))
+         OpenSlavePosition(mp, slave_symbol, target);
+      else
+         PrintFormat("CopySlave: close for resize failed %s err=%d", slave_symbol, GetLastError());
+   }
+}
+
+//+------------------------------------------------------------------+
+//| Close orphan slave positions                                     |
+//+------------------------------------------------------------------+
+void CloseOrphanSlavePositions(const MasterPos &master_positions[])
+{
+   int total = PositionsTotal();
+   for(int i = total - 1; i >= 0; i--)
+   {
+      ulong ticket = PositionGetTicket(i);
+      if(!PositionSelectByTicket(ticket))
+         continue;
+
+      if((long)PositionGetInteger(POSITION_MAGIC) != SlaveMagic)
+         continue;
+
+      string comment = PositionGetString(POSITION_COMMENT);
+      if(StringFind(comment, "COPY_", 0) != 0)
+         continue;
+
+      ulong master_ticket = (ulong)StringToInteger(StringSubstr(comment, 5));
+
+      bool found=false;
+      for(int j=0; j<ArraySize(master_positions); j++)
+      {
+         if(master_positions[j].ticket == master_ticket)
+         {
+            found=true;
+            break;
+         }
+      }
+
+      if(!found)
+      {
+         string sym = PositionGetString(POSITION_SYMBOL);
+         if(!trade.PositionClose(sym))
+            PrintFormat("CopySlave: close orphan failed %s err=%d", sym, GetLastError());
+      }
+   }
+}
+//+------------------------------------------------------------------+

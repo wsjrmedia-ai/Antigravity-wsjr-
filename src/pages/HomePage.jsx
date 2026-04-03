@@ -1,80 +1,50 @@
 import { useEffect, useRef } from 'react'
-import gsap from 'gsap'
-import ScrollTrigger from 'gsap/ScrollTrigger'
+import EmblemAnimation from '../components/animations/EmblemAnimation'
 
 // Components
 import HeroSection from '../components/HeroSection'
 import InstitutionalOverview from '../components/InstitutionalOverview'
-import TrustedBy from '../components/TrustedBy'
-import SchoolPreview from '../components/SchoolPreview'
+import SchoolsHeader from '../components/SchoolsHeader'
+import SchoolsSection from '../components/SchoolsSection'
 import KeyMetrics from '../components/KeyMetrics'
-import Foundation from '../components/Foundation'
-import Locations from '../components/Locations'
-import Signals from '../components/Signals'
-import Community from '../components/Community'
-
-gsap.registerPlugin(ScrollTrigger)
-
+import PhilosophySection from '../components/PhilosophySection'
+import InstitutionalSignals from '../components/InstitutionalSignals'
+import LearnBeyond from '../components/LearnBeyond'
+import TravelLearn from '../components/TravelLearn'
 const HomePage = () => {
-    const mainRef = useRef(null)
-
     useEffect(() => {
-        const ctx = gsap.context(() => {
-            const sections = gsap.utils.toArray('.stack-section')
-
-            sections.forEach((section, i) => {
-                if (i === sections.length - 1) return
-
-                const inner = section.querySelector('.stack-inner') || section
-
-                gsap.to(inner, {
-                    scale: 0.9,
-                    opacity: 0,
-                    ease: "power2.inOut",
-                    scrollTrigger: {
-                        trigger: section,
-                        start: "top top",
-                        end: "bottom top",
-                        scrub: true,
-                        pin: true,
-                        pinSpacing: false,
-                        anticipatePin: 1
-                    }
-                })
-            })
-        }, mainRef)
-
-        return () => ctx.revert()
+        // SEO Initialization
+        document.title = "Wall Street Jr. Academy | Where Finance Meets Real-World Mastery"
+        let metaDesc = document.querySelector('meta[name="description"]')
+        if (!metaDesc) {
+            metaDesc = document.createElement('meta')
+            metaDesc.name = "description"
+            document.head.appendChild(metaDesc)
+        }
+        metaDesc.content = "UAE's premier multidisciplinary academy for finance, technology, design and management. Most finance courses teach you theory at Wall Street Jr. Academy we teach real world mastery."
     }, [])
 
+    const scrollTrackerRef = useRef(null);
+
     return (
-        <div ref={mainRef} style={{ background: 'var(--bg-primary)' }}>
-            <div className="stack-section" style={{ zIndex: 10 }}>
-                <div className="stack-inner"><HeroSection /></div>
+        <div style={{ background: 'var(--bg-primary)' }}>
+            
+            {/* Context wrapper grouping the sections where the Emblem should exist */}
+            <div ref={scrollTrackerRef} style={{ position: 'relative' }}>
+                <EmblemAnimation targetRef={scrollTrackerRef} />
+                <HeroSection />
+                <InstitutionalOverview />
+                <SchoolsHeader />
             </div>
-            <div className="stack-section" style={{ zIndex: 9 }}>
-                <div className="stack-inner"><InstitutionalOverview /></div>
-            </div>
-            <div className="stack-section" style={{ zIndex: 8 }}>
-                <div className="stack-inner"><TrustedBy /></div>
-            </div>
-            <div className="stack-section" style={{ zIndex: 7 }}>
-                <div className="stack-inner"><SchoolPreview /></div>
-            </div>
-            <div className="stack-section" style={{ zIndex: 6 }}>
-                <div className="stack-inner"><KeyMetrics /></div>
-            </div>
-            <div className="stack-section" style={{ zIndex: 5 }}>
-                <div className="stack-inner"><Foundation /></div>
-            </div>
-            <div className="stack-section" style={{ zIndex: 4 }}>
-                <div className="stack-inner"><Locations /></div>
-            </div>
-            <div className="stack-section" style={{ zIndex: 3 }}>
-                <div className="stack-inner"><Signals /></div>
-            </div>
-            <div className="stack-section last-section" style={{ zIndex: 2 }}>
-                <div className="stack-inner"><Community /></div>
+
+            {/* Everything below has zIndex: 10 so it naturally scrolls over the floating emblem if it drops too low */}
+            <div style={{ position: 'relative', zIndex: 10 }}>
+                <SchoolsSection />
+                <KeyMetrics />
+                <PhilosophySection />
+                <InstitutionalSignals />
+                <LearnBeyond />
+                <TravelLearn />
             </div>
         </div>
     )

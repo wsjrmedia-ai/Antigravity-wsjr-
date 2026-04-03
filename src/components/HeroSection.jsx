@@ -1,238 +1,367 @@
-import { useEffect, useRef, useState } from 'react'
-import StockTicker from './StockTicker'
-import GalaxyBackground from './GalaxyBackground'
-import FloatingElements from './FloatingElements'
-import LearnEarnToggle from './LearnEarnToggle'
-import gsap from 'gsap'
+import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import MobileMenu from './MobileMenu'
 
 const HeroSection = () => {
-    const heroRef = useRef(null)
-    const textRef = useRef(null)
-    const globeRef = useRef(null)
-    const spotlightRef = useRef(null)
-    const overlayRef = useRef(null)
-
-    const handleMouseMove = (e) => {
-        if (!spotlightRef.current || !overlayRef.current) return
-        const rect = spotlightRef.current.getBoundingClientRect()
-        const x = e.clientX - rect.left
-        const y = e.clientY - rect.top
-
-        // Direct DOM update for performance (no re-renders)
-        overlayRef.current.style.maskImage = `radial-gradient(circle 120px at ${x}px ${y}px, black 0%, transparent 100%)`
-        overlayRef.current.style.webkitMaskImage = `radial-gradient(circle 120px at ${x}px ${y}px, black 0%, transparent 100%)`
-    }
-
-    const handleMouseLeave = () => {
-        if (!overlayRef.current) return
-        overlayRef.current.style.maskImage = 'none'
-        overlayRef.current.style.webkitMaskImage = 'none'
-        overlayRef.current.style.opacity = '0'
-    }
-
-    const handleMouseEnter = () => {
-        if (!overlayRef.current) return
-        overlayRef.current.style.opacity = '1'
-    }
-
-    useEffect(() => {
-        const ctx = gsap.context(() => {
-            const tl = gsap.timeline()
-
-            tl.from(textRef.current.children, {
-                y: 100,
-                opacity: 0,
-                duration: 1.2,
-                stagger: 0.15,
-                ease: 'power4.out'
-            })
-                .from(globeRef.current, {
-                    scale: 0.5,
-                    opacity: 0,
-                    duration: 2,
-                    ease: 'expo.out'
-                }, "-=1")
-
-        }, heroRef)
-
-        return () => ctx.revert()
-    }, [])
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const navigate = useNavigate()
 
     return (
-        <section ref={heroRef} style={{
-            minHeight: '100vh',
-            background: 'var(--bg-primary)',
+        <section style={{
+            height: '100vh',
+            width: '100vw',
             display: 'flex',
             flexDirection: 'column',
+            justifyContent: 'space-between',
             position: 'relative',
             overflow: 'hidden',
-            color: 'var(--text-primary)',
-            paddingTop: '110px',
-            backgroundColor: 'var(--bg-primary)'
+            fontFamily: 'var(--font-body)',
+            backgroundColor: '#50000B'
         }}>
-
+            {/* Absolute Background Columns Image */}
             <div style={{
+                position: 'absolute',
+                top: 0, left: 0, right: 0, bottom: 0,
+                zIndex: 0,
+                pointerEvents: 'none'
+            }}>
+                <img 
+                    src="https://api.builder.io/api/v1/image/assets/TEMP/bebe67a57cbec3535bac2521d32ecc1ba35224c3?width=4960"
+                    alt="Background Columns"
+                    style={{
+                        position: 'absolute',
+                        width: '2480px',
+                        height: '1655px',
+                        left: '-300px',
+                        top: '-245px',
+                        opacity: 0.75, // Increased visibility further
+                        maxWidth: 'none'
+                    }} 
+                />
+            </div>
+
+            {/* Huge Watermark background */}
+            <div style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                pointerEvents: 'none',
+                zIndex: 1,
+                opacity: 0.4
+            }}>
+                <img 
+                    src="https://api.builder.io/api/v1/image/assets/TEMP/a0aec7389b59c267fe9e6cb147a75e605ac97963?width=1760" 
+                    alt="Background Crest"
+                    style={{ width: 'min(70vh, 750px)', height: 'min(70vh, 750px)' }}
+                />
+            </div>
+
+            {/* 1. Top Header Navigation */}
+            <header style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '20px 5%',
+                position: 'relative',
+                zIndex: 10,
+                width: '100%'
+            }}>
+                {/* Left: EN / Globe */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <svg width="24" height="24" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16.0277 3.00565C13.4518 3.00565 10.9338 3.76948 8.79207 5.20055C6.65032 6.63162 4.98103 8.66565 3.99529 11.0454C3.00955 13.4252 2.75164 16.0439 3.25416 18.5702C3.75669 21.0966 4.99708 23.4172 6.81849 25.2386C8.6399 27.06 10.9605 28.3004 13.4869 28.803C16.0132 29.3055 18.6319 29.0476 21.0117 28.0618C23.3915 27.0761 25.4255 25.4068 26.8566 23.265C28.2876 21.1233 29.0515 18.6053 29.0515 16.0294C29.0475 12.5765 27.6741 9.26618 25.2325 6.82461C22.7909 4.38304 19.4806 3.00962 16.0277 3.00565ZM27.0478 16.0294C27.0487 17.0457 26.9083 18.0572 26.6308 19.0349H21.8082C22.1155 17.043 22.1155 15.0158 21.8082 13.0239H26.6308C26.9083 14.0016 27.0487 15.0131 27.0478 16.0294ZM12.7717 21.0386H19.2836C18.6421 23.1406 17.5284 25.0682 16.0277 26.6739C14.5275 25.0678 13.4139 23.1404 12.7717 21.0386ZM12.2834 19.0349C11.9394 17.046 11.9394 15.0128 12.2834 13.0239H19.782C20.126 15.0128 20.126 17.046 19.782 19.0349H12.2834ZM5.00757 16.0294C5.0067 15.0131 5.14704 14.0016 5.42458 13.0239H10.2471C9.9399 15.0158 9.9399 17.043 10.2471 19.0349H5.42458C5.14704 18.0572 5.0067 17.0457 5.00757 16.0294ZM19.2836 11.0203H12.7717C13.4133 8.9182 14.527 6.99065 16.0277 5.38499C17.5278 6.99107 18.6414 8.91849 19.2836 11.0203ZM25.8368 11.0203H21.3762C20.814 8.95765 19.8665 7.02007 18.5836 5.30985C20.1336 5.68219 21.5847 6.38529 22.8375 7.37094C24.0903 8.35658 25.1152 9.60148 25.8419 11.0203H25.8368ZM13.4718 5.30985C12.1889 7.02007 11.2414 8.95765 10.6792 11.0203H6.21352C6.94019 9.60148 7.96505 8.35658 9.21787 7.37094C10.4707 6.38529 11.9218 5.68219 13.4718 5.30985ZM6.21352 21.0386H10.6792C11.2414 23.1012 12.1889 25.0388 13.4718 26.749C11.9218 26.3767 10.4707 25.6736 9.21787 24.6879C7.96505 23.7023 6.94019 22.4574 6.21352 21.0386ZM18.5836 26.749C19.8665 25.0388 20.814 23.1012 21.3762 21.0386H25.8419C25.1152 22.4574 24.0903 23.7023 22.8375 24.6879C21.5847 25.6736 20.1336 26.3767 18.5836 26.749Z" fill="white"/>
+                    </svg>
+                    <span style={{ fontSize: '20px', fontWeight: 500, fontFamily: 'var(--font-hero)', color: '#FFF' }}>EN</span>
+                </div>
+
+                {/* Center: Monogram - Refined position and size */}
+                <div style={{ position: 'absolute', top: '20px', left: '50%', transform: 'translateX(-50%)' }}>
+                    <img 
+                        src="https://api.builder.io/api/v1/image/assets/TEMP/25031ebb293a7037f1fe8a947d41d183346733f4?width=464" 
+                        alt="Academy Monogram" 
+                        style={{ width: '130px', height: '130px', filter: 'brightness(0) invert(1)' }} 
+                    />
+                </div>
+
+                {/* Right: Hamburger Menu */}
+                <div onClick={() => setIsMenuOpen(true)} style={{ display: 'flex', flexDirection: 'column', gap: '5px', cursor: 'pointer' }}>
+                    <div style={{ width: '60px', height: '4px', background: '#FFF', borderRadius: '4px' }}></div>
+                    <div style={{ width: '60px', height: '4px', background: '#FFF', borderRadius: '4px' }}></div>
+                    <div style={{ width: '60px', height: '4px', background: '#FFF', borderRadius: '4px' }}></div>
+                </div>
+            </header>
+
+            {/* 2. Main Content Section */}
+            <div style={{
+                position: 'relative',
+                zIndex: 10,
+                width: '100%',
+                maxWidth: '1865px',
+                margin: '0 auto',
                 flex: 1,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-                alignItems: 'center',
-                textAlign: 'center',
-                position: 'relative',
-                zIndex: 2,
-                padding: '0 var(--container-padding)'
+                padding: '0 8%',
+                marginTop: '60px' // Create space for the logo
             }}>
-                <div ref={textRef}>
-                    <h2 style={{
-                        color: 'var(--accent-gold)',
-                        letterSpacing: 'clamp(2px, 1vw, 5px)',
-                        fontSize: 'clamp(0.8rem, 2vw, 1.2rem)',
-                        marginBottom: '1rem',
-                        fontWeight: 700
-                    }}>WALL STREET JR. SCHOOL</h2>
-
-                    <LearnEarnToggle />
-
-                    <div
-                        ref={spotlightRef}
-                        onMouseMove={handleMouseMove}
-                        onMouseLeave={handleMouseLeave}
-                        onMouseEnter={handleMouseEnter}
+                
+                {/* Earn Toggle - Routes to TopStocX */}
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+                    <div 
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setIsMenuOpen(prev => prev); // dummy to avoid unused
+                            const toggleBtn = e.currentTarget;
+                            const thumb = toggleBtn.querySelector('.toggle-thumb');
+                            const text = toggleBtn.querySelector('.toggle-text');
+                            
+                            // Animate the physical toggle engage
+                            thumb.style.transform = 'translateX(154px)';
+                            text.style.opacity = '0';
+                            
+                            // Wait for slide to resolve, then route
+                            setTimeout(() => {
+                                window.location.href = "http://localhost:5174/";
+                                // Reset after route in case of browser back button cache
+                                setTimeout(() => {
+                                    thumb.style.transform = 'translateX(0)';
+                                    text.style.opacity = '1';
+                                }, 500);
+                            }, 400);
+                        }}
                         style={{
+                            display: 'flex',
+                            width: '200px',
+                            height: '45px',
+                            padding: '4px',
                             position: 'relative',
-                            cursor: 'default',
-                            marginBottom: '2rem',
-                            userSelect: 'none',
-                            padding: '1rem' // Add padding to catch mouse earlier
+                            alignItems: 'center',
+                            borderRadius: '200px',
+                            background: 'linear-gradient(101deg, #F7AC41 8.57%, #BC7E26 48.6%, #FFBD5F 85.66%)',
+                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                            overflow: 'hidden'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'scale(1.05) translateY(-2px)';
+                            e.currentTarget.style.boxShadow = '0 6px 15px rgba(247, 172, 65, 0.3)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'scale(1) translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
                         }}
                     >
-                        {/* Base Text (Behind) */}
-                        <h1 style={{
-                            fontFamily: 'var(--font-hero)',
-                            fontSize: 'clamp(2.5rem, 6vw, 5rem)',
-                            fontWeight: 800,
-                            lineHeight: 1.1,
-                            margin: 0,
-                            letterSpacing: '-1px',
-                            color: '#ffffff',
-                            opacity: 0.15,
-                            transition: 'opacity 0.3s'
-                        }}>
-                            Interdisciplinary Education <br />
-                            for the Modern World
-                        </h1>
-
-                        {/* Spotlight Layer (Gold) */}
-                        <div ref={overlayRef} style={{
+                        <div className="toggle-thumb" style={{
+                            width: '38px', height: '38px',
+                            background: '#6A0715',
+                            borderRadius: '50%',
                             position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            width: '100%',
-                            height: '100%',
-                            pointerEvents: 'none',
-                            opacity: 0, // Hidden by default
-                            transition: 'opacity 0.2s',
-                            padding: '1rem' // Match container padding
-                        }}>
-                            <h1 style={{
-                                fontFamily: 'var(--font-hero)',
-                                fontSize: 'clamp(2.5rem, 6vw, 5rem)',
-                                fontWeight: 800,
-                                lineHeight: 1.1,
+                            left: '4px',
+                            transition: 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)'
+                        }}></div>
+                        
+                        <span className="toggle-text" style={{
+                            fontFamily: 'var(--font-hero)',
+                            color: '#6A0715',
+                            fontWeight: 600,
+                            fontSize: '24px',
+                            fontStyle: 'italic',
+                            position: 'absolute',
+                            right: '25px',
+                            transition: 'opacity 0.2s ease'
+                        }}>earn</span>
+                    </div>
+                </div>
+
+                {/* Main Title */}
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '40px' }}>
+                    <h1 style={{
+                        fontFamily: 'var(--font-hero)', /* Libre Baskerville */
+                        fontSize: 'clamp(2.5rem, 6vw, 96px)',
+                        fontWeight: 500,
+                        margin: 0,
+                        background: 'linear-gradient(101deg, #F7AC41 8.57%, #BC7E26 48.6%, #FFBD5F 85.66%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        textAlign: 'center',
+                        lineHeight: 1.1,
+                        letterSpacing: '-0.07em' /* -7% letter spacing */
+                    }}>
+                        WallStreet Jr. Academy
+                    </h1>
+                </div>
+
+                {/* Content Structure */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', width: '100%', maxWidth: '100%', margin: '0 auto' }}>
+                    
+                    {/* Top Row: Left Text, Center Button, Right Empty (3D Reserve) */}
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr auto 1fr',
+                        alignItems: 'center',
+                        gap: '30px',
+                        width: '100%'
+                    }} className="hero-content-grid">
+                        
+                        {/* 1. Left: Subtitle H2 */}
+                        <div style={{ paddingRight: '20px' }}>
+                            <h2 style={{
+                                fontFamily: 'var(--font-body)',
+                                fontSize: 'clamp(1.5rem, 2.2vw, 34px)',
+                                lineHeight: '1.25',
+                                letterSpacing: '-0.3px',
                                 margin: 0,
-                                letterSpacing: '-1px',
-                                color: 'var(--accent-gold)',
+                                fontWeight: 400,
+                                color: '#FFF'
                             }}>
-                                Interdisciplinary Education <br />
-                                for the Modern World
-                            </h1>
+                                <span style={{ fontFamily: 'var(--font-hero)', color: '#CC972B', fontStyle: 'italic', fontWeight: 600 }}>Dubai’s </span>
+                                premier <span style={{ fontFamily: 'var(--font-hero)', color: '#CC972B', fontStyle: 'italic', fontWeight: 600 }}>multidisciplinary </span>
+                                <br />
+                                <span style={{ fontFamily: 'var(--font-hero)', color: '#CC972B', fontStyle: 'italic', fontWeight: 600 }}>academy </span>
+                                for finance, technology, design <br />
+                                & management.
+                            </h2>
+                        </div>
+
+                        {/* 2. Center: Enroll Button Dead-Center on the page */}
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }} className="enroll-button-container">
+                            <motion.button 
+                                onClick={() => navigate('/enroll')}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                style={{
+                                    display: 'flex',
+                                    width: '220px',
+                                    height: '55px',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    gap: '12px',
+                                    borderRadius: '100px',
+                                    background: '#6A0715',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    boxShadow: '0 4px 10px rgba(0,0,0,0.2)'
+                                }}
+                            >
+                                <span style={{ fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '18px', color: '#FFF' }}>ENROLL NOW</span>
+                                <svg width="22" height="22" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15.0947 0C23.4312 8.14387e-05 30.1894 6.75827 30.1895 15.0947C30.1894 23.4311 23.4311 30.1894 15.0947 30.1895C6.75827 30.1894 8.14334e-05 23.4312 0 15.0947C2.23237e-05 6.75823 6.75823 2.23252e-05 15.0947 0ZM15.0947 1.4375C7.55219 1.43752 1.43752 7.55219 1.4375 15.0947C1.43758 22.6372 7.55222 28.7519 15.0947 28.752C22.6372 28.7519 28.7519 22.6372 28.752 15.0947C28.7519 7.55222 22.6372 1.43758 15.0947 1.4375ZM21.5645 19.0449H20.127V11.0791L9.85254 21.3535L9.34473 20.8457L8.83691 20.3369L19.1104 10.0635H11.1455V8.62598H21.5645V19.0449Z" fill="white"/>
+                                </svg>
+                            </motion.button>
+                        </div>
+
+                        {/* 3. Right: Reserved Empty Space for 3D Element (1fr width matches exactly the left column width) */}
+                        <div className="reserved-3d-space"></div>
+                    </div>
+
+                    {/* Bottom: Paragraphs strictly matching the Left 1fr column width */}
+                    <div className="hero-paragraphs" style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: 'clamp(10px, 0.8vw, 12px)',
+                        fontWeight: 400,
+                        color: 'rgba(255,255,255,0.9)',
+                        lineHeight: '1.4',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '12px',
+                        width: 'calc(50% - 140px)', /* A calculated match for the roughly 1fr space when button is 220px in center */
+                        paddingRight: '20px'
+                    }}>
+                        <p style={{ margin: 0 }}>Most finance courses teach you theory. We teach you how to think like an institutional investor, allocate capital with discipline, and lead with the kind of judgment that top firms actually value.</p>
+                        <p style={{ margin: 0 }}>At Wall Street Jr. Academy, we have built a multidisciplinary learning environment in the heart of Dubai — one that prepares students not just for their first role, but for a career defined by long-term impact. Whether your interest lies in markets and valuation, software and AI, design thinking, or organizational leadership, our specialized schools offer a structured path to real mastery.</p>
+                        <p style={{ margin: 0 }}>This is not a weekend workshop or a certification factory. It is a serious institution for people who are serious about building something lasting.</p>
+                    </div>
+
+                </div>
+            </div>
+
+            {/* 3. Bottom Locked Action Buttons - Slimmed Down */}
+            <div style={{
+                position: 'relative',
+                zIndex: 10,
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column'
+            }}>
+                <div style={{ 
+                    background: '#50000B', 
+                    width: '100%', 
+                    borderTop: '0.5px solid rgba(255,255,255,0.4)',
+                    display: 'flex',
+                    flexDirection: 'column'
+                }}>
+                    {/* Link 1 */}
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        padding: '10px 0',
+                        cursor: 'pointer'
+                    }} className="hover-brightness">
+                        <div style={{ 
+                            width: '90%',
+                            maxWidth: '1200px',
+                            display: 'flex', 
+                            justifyContent: 'space-between', 
+                            alignItems: 'center'
+                        }}>
+                            <span style={{ fontFamily: 'var(--font-body)', fontSize: 'min(1.8vw, 24px)', fontWeight: 500, color: '#FFF', letterSpacing: '-0.5px' }}>
+                                EXPLORE THE ACADEMY
+                            </span>
+                            <svg width="min(30vw, 300px)" viewBox="0 0 381 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <line x1="0" y1="7" x2="380" y2="7" stroke="white" strokeWidth="1" />
+                                <path d="M374 3 L380 7 L374 11" stroke="white" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                            </svg>
                         </div>
                     </div>
 
-                    <p style={{
-                        fontSize: 'clamp(1rem, 1.5vw, 1.3rem)',
-                        color: 'var(--text-secondary)',
-                        marginBottom: '3.5rem',
-                        maxWidth: '800px',
-                        marginLeft: 'auto',
-                        marginRight: 'auto',
-                        lineHeight: 1.6
-                    }}>
-                        The Academy is a multidisciplinary institution preparing individuals for judgment and leadership across finance, design, technology, and management.
-                    </p>
+                    <div style={{ width: '100%', borderTop: '0.5px solid rgba(255,255,255,0.4)' }}></div>
 
+                    {/* Link 2 */}
                     <div style={{
                         display: 'flex',
-                        gap: '1.5rem',
                         justifyContent: 'center',
-                        flexWrap: 'wrap'
-                    }}>
-                        <a href="#about" className="glaze-button" style={{
-                            textDecoration: 'none',
-                            color: '#000',
-                            fontWeight: '800',
-                            padding: '1rem 2.5rem'
-                        }}>Explore the Academy</a>
-                        <a href="#schools" style={{
-                            color: '#ffffff',
-                            textDecoration: 'none',
-                            fontWeight: '600',
-                            padding: '1rem 2rem',
-                            border: '1px solid rgba(255,255,255,0.2)',
-                            borderRadius: '30px',
-                            transition: 'all 0.3s'
-                        }}
-                            onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.05)'}
-                            onMouseLeave={(e) => e.target.style.background = 'transparent'}
-                        >View Our Schools</a>
+                        padding: '10px 0',
+                        cursor: 'pointer'
+                    }} className="hover-brightness">
+                        <div style={{ 
+                            width: '90%',
+                            maxWidth: '1200px',
+                            display: 'flex', 
+                            justifyContent: 'space-between', 
+                            alignItems: 'center'
+                        }}>
+                            <span style={{ fontFamily: 'var(--font-body)', fontSize: 'min(1.8vw, 24px)', fontWeight: 500, color: '#FFF', letterSpacing: '-0.5px' }}>
+                                VIEW OUR SCHOOLS
+                            </span>
+                            <svg width="min(30vw, 300px)" viewBox="0 0 381 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <line x1="0" y1="7" x2="380" y2="7" stroke="white" strokeWidth="1" />
+                                <path d="M374 3 L380 7 L374 11" stroke="white" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                            </svg>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            {/* Galaxy Background - Deepest Layer */}
-            <div style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                zIndex: 0
-            }}>
-                <GalaxyBackground />
-                <FloatingElements />
-            </div>
-
-            <div style={{ position: 'relative', zIndex: 10 }}>
-                <StockTicker />
-            </div>
-
-            {/* Scroll Indicator */}
-            <div style={{
-                position: 'absolute',
-                bottom: '80px',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                zIndex: 10,
-                opacity: 0.6,
-                animation: 'bounce 2s infinite'
-            }}>
-                <svg width="24" height="40" viewBox="0 0 24 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="1" y="1" width="22" height="38" rx="11" stroke="white" strokeWidth="2" />
-                    <circle cx="12" cy="10" r="3" fill="var(--accent-gold)" />
-                </svg>
-            </div>
+            <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
             <style>{`
-                @keyframes bounce {
-                    0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
-                    40% {transform: translateX(-50%) translateY(-10px);}
-                    60% {transform: translateX(-50%) translateY(-5px);}
-                }
-            `}</style>
-
-            <style>{`
-                @media (max-width: 480px) {
-                    .hide-mobile { display: none; }
+                .hover-brightness { transition: background-color 0.2s ease; }
+                .hover-brightness:hover { background-color: #6A0715; }
+                @media (max-width: 1200px) {
+                    .hero-content-grid { grid-template-columns: 1fr !important; gap: 30px !important; }
+                    .enroll-button-container { justify-content: center !important; }
+                    .hero-paragraphs { display: none; }
                 }
             `}</style>
         </section>
