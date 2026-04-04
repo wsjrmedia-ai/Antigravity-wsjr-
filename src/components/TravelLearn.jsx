@@ -153,6 +153,16 @@ const TravelLearn = () => {
                     ))}
                 </div>
             </div>
+            <style>{`
+                @media (max-width: 768px) {
+                    section { padding: 60px 4% !important; min-height: auto !important; }
+                    h2 { font-size: clamp(2rem, 8vw, 2.5rem) !important; text-align: center; }
+                    p { font-size: 1.1rem !important; text-align: center; }
+                    .travel-fade-container { grid-template-columns: 1fr !important; gap: 40px !important; }
+                    .travel-fade h3 { text-align: center; font-size: 1.3rem !important; }
+                    .travel-fade p { text-align: center; font-size: 1rem !important; }
+                }
+            `}</style>
         </section>
     )
 }

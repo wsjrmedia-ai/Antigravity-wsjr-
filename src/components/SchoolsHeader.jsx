@@ -22,7 +22,7 @@ const SchoolsHeader = () => {
     }, [])
 
     return (
-        <section ref={sectionRef} style={{
+        <section ref={sectionRef} className="schools-header" style={{
             backgroundColor: '#EBEBEB',
             padding: '0 8%',
             display: 'flex',
@@ -60,6 +60,14 @@ const SchoolsHeader = () => {
                     Choose your path to mastery. Each school offers a rigorous, industry-aligned curriculum designed by practitioners who have operated at the highest levels of their field.
                 </p>
             </div>
+
+            <style>{`
+                @media (max-width: 768px) {
+                    .schools-header { padding: 0 5% !important; height: auto !important; min-height: 80vh !important; }
+                    .schools-header h2 { font-size: clamp(2.5rem, 10vw, 3.5rem) !important; }
+                    .schools-header p { font-size: 1.1rem !important; margin-top: 10px !important; }
+                }
+            `}</style>
         </section>
     )
 }

@@ -14,22 +14,32 @@ const EmblemAnimation = ({ targetRef }) => {
     // 0.50 = Institutional Overview (Centered perfectly in viewport)
     // 1.00 = Schools Header (Right Edge)
     
+    const [isMobile, setIsMobile] = React.useState(false);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        handleResize(); // Init safely
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     // Physics Trajectory Paths mapped to screen progression
     // Standard identical string units ['vw', 'vw', 'vw'] ensures flawless 144fps Framer Motion interpolation!
+    // On mobile, the bounding width is smaller and we push it to center (x: 10vw, etc) or even rely on its flex parent.
     const x = useTransform(smoothProgress, 
         [0, 0.5, 1], 
-        ['65vw', '30vw', '55vw'] // 65vw: Right edge safely | 30vw: Dead Absolute Center | 55vw: Right edge nicely
+        isMobile ? ['20vw', '15vw', '20vw'] : ['65vw', '30vw', '55vw'] 
     );
 
     const y = useTransform(smoothProgress, 
         [0, 0.5, 1], 
-        ['15vh', '15vh', '20vh'] // Floating down slightly at the end
+        isMobile ? ['2vh', '5vh', '10vh'] : ['15vh', '15vh', '20vh'] // Floating down slightly at the end
     );
 
     // Dynamic scale to make it feel cinematic
     const scale = useTransform(smoothProgress, 
         [0, 0.5, 1], 
-        [0.75, 1.0, 1.0] // Hero base -> massive in center -> maintained scale in schools
+        isMobile ? [0.65, 0.8, 0.75] : [0.75, 1.0, 1.0] // Hero base -> massive in center -> maintained scale in schools
     );
 
     // Keep it fully visible throughout all blocks
@@ -110,7 +120,7 @@ const EmblemAnimation = ({ targetRef }) => {
                     position: 'absolute',
                     top: 0,
                     left: 0, // Reset to 0 to rely purely on x transforms
-                    width: 'clamp(400px, 40vw, 800px)', // Larger base responsive size
+                    width: isMobile ? 'clamp(280px, 70vw, 400px)' : 'clamp(400px, 40vw, 800px)',
                     x,
                     y,
                     scale,

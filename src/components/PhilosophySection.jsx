@@ -46,7 +46,7 @@ const PhilosophySection = () => {
     }, [])
 
     return (
-        <section ref={sectionRef} style={{
+        <section ref={sectionRef} className="philosophy-section" style={{
             backgroundColor: '#50000B',
             padding: '120px 5%',
             minHeight: '100vh',
@@ -92,7 +92,7 @@ const PhilosophySection = () => {
                 </div>
 
                 {/* Cards Grid */}
-                <div style={{
+                <div className="phil-cards-grid" style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
                     gap: '40px',
@@ -192,6 +192,16 @@ const PhilosophySection = () => {
 
                 </div>
             </div>
+
+            <style>{`
+                @media (max-width: 768px) {
+                    .philosophy-section { padding: 60px 5% !important; }
+                    .philosophy-section h2 { font-size: clamp(2.2rem, 8vw, 3rem) !important; text-align: center; }
+                    .philosophy-section p { font-size: 1.1rem !important; text-align: center; }
+                    .phil-cards-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+                    .phil-card { padding: 30px 20px !important; }
+                }
+            `}</style>
         </section>
     )
 }

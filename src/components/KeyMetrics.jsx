@@ -75,7 +75,7 @@ const KeyMetrics = () => {
     }, [])
 
     return (
-        <section ref={sectionRef} style={{
+        <section ref={sectionRef} className="metrics-section" style={{
             backgroundColor: '#50000B',
             padding: '120px 5%',
             minHeight: '600px',
@@ -160,6 +160,15 @@ const KeyMetrics = () => {
                     </div>
                 ))}
             </div>
+
+            <style>{`
+                @media (max-width: 768px) {
+                    .metrics-section { padding: 60px 5% !important; }
+                    .metrics-section h2 { font-size: clamp(2.2rem, 8vw, 3rem) !important; margin-bottom: 60px !important; }
+                    .metrics-section .metric-stat { gap: 10px !important; }
+                    .metrics-section .metric-number { font-size: clamp(2.5rem, 8vw, 3.5rem) !important; }
+                }
+            `}</style>
         </section>
     )
 }

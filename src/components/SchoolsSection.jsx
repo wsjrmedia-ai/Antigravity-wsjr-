@@ -86,7 +86,7 @@ const SchoolCard = ({ school, index, total }) => {
                     height: '60px',
                     width: '100%'
                 }}>
-                    <div style={{
+                    <div className="school-tab" style={{
                         position: 'absolute',
                         left: school.tabLeft,
                         bottom: 0,
@@ -113,7 +113,7 @@ const SchoolCard = ({ school, index, total }) => {
                 </div>
 
                 {/* Main Body of the Folder */}
-                <div style={{
+                <div className="school-main-body" style={{
                     backgroundColor: school.color,
                     borderRadius: '40px 40px 0 0',
                     position: 'relative',
@@ -125,7 +125,7 @@ const SchoolCard = ({ school, index, total }) => {
                 }}>
                     
                     {/* LEFT Content Column */}
-                    <div style={{
+                    <div className="school-left-col" style={{
                         flex: 1,
                         padding: '40px 8%',
                         display: 'flex',
@@ -178,7 +178,7 @@ const SchoolCard = ({ school, index, total }) => {
                     </div>
 
                     {/* RIGHT Content Column (Fixed width for image / info blocks) */}
-                    <div style={{
+                    <div className="school-right-col" style={{
                         width: '45%',
                         minWidth: '600px',
                         display: 'flex',
@@ -289,6 +289,16 @@ const SchoolsSection = () => {
                         width: 100% !important;
                         min-width: 0 !important;
                     }
+                }
+                @media (max-width: 768px) {
+                    .school-main-body { flex-direction: column !important; }
+                    .school-right-col { display: none !important; } /* Hide large image right column on small screens to fit text */
+                    .school-left-col { justify-content: center !important; padding: 40px 5% !important; gap: 20px !important; }
+                    .school-left-col h4 { font-size: 1.5rem !important; }
+                    .school-left-col p { font-size: 1.2rem !important; }
+                    .school-left-col h3 { font-size: 2.2rem !important; padding-bottom: 0 !important; }
+                    .school-tab { width: 120px !important; }
+                    .school-tab span { font-size: 1.5rem !important; }
                 }
             `}</style>
         </section>

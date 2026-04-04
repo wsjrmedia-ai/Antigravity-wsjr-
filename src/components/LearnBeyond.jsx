@@ -140,6 +140,17 @@ const LearnBeyond = () => {
                     ))}
                 </div>
             </div>
+            <style>{`
+                @media (max-width: 768px) {
+                    section { padding: 60px 4% !important; }
+                    h2 { font-size: clamp(2.2rem, 8vw, 3rem) !important; text-align: center; }
+                    p { font-size: 1.1rem !important; text-align: center; }
+                    .beyond-card { padding: 30px 20px !important; gap: 15px !important; }
+                    .beyond-card h3 { font-size: 1.5rem !important; }
+                    .beyond-card p { font-size: 1rem !important; text-align: left !important; }
+                    div[style*="display: grid"] { grid-template-columns: 1fr !important; }
+                }
+            `}</style>
         </section>
     )
 }

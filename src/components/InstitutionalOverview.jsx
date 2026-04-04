@@ -86,7 +86,7 @@ const InstitutionalOverview = () => {
             </div>
 
             {/* Content Container */}
-            <div style={{
+            <div className="overview-container" style={{
                 position: 'relative',
                 zIndex: 10,
                 width: '100%',
@@ -147,6 +147,15 @@ const InstitutionalOverview = () => {
                         </p>
                 </div>
             </div>
+
+            <style>{`
+                @media (max-width: 768px) {
+                    .overview-container { padding: 80px 5% !important; gap: 40px !important; flex-direction: column !important; }
+                    .overview-container h2 { font-size: clamp(2.2rem, 8vw, 3rem) !important; text-align: center !important; }
+                    .overview-container p { font-size: 1.1rem !important; text-align: center !important; }
+                    .overview-container > div { flex: 1 1 100% !important; max-width: 100% !important; }
+                }
+            `}</style>
         </section>
     )
 }
