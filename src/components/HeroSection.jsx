@@ -90,10 +90,10 @@ const HeroSection = () => {
                 </div>
 
                 {/* Right: Hamburger Menu */}
-                <div onClick={() => setIsMenuOpen(true)} style={{ display: 'flex', flexDirection: 'column', gap: '5px', cursor: 'pointer' }}>
-                    <div style={{ width: '60px', height: '4px', background: '#FFF', borderRadius: '4px' }}></div>
-                    <div style={{ width: '60px', height: '4px', background: '#FFF', borderRadius: '4px' }}></div>
-                    <div style={{ width: '60px', height: '4px', background: '#FFF', borderRadius: '4px' }}></div>
+                <div className="hamburger-menu" onClick={() => setIsMenuOpen(true)} style={{ display: 'flex', flexDirection: 'column', gap: '5px', cursor: 'pointer' }}>
+                    <div className="hamburger-bar" style={{ width: '60px', height: '4px', background: '#FFF', borderRadius: '4px' }}></div>
+                    <div className="hamburger-bar" style={{ width: '60px', height: '4px', background: '#FFF', borderRadius: '4px' }}></div>
+                    <div className="hamburger-bar" style={{ width: '60px', height: '4px', background: '#FFF', borderRadius: '4px' }}></div>
                 </div>
             </header>
 
@@ -377,10 +377,10 @@ const HeroSection = () => {
                 @media (max-width: 768px) {
                     /* Main Page Spacing */
                     .main-content-wrapper { padding: 0 5% !important; margin-top: 30px !important; }
-                    
+
                     /* Title adjustment */
                     h1 { font-size: clamp(2rem, 10vw, 3rem) !important; margin-bottom: 20px !important; }
-                    
+
                     /* "Earn" Toggle sizing for phones */
                     .earn-toggle-container { width: 170px !important; height: 40px !important; margin-bottom: 15px !important; }
                     .earn-toggle-container .toggle-thumb { width: 33px !important; height: 33px !important; }
@@ -390,18 +390,28 @@ const HeroSection = () => {
                     header { padding: 15px 5% !important; }
                     .header-en { display: none !important; } /* Hide EN to free up space */
                     .academy-monogram { width: 90px !important; height: 90px !important; top: 10px !important; }
-                    
+
+                    /* Hamburger shrink for mobile */
+                    .hamburger-bar { width: 28px !important; height: 3px !important; }
+                    .hamburger-menu { gap: 4px !important; }
+
                     /* Subtitle Adjustment */
                     h2 { font-size: clamp(1.2rem, 5vw, 1.5rem) !important; text-align: center !important; }
                     .hero-content-grid { text-align: center !important; }
-                    
+
                     /* Hero Paragraphs */
                     .hero-paragraphs { padding: 0 10px !important; }
                     .hero-paragraphs p { max-width: 100% !important; font-size: 14px !important; }
 
                     /* Bottom Actions */
-                    .explore-text { font-size: 16px !important; }
-                    .explore-arrow { width: 150px !important; }
+                    .explore-text { font-size: 14px !important; }
+                    .explore-arrow { width: 80px !important; }
+                }
+
+                @media (max-width: 480px) {
+                    .main-content-wrapper { padding: 0 4% !important; margin-top: 20px !important; }
+                    .enroll-button-container button { width: 180px !important; height: 48px !important; }
+                    .hero-paragraphs { display: none !important; } /* Hide long text on very small screens */
                 }
             `}</style>
         </section>

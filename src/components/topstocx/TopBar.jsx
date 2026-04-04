@@ -35,7 +35,7 @@ const TopBar = ({
     };
 
     return (
-        <div style={{
+        <div className="topbar-root" style={{
             height: '48px',
             background: '#131722',
             borderBottom: '1px solid #2a2e39',
@@ -45,7 +45,22 @@ const TopBar = ({
             gap: '16px',
             position: 'relative',
             zIndex: 100,
+            overflowX: 'auto',
+            overflowY: 'hidden',
         }}>
+        <style>{`
+            .topbar-root::-webkit-scrollbar { display: none; }
+            .topbar-root { scrollbar-width: none; }
+            @media (max-width: 768px) {
+                .topbar-root { gap: 8px !important; padding: 0 8px !important; }
+                .topbar-indicators { display: none !important; }
+                .topbar-equity-label { display: none !important; }
+                .topbar-divider { display: none !important; }
+            }
+            @media (max-width: 480px) {
+                .topbar-timeframes { display: none !important; }
+            }
+        `}</style>
             {/* Logo */}
             <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
                 <img 
@@ -112,7 +127,7 @@ const TopBar = ({
             {/* Timeframes */}
             {activeView !== 'copytrade' && (
                 <>
-                    <div style={{ display: 'flex', gap: '4px' }}>
+                    <div className="topbar-timeframes" style={{ display: 'flex', gap: '4px' }}>
                         {TIMEFRAMES.map(tf => (
                             <div
                                 key={tf}
@@ -132,9 +147,9 @@ const TopBar = ({
                         ))}
                     </div>
 
-                    <div style={{ width: '1px', height: '24px', background: '#2a2e39' }} />
+                    <div className="topbar-divider" style={{ width: '1px', height: '24px', background: '#2a2e39' }} />
 
-                    <div style={{ fontSize: '14px', color: '#d1d4dc', cursor: 'pointer' }}>
+                    <div className="topbar-indicators" style={{ fontSize: '14px', color: '#d1d4dc', cursor: 'pointer' }}>
                         Indicators
                     </div>
                 </>
@@ -217,12 +232,12 @@ const TopBar = ({
                 )}
             </div>
 
-            <div style={{ width: '1px', height: '24px', background: '#2a2e39' }} />
+            <div className="topbar-divider" style={{ width: '1px', height: '24px', background: '#2a2e39' }} />
 
             {/* Account equity */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
                 <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '11px', color: '#868993' }}>EQUITY</div>
+                    <div className="topbar-equity-label" style={{ fontSize: '11px', color: '#868993' }}>EQUITY</div>
                     <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#26a69a' }}>
                         {equity != null
                             ? `$${equity.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`

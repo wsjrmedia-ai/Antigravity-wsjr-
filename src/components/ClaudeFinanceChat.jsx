@@ -229,10 +229,14 @@ export default function ClaudeFinanceChat() {
         .cfc-chip:hover{background:rgba(0,245,160,.12)!important;border-color:#00f5a0!important;color:#00f5a0!important}
         .cfc-send:hover:not(:disabled){transform:scale(1.08)}
         .cfc-clear:hover{background:rgba(255,77,109,.15)!important;color:#ff4d6d!important}
+        @media (max-width: 480px) {
+          .cfc-panel { width: calc(100vw - 24px) !important; right: 12px !important; left: 12px !important; bottom: 90px !important; height: 75vh !important; }
+          .cfc-fab-wrap { bottom: 16px !important; right: 16px !important; }
+        }
       `}</style>
 
       {/* ── FAB with pulsing online dot ── */}
-      <div style={{ position: "fixed", bottom: 90, right: 24, zIndex: 9000 }}>
+      <div className="cfc-fab-wrap" style={{ position: "fixed", bottom: 90, right: 24, zIndex: 9000 }}>
         {/* Pulsing green online indicator */}
         {!isOpen && (
           <span style={{
@@ -266,7 +270,7 @@ export default function ClaudeFinanceChat() {
 
       {/* ── Chat panel ── */}
       {isOpen && (
-        <div style={{
+        <div className="cfc-panel" style={{
           position: "fixed", bottom: 158, right: 20, zIndex: 8999,
           width: 400, height: "70vh", maxHeight: 620,
           display: "flex", flexDirection: "column",

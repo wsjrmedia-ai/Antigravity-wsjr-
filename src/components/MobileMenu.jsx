@@ -10,6 +10,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: '100%' }}
                     transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                    className="mobile-menu-panel"
                     style={{
                         position: 'fixed',
                         top: 0,
@@ -75,6 +76,11 @@ const MobileMenu = ({ isOpen, onClose }) => {
                 </motion.div>
             )}
         </AnimatePresence>
+        <style>{`
+            @media (max-width: 480px) {
+                .mobile-menu-panel { padding: 30px 24px !important; }
+            }
+        `}</style>
     );
 };
 

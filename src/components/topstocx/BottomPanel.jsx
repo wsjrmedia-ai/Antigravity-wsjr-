@@ -32,13 +32,19 @@ const BottomPanel = ({ positions = [], closedPositions = [] }) => {
     const tabs = ['Positions', 'Orders', 'History', 'Alerts'];
 
     return (
-        <div style={{
+        <div className="bottom-panel-root" style={{
             height: '240px',
             background: '#131722',
             borderTop: '1px solid #2a2e39',
             display: 'flex',
             flexDirection: 'column',
         }}>
+        <style>{`
+            @media (max-width: 768px) {
+                .bottom-panel-root { height: 160px !important; }
+                .bottom-panel-th-hide { display: none !important; }
+            }
+        `}</style>
             {/* Tab bar */}
             <div style={{
                 height: '36px',
@@ -88,10 +94,10 @@ const BottomPanel = ({ positions = [], closedPositions = [] }) => {
                             <tr style={{ color: '#868993', textAlign: 'left', borderBottom: '1px solid #2a2e39' }}>
                                 <th style={{ padding: '8px 12px' }}>SYMBOL</th>
                                 <th style={{ padding: '8px 12px' }}>SIDE</th>
-                                <th style={{ padding: '8px 12px' }}>QUANTITY</th>
-                                <th style={{ padding: '8px 12px' }}>AVG. ENTRY</th>
-                                <th style={{ padding: '8px 12px' }}>MARK PRICE</th>
-                                <th style={{ padding: '8px 12px', textAlign: 'right' }}>UNREALIZED P&L</th>
+                                <th className="bottom-panel-th-hide" style={{ padding: '8px 12px' }}>QUANTITY</th>
+                                <th className="bottom-panel-th-hide" style={{ padding: '8px 12px' }}>AVG. ENTRY</th>
+                                <th className="bottom-panel-th-hide" style={{ padding: '8px 12px' }}>MARK PRICE</th>
+                                <th style={{ padding: '8px 12px', textAlign: 'right' }}>P&L</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -103,9 +109,9 @@ const BottomPanel = ({ positions = [], closedPositions = [] }) => {
                                     <tr key={pos.OrderID ?? i} style={{ borderBottom: '1px solid #232731', color: '#d1d4dc' }}>
                                         <td style={{ padding: '8px 12px', fontWeight: 'bold' }}>{pos.InstrumentName}</td>
                                         <td style={{ padding: '8px 12px' }}><SideBadge actionType={pos.ActionType} /></td>
-                                        <td style={{ padding: '8px 12px' }}>{pos.Amount?.toLocaleString()}</td>
-                                        <td style={{ padding: '8px 12px' }}>{pos.OpenRate?.toFixed(5)}</td>
-                                        <td style={{ padding: '8px 12px', fontWeight: 'bold' }}>{pos.CurrentRate?.toFixed(5)}</td>
+                                        <td className="bottom-panel-th-hide" style={{ padding: '8px 12px' }}>{pos.Amount?.toLocaleString()}</td>
+                                        <td className="bottom-panel-th-hide" style={{ padding: '8px 12px' }}>{pos.OpenRate?.toFixed(5)}</td>
+                                        <td className="bottom-panel-th-hide" style={{ padding: '8px 12px', fontWeight: 'bold' }}>{pos.CurrentRate?.toFixed(5)}</td>
                                         <td style={{ padding: '8px 12px', textAlign: 'right', color: pnl >= 0 ? '#26a69a' : '#ef5350' }}>
                                             {pnl >= 0 ? '+' : ''}{pnl.toFixed(2)}
                                         </td>
@@ -122,9 +128,9 @@ const BottomPanel = ({ positions = [], closedPositions = [] }) => {
                             <tr style={{ color: '#868993', textAlign: 'left', borderBottom: '1px solid #2a2e39' }}>
                                 <th style={{ padding: '8px 12px' }}>SYMBOL</th>
                                 <th style={{ padding: '8px 12px' }}>SIDE</th>
-                                <th style={{ padding: '8px 12px' }}>QUANTITY</th>
-                                <th style={{ padding: '8px 12px' }}>OPEN</th>
-                                <th style={{ padding: '8px 12px' }}>CLOSE</th>
+                                <th className="bottom-panel-th-hide" style={{ padding: '8px 12px' }}>QUANTITY</th>
+                                <th className="bottom-panel-th-hide" style={{ padding: '8px 12px' }}>OPEN</th>
+                                <th className="bottom-panel-th-hide" style={{ padding: '8px 12px' }}>CLOSE</th>
                                 <th style={{ padding: '8px 12px', textAlign: 'right' }}>P&L</th>
                             </tr>
                         </thead>
@@ -137,9 +143,9 @@ const BottomPanel = ({ positions = [], closedPositions = [] }) => {
                                     <tr key={pos.OrderID ?? i} style={{ borderBottom: '1px solid #232731', color: '#d1d4dc' }}>
                                         <td style={{ padding: '8px 12px', fontWeight: 'bold' }}>{pos.InstrumentName}</td>
                                         <td style={{ padding: '8px 12px' }}><SideBadge actionType={pos.ActionType} /></td>
-                                        <td style={{ padding: '8px 12px' }}>{pos.Amount?.toLocaleString()}</td>
-                                        <td style={{ padding: '8px 12px' }}>{pos.OpenRate?.toFixed(5)}</td>
-                                        <td style={{ padding: '8px 12px' }}>{pos.CloseRate?.toFixed(5)}</td>
+                                        <td className="bottom-panel-th-hide" style={{ padding: '8px 12px' }}>{pos.Amount?.toLocaleString()}</td>
+                                        <td className="bottom-panel-th-hide" style={{ padding: '8px 12px' }}>{pos.OpenRate?.toFixed(5)}</td>
+                                        <td className="bottom-panel-th-hide" style={{ padding: '8px 12px' }}>{pos.CloseRate?.toFixed(5)}</td>
                                         <td style={{ padding: '8px 12px', textAlign: 'right', color: pnl >= 0 ? '#26a69a' : '#ef5350' }}>
                                             {pnl >= 0 ? '+' : ''}{pnl.toFixed(2)}
                                         </td>

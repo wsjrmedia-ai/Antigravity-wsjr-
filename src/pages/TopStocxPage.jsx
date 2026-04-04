@@ -68,6 +68,11 @@ const TopStocxPage = () => {
             overflow: 'hidden',
             fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
         }}>
+            <style>{`
+                @media (max-width: 768px) {
+                    .topstocx-sidebar { display: none !important; }
+                }
+            `}</style>
             <TopBar
                 activeView={activeView}
                 onViewChange={setActiveView}
@@ -80,7 +85,11 @@ const TopStocxPage = () => {
             />
 
             <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
-                {activeView === 'chart' && <Sidebar />}
+                {activeView === 'chart' && (
+                    <div className="topstocx-sidebar">
+                        <Sidebar />
+                    </div>
+                )}
 
                 {activeView === 'chart' ? (
                     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>

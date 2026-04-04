@@ -86,7 +86,7 @@ const SchoolCard = ({ school, index, total }) => {
                     height: '60px',
                     width: '100%'
                 }}>
-                    <div className="school-tab" style={{
+                    <div className={`school-tab school-tab-${school.id}`} style={{
                         position: 'absolute',
                         left: school.tabLeft,
                         bottom: 0,
@@ -292,13 +292,22 @@ const SchoolsSection = () => {
                 }
                 @media (max-width: 768px) {
                     .school-main-body { flex-direction: column !important; }
-                    .school-right-col { display: none !important; } /* Hide large image right column on small screens to fit text */
-                    .school-left-col { justify-content: center !important; padding: 40px 5% !important; gap: 20px !important; }
-                    .school-left-col h4 { font-size: 1.5rem !important; }
-                    .school-left-col p { font-size: 1.2rem !important; }
-                    .school-left-col h3 { font-size: 2.2rem !important; padding-bottom: 0 !important; }
-                    .school-tab { width: 120px !important; }
-                    .school-tab span { font-size: 1.5rem !important; }
+                    .school-right-col { display: none !important; }
+                    .school-left-col { justify-content: flex-start !important; padding: 30px 5% !important; gap: 20px !important; }
+                    .school-left-col h4 { font-size: 1.3rem !important; line-height: 1.3 !important; }
+                    .school-left-col p { font-size: 1.05rem !important; line-height: 1.35 !important; }
+                    .school-left-col h3 { font-size: 2rem !important; padding-bottom: 0 !important; letter-spacing: -1px !important; }
+                    .school-tab { width: 100px !important; border-radius: 20px 20px 0 0 !important; }
+                    .school-tab span { font-size: 1.3rem !important; }
+                }
+                @media (max-width: 480px) {
+                    .school-tab-sof { left: 5% !important; }
+                    .school-tab-sot { left: 28% !important; }
+                    .school-tab-sod { left: 51% !important; }
+                    .school-tab-som { left: 74% !important; }
+                    .school-left-col h4 { font-size: 1.1rem !important; }
+                    .school-left-col p { font-size: 0.95rem !important; }
+                    .school-left-col h3 { font-size: 1.7rem !important; }
                 }
             `}</style>
         </section>
