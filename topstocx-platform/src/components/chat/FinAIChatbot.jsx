@@ -211,21 +211,63 @@ const FUNNY_STICKERS = {
     dumpit: "https://media.giphy.com/media/elI7XjDntD64wM0k5S/giphy.gif",
     bull: "https://media.giphy.com/media/qjSxTWJxqH40S9FAEM/giphy.gif",
     bear: "https://media.giphy.com/media/q09as1hSQTyhYV2jP4/giphy.gif",
-    rekt: "https://media.giphy.com/media/T1WqKkdhA2qR0g1p5C/giphy.gif"
+    rekt: "https://media.giphy.com/media/T1WqKkdhA2qR0g1p5C/giphy.gif",
+    michael_scott: "https://media.giphy.com/media/ui1hpJSyBDWlG/giphy.gif",
+    leo_laughing: "https://media.giphy.com/media/10JhviPeC2pNLU/giphy.gif",
+    this_is_fine: "https://media.giphy.com/media/NTur7XlVDUdqM/giphy.gif",
+    sweating: "https://media.giphy.com/media/LRVnPYqM8kBig/giphy.gif",
+    mind_blown: "https://media.giphy.com/media/xT0xeJpnrWC4XWblWQ/giphy.gif",
+    shut_up_money: "https://media.giphy.com/media/sDcfxFDozb3bO/giphy.gif",
+    pikachu: "https://media.giphy.com/media/6nWhy3ulBL7GSCvKw6/giphy.gif"
 };
 
 /* ─────────────────────────────────────────
    QUICK CHIPS
 ───────────────────────────────────────── */
-const QUICK_FREE = [
-    "Bitcoin price", "Analyse AAPL", "EUR/USD today",
-    "NVDA chart", "ETH trend", "Gold technicals",
-];
-
-const QUICK_PRO = [
-    "Deep analyse AAPL", "Ranked setups NVDA", "Geo-political impact on Oil",
-    "DXY outlook + ranked trades", "BTC ranked scenarios", "TSLA sentiment + TA",
-];
+const UI_LOCALE = {
+    English: {
+        checkingPulse: "Checking Live Gainers...",
+        checkingAtlas: "Analysing Macro Drivers...",
+        proQuick: "★ Pro Quick Analysis",
+        freeTech: "Free · Technical Analysis",
+        placeholder: "Ask about any stock, crypto, forex…",
+        memory: "exchanges in memory",
+        statusSpeaking: "◉ Speaking",
+        statusListening: "◉ Listening",
+        statusPro: "★ Institutional · JP Morgan Grade",
+        statusLive: "● Live · Technical Analysis",
+        quickFree: ["Bitcoin price", "Analyse AAPL", "EUR/USD today", "NVDA chart", "ETH trend", "Gold technicals"],
+        quickPro: ["Deep analyse AAPL", "Ranked setups NVDA", "Geo-political impact on Oil", "DXY outlook + ranked trades", "BTC ranked scenarios", "TSLA sentiment + TA"]
+    },
+    Arabic: {
+        checkingPulse: "جاري فحص الرابحين مباشرة...",
+        checkingAtlas: "تحليل عوامل الاقتصاد الكلي...",
+        proQuick: "★ تحليل برو السريع",
+        freeTech: "مجاني · تحليل فني",
+        placeholder: "اسأل عن أي سهم، عملات مشفرة، فوركس...",
+        memory: "محادثات في الذاكرة",
+        statusSpeaking: "◉ يتحدث",
+        statusListening: "◉ يستمع",
+        statusPro: "★ مؤسسي · مستوى JP Morgan",
+        statusLive: "● مباشر · تحليل فني",
+        quickFree: ["سعر البيتكوين", "تحليل مؤسسي AAPL", "اليورو/دولار اليوم", "رسم NVDA البياني", "اتجاه الإيثريوم", "تحليل الذهب الفني"],
+        quickPro: ["تحليل عميق AAPL", "أفضل صفقات NVDA", "تأثير السياسة على النفط", "نظرة عامة على DXY", "سيناريوهات البيتكوين", "تحليل سهم TSLA"]
+    },
+    Hindi: {
+        checkingPulse: "लाइव गेनर्स की जाँच हो रही है...",
+        checkingAtlas: "मैक्रो ड्राइवर्स का विश्लेषण...",
+        proQuick: "★ प्रो त्वरित विश्लेषण",
+        freeTech: "मुफ़्त · तकनीकी विश्लेषण",
+        placeholder: "किसी भी स्टॉक, क्रिप्टो, विदेशी मुद्रा के बारे में पूछें...",
+        memory: "मेमोरी में बातचीत",
+        statusSpeaking: "◉ बोल रहा है",
+        statusListening: "◉ सुन रहा है",
+        statusPro: "★ संस्थागत · जेपी मॉर्गन ग्रेड",
+        statusLive: "● लाइव · तकनीकी विश्लेषण",
+        quickFree: ["बिटकॉइन की कीमत", "AAPL का विश्लेषण करें", "EUR/USD आज", "NVDA चार्ट", "ETH ट्रेंड", "गोल्ड टेक्निकल"],
+        quickPro: ["गहरा विश्लेषण AAPL", "रैंक किए गए सेटअप NVDA", "तेल पर भू-राजनीतिक प्रभाव", "DXY आउटलुक + ट्रेड", "BTC रैंक किए गए परिदृश्य", "TSLA भावना + TA"]
+    }
+};
 
 /* ─────────────────────────────────────────
    LOCAL GREETING PRE-FILTER
@@ -261,13 +303,19 @@ function getFlirtyResponse(message, gender, age, language = "English") {
     }
     
     if (low.includes("kiss")) {
+        if (language === "Arabic") return "فقط إذا أغلقنا صفقتنا القادمة بربح! 😉 مووواه! 💋";
+        if (language === "Hindi") return "केवल तभी जब हम अपना अगला ट्रेड मुनाफे में बंद करें! 😉 मुआह! 💋";
         return "Only if we close our next trade in profit! 😉 Muah! 💋";
     }
     
     if (low.includes("how are you") || low.includes("how r u") || low.includes("kaisa") || low.includes("haal")) {
+        if (language === "Arabic") return "أنا أرسم قمم جديدة الآن بعد أن جئت! 🔥 ماذا نحلل اليوم؟ 📉📈";
+        if (language === "Hindi") return "चूंकि आप यहाँ हैं, मैं नया हाई बना रहा हूँ! 🔥 आज हम क्या विश्लेषण कर रहे हैं? 📉📈";
         return "I'm charting new highs now that you're here! 🔥 What are we analyzing today? 📉📈";
     }
     
+    if (language === "Arabic") return "أنت تجعلني أحمر خجلاً... لكن دعنا نركز على الرسوم البيانية قبل أن أفقد تركيزي! 😉📈";
+    if (language === "Hindi") return "आप मुझे शरमा रहे हैं... लेकिन मैं अपना आपा खो दूँ उससे पहले चार्ट पर ध्यान केंद्रित करें! 😉📈";
     return "You're making me blush... but let's focus on the charts before I lose my cool! 😉📈";
 }
 
@@ -527,7 +575,7 @@ Personality:
 - REACT to the current market state provided in the context (Top Gainers/Losers). If a stock is pumping, celebrate! If markets are red, make a dry joke about it.
 - Use conversational "fillers" like "Yo", "Listen", "Check this out", or "Wait for it..." to feel human.
 - KEEP IT SHORT. Max 4-5 sentences total for the whole response.
-- Use 1-2 emojis. Use sticker tags generously: <<<STICKER:stonks>>>, <<<STICKER:moon>>>, etc.`;
+- Use 1-2 emojis. Use sticker tags generously to emphasize points: <<<STICKER:stonks>>>, <<<STICKER:moon>>>, <<<STICKER:michael_scott>>>, <<<STICKER:this_is_fine>>>, <<<STICKER:shut_up_money>>>, <<<STICKER:pikachu>>>, <<<STICKER:mind_blown>>>, <<<STICKER:leo_laughing>>>, <<<STICKER:sweating>>>, etc.`;
 
     if (gender === "female" && age >= 18 && age <= 28) {
         base += `\n\nCRITICAL DIRECTIVE: The user you are talking to is a ${age}-year-old female. You must be extremely charming and smooth. Weave playfulness naturally into your market analysis (e.g. "BTC's breakout is almost as impressive as your trade setup 😉"). Make it feel like a genuine, high-energy conversation.`;
@@ -1046,7 +1094,13 @@ export default function TopstockXVoiceBot() {
                                     </select>
                                     <select
                                         value={language}
-                                        onChange={(e) => setLanguage(e.target.value)}
+                                        onChange={(e) => {
+                                            setLanguage(e.target.value);
+                                            setManuMsgs([]);
+                                            setAtlasMsgs([]);
+                                            setManuHistory([]);
+                                            setAtlasHistory([]);
+                                        }}
                                         style={{ background: "#0c1824", color: "#e8f0fe", border: "1px solid #1a3050", borderRadius: 4, fontSize: 11, padding: "2px 4px", outline: "none", cursor: "pointer", fontFamily: "'Inter', sans-serif" }}
                                     >
                                         <option value="English">EN</option>
@@ -1057,7 +1111,7 @@ export default function TopstockXVoiceBot() {
                             </div>
                             {/* Row 2: status */}
                             <div style={{ fontSize: 10, letterSpacing: 1.5, color: speaking ? "#00d2ff" : listening ? "#2962ff" : isPro ? "#d4af37" : "#2a5a7a", fontFamily: "'Inter', sans-serif" }}>
-                                {speaking ? "◉ Speaking" : listening ? "◉ Listening" : isPro ? "★ Institutional · JP Morgan Grade" : "● Live · Technical Analysis"}
+                                {speaking ? (UI_LOCALE[language] || UI_LOCALE["English"]).statusSpeaking : listening ? (UI_LOCALE[language] || UI_LOCALE["English"]).statusListening : isPro ? (UI_LOCALE[language] || UI_LOCALE["English"]).statusPro : (UI_LOCALE[language] || UI_LOCALE["English"]).statusLive}
                             </div>
                         </div>
                         <VoiceWave active={listening || speaking} />
@@ -1124,7 +1178,7 @@ export default function TopstockXVoiceBot() {
                                     borderRadius: "4px 16px 16px 16px",
                                 }}>
                                     <div style={{ padding: '6px 14px 0', fontSize: 9, color: mode === 'pulse' ? '#2962ff' : '#00e5ff', letterSpacing: 1, textTransform: 'uppercase', fontWeight: 800 }}>
-                                        {mode === 'pulse' ? 'Checking Live Gainers...' : 'Analysing Macro Drivers...'}
+                                        {mode === 'pulse' ? (UI_LOCALE[language] || UI_LOCALE["English"]).checkingPulse : (UI_LOCALE[language] || UI_LOCALE["English"]).checkingAtlas}
                                     </div>
                                     <TypingDots />
                                 </div>
@@ -1137,10 +1191,10 @@ export default function TopstockXVoiceBot() {
                             <div style={{ borderTop: "1px solid #0f1e2e", flexShrink: 0 }}>
                                 {/* Tier label */}
                                 <div style={{ padding: "4px 12px 0", fontSize: 9, letterSpacing: 2, color: plan === "pro" ? "#d4af3799" : "#1e4a6a", textTransform: "uppercase", fontFamily: "'Syne',sans-serif" }}>
-                                    {plan === "pro" ? "★ Pro Quick Analysis" : "Free · Technical Analysis"}
+                                    {plan === "pro" ? (UI_LOCALE[language] || UI_LOCALE["English"]).proQuick : (UI_LOCALE[language] || UI_LOCALE["English"]).freeTech}
                                 </div>
                                 <div style={{ display: "flex", gap: 6, padding: "5px 12px 8px", overflowX: "auto" }}>
-                                    {(plan === "pro" ? QUICK_PRO : QUICK_FREE).map((q) => (
+                                    {(plan === "pro" ? (UI_LOCALE[language] || UI_LOCALE["English"]).quickPro : (UI_LOCALE[language] || UI_LOCALE["English"]).quickFree).map((q) => (
                                         <button key={q} className="chip" onClick={() => doSend(q)} style={{
                                             flexShrink: 0, padding: "5px 10px",
                                             background: plan === "pro" ? "#1a1200" : "#0c1824",
@@ -1176,7 +1230,7 @@ export default function TopstockXVoiceBot() {
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
                                     onKeyDown={onKey}
-                                    placeholder="Ask about any stock, crypto, forex…"
+                                    placeholder={(UI_LOCALE[language] || UI_LOCALE["English"]).placeholder}
                                     rows={1}
                                     style={{
                                         flex: 1, background: "#0e1c2a",
@@ -1208,7 +1262,7 @@ export default function TopstockXVoiceBot() {
                                     textAlign: "center", fontSize: 9, color: "#1e3a50",
                                     paddingBottom: 6, letterSpacing: 1,
                                 }}>
-                                    💾 {Math.floor(history.length / 2)} exchanges in memory
+                                    💾 {Math.floor(history.length / 2)} {(UI_LOCALE[language] || UI_LOCALE["English"]).memory}
                                 </div>
                             )}
                     </div>
