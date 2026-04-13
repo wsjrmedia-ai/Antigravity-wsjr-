@@ -63,7 +63,7 @@ const INTEREST_RATES = {
   'Japan': 0.1, 'China': 3.45, 'India': 6.5, 'South Korea': 3.5,
   'Indonesia': 6.0, 'Saudi Arabia': 6.0, 'Singapore': 3.68,
   'Brazil': 10.75, 'Argentina': 100.0, 'Colombia': 12.75, 'Chile': 7.25,
-  'Peru': 6.75, 'Mexico': 11.25, 'South Africa': 8.25,
+  'Peru': 6.75, 'South Africa': 8.25,
   'Egypt': 21.25, 'Nigeria': 18.75, 'Kenya': 13.0, 'Ghana': 29.0,
   'Pakistan': 22.0, 'Bangladesh': 8.0,
 };

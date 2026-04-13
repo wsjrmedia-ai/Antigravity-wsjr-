@@ -270,7 +270,7 @@ export default function HomePage() {
           <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 900, margin: '0 0 8px', letterSpacing: '-1.5px' }}>
             International <span style={{ color: '#2962ff' }}>Market Intelligence</span>
           </h2>
-          <p style={{ color: '#555', margin: 0, fontSize: 16, maxWidth: 600, margin: '0 auto' }}>
+          <p style={{ color: '#555', fontSize: 16, maxWidth: 600, margin: '0 auto' }}>
             Visualize global stock performance, inflation, and GDP growth in real-time across the world’s major economies.
           </p>
         </div>

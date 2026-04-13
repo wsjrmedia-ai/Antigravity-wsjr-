@@ -153,7 +153,6 @@ const HomeHeader = () => {
                         fontSize: '13px',
                         fontWeight: 800,
                         cursor: 'pointer',
-                        border: 'none',
                         whiteSpace: 'nowrap',
                         letterSpacing: '0.5px',
                         fontFamily: 'inherit',
