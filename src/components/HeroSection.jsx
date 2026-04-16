@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MobileMenu from './MobileMenu'
+import LearnEarnToggle from './LearnEarnToggle'
 
 const HeroSection = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -113,74 +114,7 @@ const HeroSection = () => {
             }}>
                 
                 {/* Earn Toggle - Routes to TopStocX */}
-                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-                    <div 
-                        onClick={(e) => {
-                            e.preventDefault();
-                            setIsMenuOpen(prev => prev); // dummy to avoid unused
-                            const toggleBtn = e.currentTarget;
-                            const thumb = toggleBtn.querySelector('.toggle-thumb');
-                            const text = toggleBtn.querySelector('.toggle-text');
-                            
-                            // Animate the physical toggle engage
-                            thumb.style.transform = 'translateX(154px)';
-                            text.style.opacity = '0';
-                            
-                            // Wait for slide to resolve, then route
-                            setTimeout(() => {
-                                window.location.href = "http://localhost:5174/";
-                                // Reset after route in case of browser back button cache
-                                setTimeout(() => {
-                                    thumb.style.transform = 'translateX(0)';
-                                    text.style.opacity = '1';
-                                }, 500);
-                            }, 400);
-                        }}
-                        style={{
-                            display: 'flex',
-                            width: '200px',
-                            height: '45px',
-                            padding: '4px',
-                            position: 'relative',
-                            alignItems: 'center',
-                            borderRadius: '200px',
-                            background: 'linear-gradient(101deg, #F7AC41 8.57%, #BC7E26 48.6%, #FFBD5F 85.66%)',
-                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s ease',
-                            overflow: 'hidden'
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = 'scale(1.05) translateY(-2px)';
-                            e.currentTarget.style.boxShadow = '0 6px 15px rgba(247, 172, 65, 0.3)';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = 'scale(1) translateY(0)';
-                            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
-                        }}
-                        className="earn-toggle-container"
-                    >
-                        <div className="toggle-thumb" style={{
-                            width: '38px', height: '38px',
-                            background: '#6A0715',
-                            borderRadius: '50%',
-                            position: 'absolute',
-                            left: '4px',
-                            transition: 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)'
-                        }}></div>
-                        
-                        <span className="toggle-text" style={{
-                            fontFamily: 'var(--font-hero)',
-                            color: '#6A0715',
-                            fontWeight: 600,
-                            fontSize: '24px',
-                            fontStyle: 'italic',
-                            position: 'absolute',
-                            right: '25px',
-                            transition: 'opacity 0.2s ease'
-                        }}>earn</span>
-                    </div>
-                </div>
+                <LearnEarnToggle />
 
                 {/* Main Title */}
                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '40px' }}>
