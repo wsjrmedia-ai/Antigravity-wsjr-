@@ -63,8 +63,8 @@ const Footer = () => {
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginTop: '20px' }}>
                         <p style={{ color: '#FFF', fontSize: '1.1rem', margin: 0, fontFamily: 'var(--font-body)', fontWeight: 600 }}>Dubai - Global Headquarters</p>
-                        <p style={{ color: '#FFF', fontSize: '1.1rem', margin: 0, fontFamily: 'var(--font-body)', fontWeight: 600 }}>Chicago-Wall Street Jr. Investments Ltd.</p>
-                        <p style={{ color: '#FFF', fontSize: '1.1rem', margin: 0, fontFamily: 'var(--font-body)', fontWeight: 600 }}>India-Cochin, Bangalore, Mumbai, Delhi</p>
+                        <p style={{ color: '#FFF', fontSize: '1.1rem', margin: 0, fontFamily: 'var(--font-body)', fontWeight: 600 }}>Chicago - Wall Street Jr. Investments Ltd.</p>
+                        <p style={{ color: '#FFF', fontSize: '1.1rem', margin: 0, fontFamily: 'var(--font-body)', fontWeight: 600 }}>India - Cochin, Bangalore, Mumbai, Delhi</p>
                     </div>
                 </div>
 
