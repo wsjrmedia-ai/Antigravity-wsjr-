@@ -22,7 +22,7 @@ const schoolsData = [
         subtitle: 'Building the Future with Code, AI &\nSystems Architecture',
         desc: 'The School of Technology bridges the gap between software development and business impact. Students gain hands-...',
         ideal: 'Ideal for:\nDevelopers, aspiring tech entrepreneurs,\nand professionals looking to integrate...',
-        image: '/images/figma/school-technology.jpg'
+        image: '/images/figma/bg-qatar-museum.jpg'
     },
     {
         id: 'sod',
