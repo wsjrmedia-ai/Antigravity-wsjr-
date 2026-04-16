@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { GraduationCap, TrendingUp } from 'lucide-react';
 
-const ACADEMY_URL = 'http://localhost:5173';
+const ACADEMY_URL = 'https://wsjrschool.com';
 
 const LearnEarnToggle = () => {
     const [isLearn, setIsLearn] = useState(false);
@@ -11,7 +11,8 @@ const LearnEarnToggle = () => {
         if (platform === 'learn') {
             setIsLearn(true);
             setTimeout(() => {
-                window.location.href = ACADEMY_URL;
+                window.open(ACADEMY_URL, '_blank', 'noopener,noreferrer');
+                setIsLearn(false);
             }, 400);
         }
     };

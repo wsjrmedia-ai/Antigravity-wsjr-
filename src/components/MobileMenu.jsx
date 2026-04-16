@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 const MobileMenu = ({ isOpen, onClose }) => {
     return (
+        <>
         <AnimatePresence>
             {isOpen && (
                 <motion.div
@@ -81,6 +82,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
                 .mobile-menu-panel { padding: 30px 24px !important; }
             }
         `}</style>
+        </>
     );
 };
 

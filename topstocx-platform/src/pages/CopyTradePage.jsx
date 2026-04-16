@@ -113,8 +113,19 @@ export default function CopyTradePage() {
     return (
         <div style={{ backgroundColor: '#0d1117', minHeight: '100vh', color: '#e8f0fe', fontFamily: "'Inter', sans-serif" }}>
             <HomeHeader />
+            <style>{`
+                @media (max-width: 768px) {
+                    .ct-layout { grid-template-columns: 1fr !important; }
+                    .ct-live-feed > div { position: static !important; }
+                    .ct-trader-grid { grid-template-columns: 1fr !important; }
+                    .ct-hero-stats { flex-direction: column !important; gap: 0.75rem !important; align-items: center !important; }
+                }
+                @media (max-width: 480px) {
+                    .ct-main { padding-top: 90px !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+                }
+            `}</style>
 
-            <main style={{ paddingTop: '120px', maxWidth: '1200px', margin: '0 auto', paddingBottom: '6rem', paddingLeft: '1.5rem', paddingRight: '1.5rem' }}>
+            <main className="ct-main" style={{ paddingTop: '120px', maxWidth: '1200px', margin: '0 auto', paddingBottom: '6rem', paddingLeft: '1.5rem', paddingRight: '1.5rem' }}>
                 
                 {/* Hero Section */}
                 <section style={{ marginBottom: '4rem', textAlign: 'center' }}>
@@ -130,7 +141,7 @@ export default function CopyTradePage() {
                             Follow TopStocX verified traders and automatically replicate their high-conviction setups in real-time.
                         </p>
                         
-                        <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', marginBottom: '4rem' }}>
+                        <div className="ct-hero-stats" style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', marginBottom: '4rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                 <Users size={20} color="#2962ff" />
                                 <span style={{ fontWeight: 600 }}>10,000+ Active Copiers</span>
@@ -147,7 +158,7 @@ export default function CopyTradePage() {
                     </motion.div>
                 </section>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '3rem' }}>
+                <div className="ct-layout" style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '3rem' }}>
                     
                     {/* Left Column: Top Traders */}
                     <div>
@@ -161,7 +172,7 @@ export default function CopyTradePage() {
                             </button>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
+                        <div className="ct-trader-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1.5rem' }}>
                             {TRADERS.map(trader => (
                                 <TraderCard 
                                     key={trader.id} 
@@ -174,7 +185,7 @@ export default function CopyTradePage() {
                     </div>
 
                     {/* Right Column: Live Feed */}
-                    <div>
+                    <div className="ct-live-feed">
                         <div style={{ position: 'sticky', top: '100px' }}>
                             <div style={{ background: '#161b22', border: '1px solid #30363d', borderRadius: 20, padding: '1.5rem' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '1.5rem' }}>

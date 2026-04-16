@@ -302,8 +302,17 @@ export default function MarketsPage() {
   return (
     <div style={{ color: '#fff' }}>
       <HomeHeader />
+      <style>{`
+          @media (max-width: 768px) {
+              .mk-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+              .mk-tabs::-webkit-scrollbar { display: none; }
+          }
+          @media (max-width: 480px) {
+              .mk-main { padding-top: 80px !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+          }
+      `}</style>
 
-      <main style={{ paddingTop: 110, maxWidth: 1400, margin: '0 auto', padding: '110px 1.5rem 4rem' }}>
+      <main className="mk-main" style={{ paddingTop: 110, maxWidth: 1400, margin: '0 auto', padding: '110px 1.5rem 4rem' }}>
 
         {/* Page title */}
         <div style={{ marginBottom: '2rem' }}>
@@ -343,7 +352,7 @@ export default function MarketsPage() {
         {/* Table card */}
         <div style={{ background: '#0d1117', border: '1px solid #1e2432', borderRadius: 12, overflow: 'hidden' }}>
           {/* Tabs */}
-          <div style={{ display: 'flex', borderBottom: '1px solid #1e2432', background: '#0d1117', padding: '0 8px' }}>
+          <div className="mk-tabs" style={{ display: 'flex', borderBottom: '1px solid #1e2432', background: '#0d1117', padding: '0 8px' }}>
             {TABS.map((t) => (
               <button key={t.key} onClick={() => setActiveTab(t.key)} style={{
                 padding: '14px 18px', background: 'none', border: 'none',

@@ -115,3 +115,113 @@ body {
 .perspective-800 {
   perspective: 800px;
 }
+
+/* ── RESPONSIVE MOBILE UTILITIES ── */
+.show-on-mobile {
+  display: none !important;
+}
+
+.ws-mobile-toggle {
+  display: none !important;
+}
+
+/* ── TABLET LANDSCAPE / SMALL DESKTOP ── */
+@media (max-width: 1024px) {
+  .hide-on-tablet-down {
+    display: none !important;
+  }
+
+  .responsive-grid-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1.5rem !important;
+  }
+}
+
+/* ── TABLET PORTRAIT / MOBILE ── */
+@media (max-width: 768px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+
+  .show-on-mobile {
+    display: flex !important;
+  }
+
+  .ws-mobile-toggle {
+    display: flex !important;
+  }
+
+  .flex-stack-mobile {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1rem !important;
+  }
+
+  .responsive-grid-4 {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  .responsive-padding {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .mobile-text-center {
+    text-align: center !important;
+  }
+
+  .mobile-font-scale {
+    font-size: clamp(32px, 8vw, 42px) !important;
+  }
+
+  /* Workspace: hide sidebar & watchlist on mobile */
+  .ws-sidebar {
+    display: none !important;
+  }
+
+  .ws-watchlist {
+    display: none !important;
+  }
+
+  .ws-watchlist.mobile-open {
+    display: flex !important;
+    position: fixed;
+    top: 52px;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: 380px;
+    z-index: 200;
+    background: var(--bg-secondary);
+    border-left: 1px solid var(--border-color);
+  }
+
+  .ws-bottom-panel {
+    max-height: 42px;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .ws-bottom-panel.expanded {
+    max-height: 50vh;
+    overflow: auto;
+  }
+
+  /* Touch targets */
+  button, a, [role="button"] {
+    min-height: 44px;
+  }
+}
+
+/* ── PHONE ── */
+@media (max-width: 480px) {
+  .responsive-padding {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+
+  .mobile-font-scale {
+    font-size: clamp(26px, 8vw, 36px) !important;
+  }
+}

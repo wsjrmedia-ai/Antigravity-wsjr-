@@ -109,6 +109,7 @@ export default function AuthPage() {
             }}>
                 <motion.div
                     layout
+                    className="auth-form-card"
                     style={{
                         width: '100%',
                         maxWidth: 440,
@@ -142,7 +143,7 @@ export default function AuthPage() {
                                 {/* Basic Fields */}
                                 {/* Registration Name & Mobile */}
                                 {!isLogin && (
-                                    <div style={{ display: 'flex', gap: '1.25rem' }}>
+                                    <div className="auth-row-stack" style={{ display: 'flex', gap: '1.25rem' }}>
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
                                             <label style={{ fontSize: 12, fontWeight: 600, color: '#a0aec0', textTransform: 'uppercase', letterSpacing: 1 }}>Full Name</label>
                                             <input type="text" required placeholder="John Doe" className="auth-input" style={inputStyle} />
@@ -169,7 +170,7 @@ export default function AuthPage() {
                                 {/* Registration Remaining Fields */}
                                 {!isLogin && (
                                     <>
-                                        <div style={{ display: 'flex', gap: '1.25rem' }}>
+                                        <div className="auth-row-stack" style={{ display: 'flex', gap: '1.25rem' }}>
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
                                                 <label style={{ fontSize: 12, fontWeight: 600, color: '#a0aec0', textTransform: 'uppercase', letterSpacing: 1 }}>Gender</label>
                                                 <select required className="auth-select" style={{ ...inputStyle, appearance: 'none', cursor: 'pointer' }}>
@@ -307,6 +308,11 @@ export default function AuthPage() {
                 /* Hide sidebar on small screens */
                 @media (max-width: 900px) {
                     .auth-hero { display: none !important; }
+                }
+                @media (max-width: 480px) {
+                    .auth-form-card { max-width: 100% !important; padding: 2rem 1.5rem !important; border-radius: 16px !important; }
+                    .auth-input, .auth-select { padding: 14px 16px !important; font-size: 16px !important; }
+                    .auth-row-stack { flex-direction: column !important; }
                 }
             `}</style>
         </div>

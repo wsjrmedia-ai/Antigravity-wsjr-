@@ -2,7 +2,20 @@ import { Link } from 'react-router-dom'
 
 const Footer = () => {
     return (
-        <footer style={{
+        <>
+        <style>{`
+            @media (max-width: 768px) {
+                .footer-inner { flex-direction: column !important; gap: 2.5rem !important; }
+                .footer-brand { flex: 1 1 auto !important; max-width: 100% !important; }
+                .footer-links { gap: 2.5rem !important; }
+                .footer-bottom { position: static !important; flex-direction: column !important; gap: 0.5rem !important; text-align: center !important; margin-top: 3rem; padding-top: 1.5rem; }
+            }
+            @media (max-width: 480px) {
+                .footer-root { padding: 60px 1.25rem !important; min-height: auto !important; }
+                .footer-links { gap: 2rem !important; }
+            }
+        `}</style>
+        <footer className="footer-root" style={{
             backgroundColor: '#040001',
             padding: '100px 5%',
             minHeight: '400px',
@@ -12,7 +25,7 @@ const Footer = () => {
             position: 'relative',
             zIndex: 10
         }}>
-            <div style={{
+            <div className="footer-inner" style={{
                 maxWidth: '1600px',
                 width: '100%',
                 margin: '0 auto',
@@ -24,7 +37,7 @@ const Footer = () => {
             }}>
                 
                 {/* Brand Column */}
-                <div style={{ flex: '1 1 400px', display: 'flex', flexDirection: 'column', gap: '30px', maxWidth: '500px' }}>
+                <div className="footer-brand" style={{ flex: '1 1 400px', display: 'flex', flexDirection: 'column', gap: '30px', maxWidth: '500px' }}>
                     <h2 style={{
                         fontFamily: 'var(--font-hero)',
                         fontSize: 'clamp(2rem, 3vw, 2.5rem)', // 31px
@@ -56,7 +69,7 @@ const Footer = () => {
                 </div>
 
                 {/* Links Grids */}
-                <div style={{ display: 'flex', gap: '80px', flexWrap: 'wrap' }}>
+                <div className="footer-links" style={{ display: 'flex', gap: '80px', flexWrap: 'wrap' }}>
                     
                     {/* Column 1 */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -97,7 +110,7 @@ const Footer = () => {
             </div>
 
             {/* Copyright / Bottom Strip */}
-            <div style={{
+            <div className="footer-bottom" style={{
                 position: 'absolute',
                 bottom: '30px',
                 left: '5%',
@@ -114,6 +127,7 @@ const Footer = () => {
                 <Link to="/legal" style={{ color: 'inherit', textDecoration: 'none' }}>Legal Notice</Link>
             </div>
         </footer>
+        </>
     )
 }
 

@@ -148,8 +148,14 @@ export default function TradeIdeasPage() {
     return (
         <div style={{ backgroundColor: '#0d1117', minHeight: '100vh', color: '#e8f0fe', fontFamily: "'Inter', sans-serif" }}>
             <HomeHeader />
+            <style>{`
+                @media (max-width: 480px) {
+                    .ti-main { padding-top: 90px !important; padding-left: 0.5rem !important; padding-right: 0.5rem !important; }
+                    .ti-toolbar { flex-wrap: wrap; gap: 0.5rem !important; }
+                }
+            `}</style>
 
-            <main style={{ paddingTop: '120px', maxWidth: '680px', margin: '0 auto', paddingBottom: '4rem' }}>
+            <main className="ti-main" style={{ paddingTop: '120px', maxWidth: '680px', margin: '0 auto', paddingBottom: '4rem', padding: '120px 1rem 4rem' }}>
                 <div style={{ padding: '0 1rem', marginBottom: '2rem' }}>
                     <h1 style={{ fontSize: '2rem', fontWeight: 800, fontFamily: "'Syne', sans-serif", letterSpacing: 1, margin: 0 }}>
                         Trade Ideas
@@ -187,8 +193,8 @@ export default function TradeIdeasPage() {
                             </div>
                         </div>
 
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #30363d' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        <div className="ti-toolbar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #30363d' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                                 <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, color: '#2962ff', fontSize: 14, fontWeight: 600, padding: '6px 10px', borderRadius: 8 }}>
                                     <Image size={18} /><span>Media</span>
                                     <input type="file" accept="image/*" style={{ display: 'none' }} onChange={e => { if (e.target.files[0]) setNewPostImage(e.target.files[0]) }} />

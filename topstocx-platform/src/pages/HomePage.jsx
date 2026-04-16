@@ -55,7 +55,7 @@ function NewsCarousel() {
 
   return (
     <div style={{ position: 'relative', width: '100%', padding: '2rem 0' }}>
-      <div style={{
+      <div className="hide-on-mobile" style={{
         position: 'absolute', top: '50%', left: '2rem', zIndex: 10,
         transform: 'translateY(-50%)',
       }}>
@@ -75,7 +75,7 @@ function NewsCarousel() {
         </button>
       </div>
 
-      <div style={{
+      <div className="hide-on-mobile" style={{
         position: 'absolute', top: '50%', right: '2rem', zIndex: 10,
         transform: 'translateY(-50%)',
       }}>
@@ -188,9 +188,21 @@ export default function HomePage() {
   return (
     <div style={{ color: '#fff', overflowX: 'hidden', background: '#03050e', position: 'relative' }}>
       <HomeHeader />
+      <style>{`
+          @media (max-width: 768px) {
+              .hp-hero { padding-top: 80px !important; min-height: auto !important; }
+              .hp-search-bar { max-width: 100% !important; }
+              .hp-cta-buttons a { flex: 1; justify-content: center; }
+          }
+          @media (max-width: 480px) {
+              .hp-hero { padding-top: 72px !important; padding-bottom: 2rem !important; }
+              .hp-search-bar input { font-size: 14px !important; }
+              .hp-cta-buttons a { width: 100%; }
+          }
+      `}</style>
 
       {/* ── Hero ── */}
-      <section style={{
+      <section className="hp-hero responsive-padding" style={{
         minHeight: '100vh',
         display: 'flex', flexDirection: 'column',
         justifyContent: 'center', alignItems: 'center',
@@ -233,6 +245,7 @@ export default function HomePage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.35 }}
+              className="hp-search-bar"
               style={{ display: 'flex', alignItems: 'center', background: '#161b22', border: '1px solid #30363d', borderRadius: 10, overflow: 'hidden', maxWidth: 540, margin: '0 auto 3rem' }}
             >
               <div style={{ padding: '0 14px', display: 'flex', alignItems: 'center' }}><Search size={18} color="#555" /></div>
@@ -243,6 +256,7 @@ export default function HomePage() {
               <Link to="/chart" style={{ padding: '14px 22px', background: '#2962ff', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 700 }}>Search</Link>
             </motion.div>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
+              className="hp-cta-buttons flex-stack-mobile"
               style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}
             >
               <Link to="/chart" style={{ padding: '0.75rem 2rem', background: '#2962ff', color: '#fff', borderRadius: 8, textDecoration: 'none', fontSize: 15, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -258,14 +272,16 @@ export default function HomePage() {
     
 
       {/* ── Market Summary ── */}
-      <section style={{ maxWidth: 1400, margin: '0 auto', padding: '4rem 2rem 2rem', position: 'relative', zIndex: 10, background: '#03050e' }}>
+      {/* ── Market Summary ── */}
+      <section className="responsive-padding" style={{ maxWidth: 1400, margin: '0 auto', padding: '4rem 2rem 2rem', position: 'relative', zIndex: 10, background: '#03050e' }}>
         <Suspense fallback={<Fallback h={600} />}>
           <MarketSummary />
         </Suspense>
       </section>
 
       {/* ── Global Markets & Intelligence ── */}
-      <section style={{ maxWidth: 1400, margin: '0 auto', padding: '0 2rem 4rem' }}>
+      {/* ── Global Markets & Intelligence ── */}
+      <section className="responsive-padding" style={{ maxWidth: 1400, margin: '0 auto', padding: '0 2rem 4rem' }}>
         <div style={{ marginBottom: '2.5rem', textAlign: 'center' }}>
           <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 900, margin: '0 0 8px', letterSpacing: '-1.5px' }}>
             International <span style={{ color: '#2962ff' }}>Market Intelligence</span>
@@ -285,7 +301,7 @@ export default function HomePage() {
       </Suspense>
 
       {/* ── Features — 3D Cards ── */}
-      <section style={{
+      <section className="responsive-padding" style={{
         background: 'rgba(8, 11, 18, 0.6)',
         borderTop: '1px solid rgba(30, 36, 50, 0.8)',
         padding: '6rem 2rem',
@@ -325,7 +341,7 @@ export default function HomePage() {
 
       {/* ── News — INFINITE CAROUSEL WITH CONTROLS ── */}
       <section style={{ padding: '6rem 0' }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 2rem', marginBottom: '1rem' }}>
+        <div className="responsive-padding" style={{ maxWidth: 1400, margin: '0 auto', padding: '0 2rem', marginBottom: '1rem' }}>
           <h2 style={{ fontSize: 28, fontWeight: 800, margin: '0 0 6px' }}>Latest News</h2>
           <p style={{ color: '#555', margin: 0, fontSize: 14 }}>Breaking financial news and market analysis — scrolls to left</p>
         </div>
@@ -333,7 +349,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Footnotes / Quick Links ── */}
-      <section style={{ maxWidth: 1400, margin: '0 auto', padding: '0 2rem 6rem' }}>
+      <section className="responsive-padding" style={{ maxWidth: 1400, margin: '0 auto', padding: '0 2rem 6rem' }}>
          <div style={{ background: 'rgba(13, 17, 23, 0.45)', border: '1px solid rgba(30, 36, 50, 0.5)', borderRadius: 16, padding: '2rem' }}>
             <h3 style={{ margin: '0 0 1.5rem', fontSize: 18, fontWeight: 700, color: '#e8f0fe' }}>Quick Access</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
@@ -363,7 +379,7 @@ export default function HomePage() {
       </section>
 
       {/* ── CTA ── */}
-      <section style={{ padding: '6rem 2rem', textAlign: 'center' }}>
+      <section className="responsive-padding" style={{ padding: '6rem 2rem', textAlign: 'center' }}>
         <div style={{ maxWidth: 700, margin: '0 auto' }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -378,7 +394,7 @@ export default function HomePage() {
               Join millions of traders using TopStocX to analyse markets,
               execute trades, and grow their portfolios.
             </p>
-            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <div className="flex-stack-mobile" style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link to="/login" style={{
                 padding: '0.9rem 2.5rem', background: '#2962ff', color: '#fff',
                 borderRadius: 8, textDecoration: 'none', fontSize: 16, fontWeight: 800, transition: 'all 0.2s',
@@ -397,8 +413,8 @@ export default function HomePage() {
       </section>
 
       {/* ── Footer ── */}
-      <footer style={{ background: 'rgba(13, 17, 23, 0.45)', borderTop: '1px solid rgba(30,36,50,0.5)', padding: '3rem 2rem', color: '#555' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '2rem', marginBottom: '2rem' }}>
+      <footer className="responsive-padding" style={{ background: 'rgba(13, 17, 23, 0.45)', borderTop: '1px solid rgba(30,36,50,0.5)', padding: '3rem 2rem', color: '#555' }}>
+        <div className="responsive-grid-4" style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '2rem', marginBottom: '2rem' }}>
           {[
             { heading: 'Products',  links: ['Supercharts', 'Copy Trade', 'Screener', 'Market Data'] },
             { heading: 'Company',   links: ['About', 'Careers', 'Blog', 'Press'] },
@@ -415,7 +431,7 @@ export default function HomePage() {
             </div>
           ))}
         </div>
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 12 }}>
+        <div className="flex-stack-mobile mobile-text-center" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 12 }}>
           <span>TOP<span style={{ color: '#2962ff' }}>STOCX</span> — © 2024 TopStocX Ltd. All rights reserved.</span>
           <span>Wall Street Jr. Academy Platform</span>
         </div>

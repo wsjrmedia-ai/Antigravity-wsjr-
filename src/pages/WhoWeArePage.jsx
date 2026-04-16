@@ -95,10 +95,22 @@ const WhoWeArePage = () => {
 
     return (
         <div ref={pageRef} style={{ background: 'var(--bg-primary)', color: 'white', minHeight: '100vh', position: 'relative', overflowX: 'hidden' }}>
+            <style>{`
+                @media (max-width: 768px) {
+                    .wwa-grid-350 { grid-template-columns: 1fr !important; }
+                    .wwa-grid-300 { grid-template-columns: 1fr !important; }
+                    .wwa-grid-280 { grid-template-columns: 1fr !important; }
+                    .wwa-card { padding: 1.5rem !important; }
+                    .wwa-hero { padding-top: 6rem !important; }
+                }
+                @media (max-width: 480px) {
+                    .wwa-section { padding: 3rem 1rem !important; }
+                }
+            `}</style>
             <GalaxyBackground />
 
             {/* Hero Section */}
-            <section className="hero-content" style={{ ...sectionStyle, paddingTop: '10rem', paddingBottom: '4rem', textAlign: 'center' }}>
+            <section className="hero-content wwa-hero wwa-section" style={{ ...sectionStyle, paddingTop: '10rem', paddingBottom: '4rem', textAlign: 'center' }}>
                 <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', fontWeight: 800, marginBottom: '1.5rem', color: '#d4af37', lineHeight: 1.1 }}>
                     We Are Wall Street Jr. Academy<br /><span style={{ color: '#fff', fontSize: 'clamp(1.5rem, 3vw, 3rem)' }}>A Different Kind of Institution</span>
                 </h1>
@@ -141,7 +153,7 @@ const WhoWeArePage = () => {
 
             {/* Leadership */}
             <section ref={el => contentRefs.current[1] = el} style={sectionStyle}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '3rem', alignItems: 'center' }}>
+                <div className="wwa-grid-350" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '3rem', alignItems: 'center' }}>
                     <div>
                         <h2 style={{ ...headingStyle, textAlign: 'left' }}>Led by People Who Have Done the Work</h2>
                         <h3 style={{ fontSize: '1.5rem', color: '#fff', marginBottom: '1.5rem' }}>Vishnu Das</h3>
@@ -181,7 +193,7 @@ const WhoWeArePage = () => {
                     </div>
 
                     <h3 style={{ fontSize: '2rem', color: '#fff', marginBottom: '3rem', textAlign: 'center' }}>Our Core Values</h3>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+                    <div className="wwa-grid-300" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
                         {[
                             { title: "Institutional Discipline", icon: "🏛️", desc: "We apply banking-grade rigor to everything we build. Standards are not negotiable." },
                             { title: "Education Before Execution", icon: "📚", desc: "We will not rush students toward action before they have the understanding to act wisely." },
@@ -233,7 +245,7 @@ const WhoWeArePage = () => {
 
                     <h3 style={{ fontSize: '1.5rem', textAlign: 'center', color: '#fff', marginBottom: '2rem' }}>Our commitment to social responsibility shows up in three concrete ways:</h3>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
+                    <div className="wwa-grid-280" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
                         {[
                             { title: "Access", desc: "We are actively expanding our campus network and online infrastructure to reach students across India and beyond who deserve the same quality of instruction as those in global financial centers." },
                             { title: "Sustainability", desc: "Our programs include an explicit focus on sustainable finance, responsible capital allocation, and the 21st-century challenges that financial professionals will be expected to navigate." },

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { TrendingUp, History, Bell, ClipboardList } from 'lucide-react';
+import { TrendingUp, History, Bell, ClipboardList, ChevronUp, ChevronDown } from 'lucide-react';
 import { useLeverate } from '../../context/LeverateContext';
 
-const BottomPanel = () => {
+const BottomPanel = ({ className, onToggleExpand, expanded }) => {
     const { positions } = useLeverate();
     const [activeTab, setActiveTab] = useState('Positions');
     const tabs = [
@@ -13,7 +13,7 @@ const BottomPanel = () => {
     ];
 
     return (
-        <div style={{
+        <div className={className} style={{
             height: '260px',
             backgroundColor: 'var(--bg-secondary)',
             borderTop: '1px solid var(--border-color)',
@@ -21,17 +21,24 @@ const BottomPanel = () => {
             flexDirection: 'column',
             zIndex: 5
         }}>
+            <style>{`
+                @media (max-width: 768px) {
+                    .bp-hide-mobile { display: none !important; }
+                    .bp-table th, .bp-table td { padding: 10px 12px !important; font-size: 12px !important; }
+                }
+            `}</style>
             {/* Tab Header */}
             <div style={{
                 height: '42px',
                 display: 'flex',
                 borderBottom: '1px solid var(--border-color)',
                 padding: '0 12px',
-                backgroundColor: 'rgba(255,255,255,0.01)'
+                backgroundColor: 'rgba(255,255,255,0.01)',
+                flexShrink: 0
             }}>
                 {tabs.map(tab => (
                     <div key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
+                        onClick={() => { setActiveTab(tab.id); if (onToggleExpand && !expanded) onToggleExpand(); }}
                         style={{
                             display: 'flex',
                             alignItems: 'center',
@@ -54,19 +61,26 @@ const BottomPanel = () => {
                         {tab.id}
                     </div>
                 ))}
+                <div style={{ flex: 1 }} />
+                {onToggleExpand && (
+                    <div className="ws-mobile-toggle" onClick={onToggleExpand}
+                        style={{ alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: '0 8px' }}>
+                        {expanded ? <ChevronDown size={16} color="var(--text-muted)" /> : <ChevronUp size={16} color="var(--text-muted)" />}
+                    </div>
+                )}
             </div>
 
             {/* Content Area */}
             <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+                <table className="bp-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
                     <thead style={{ position: 'sticky', top: 0, backgroundColor: 'var(--bg-secondary)', zIndex: 1, boxShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>
                         <tr style={{ color: 'var(--text-muted)', textAlign: 'left', borderBottom: '1px solid var(--border-color)' }}>
                             <th style={{ padding: '12px 20px', fontWeight: '600', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px' }}>Symbol</th>
                             <th style={{ padding: '12px 20px', fontWeight: '600', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px' }}>Side</th>
-                            <th style={{ padding: '12px 20px', fontWeight: '600', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px' }}>Quantity</th>
-                            <th style={{ padding: '12px 20px', fontWeight: '600', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px' }}>Avg. Entry</th>
-                            <th style={{ padding: '12px 20px', fontWeight: '600', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px' }}>Mark Price</th>
-                            <th style={{ padding: '12px 20px', fontWeight: '600', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'right' }}>Unrealized P&L</th>
+                            <th className="bp-hide-mobile" style={{ padding: '12px 20px', fontWeight: '600', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px' }}>Quantity</th>
+                            <th className="bp-hide-mobile" style={{ padding: '12px 20px', fontWeight: '600', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px' }}>Avg. Entry</th>
+                            <th className="bp-hide-mobile" style={{ padding: '12px 20px', fontWeight: '600', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px' }}>Mark Price</th>
+                            <th style={{ padding: '12px 20px', fontWeight: '600', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'right' }}>P&L</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -89,9 +103,9 @@ const BottomPanel = () => {
                                         border: pos.ActionType === 0 ? '1px solid rgba(8, 153, 129, 0.2)' : '1px solid rgba(242, 54, 69, 0.2)'
                                     }}>{pos.ActionType === 0 ? 'Buy' : 'Sell'}</span>
                                 </td>
-                                <td style={{ padding: '16px 20px', color: 'var(--text-secondary)', fontWeight: '500' }}>{pos.Amount}</td>
-                                <td style={{ padding: '16px 20px', color: 'var(--text-secondary)', fontWeight: '500' }}>{pos.OpenRate}</td>
-                                <td style={{ padding: '16px 20px', color: 'var(--text-primary)', fontWeight: '700' }}>{pos.CurrentRate}</td>
+                                <td className="bp-hide-mobile" style={{ padding: '16px 20px', color: 'var(--text-secondary)', fontWeight: '500' }}>{pos.Amount}</td>
+                                <td className="bp-hide-mobile" style={{ padding: '16px 20px', color: 'var(--text-secondary)', fontWeight: '500' }}>{pos.OpenRate}</td>
+                                <td className="bp-hide-mobile" style={{ padding: '16px 20px', color: 'var(--text-primary)', fontWeight: '700' }}>{pos.CurrentRate}</td>
                                 <td style={{ padding: '16px 20px', textAlign: 'right' }}>
                                     <div style={{ fontWeight: '800', color: (pos.ProfitInAccountCurrency || 0) >= 0 ? 'var(--brand-green)' : 'var(--brand-red)', fontSize: '14px' }}>
                                         { (pos.ProfitInAccountCurrency || 0) >= 0 ? '+' : '' }{pos.ProfitInAccountCurrency || '0.00'}
