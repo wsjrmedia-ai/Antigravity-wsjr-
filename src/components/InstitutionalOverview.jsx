@@ -46,7 +46,7 @@ const InstitutionalOverview = () => {
             <div style={{
                 position: 'absolute',
                 top: 0, left: 0, right: 0, bottom: 0,
-                zIndex: -1, // Sits deeply in the back so the global Emblem can interleave
+                zIndex: 0, // Sits in the back but slightly above the root page background
                 backgroundColor: '#050505',
                 overflow: 'hidden'
             }}>
