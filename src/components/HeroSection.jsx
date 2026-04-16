@@ -123,11 +123,12 @@ const HeroSection = () => {
                         fontSize: 'clamp(2.5rem, 6vw, 96px)',
                         fontWeight: 500,
                         margin: 0,
+                        paddingBottom: '20px', /* Fix WebkitBackgroundClip descender cutoff bug */
                         background: 'linear-gradient(101deg, #F7AC41 8.57%, #BC7E26 48.6%, #FFBD5F 85.66%)',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                         textAlign: 'center',
-                        lineHeight: 1.1,
+                        lineHeight: 1.2, /* Slightly increased to prevent clipping bounds */
                         letterSpacing: '-0.07em' /* -7% letter spacing */
                     }}>
                         WallStreet Jr. Academy
