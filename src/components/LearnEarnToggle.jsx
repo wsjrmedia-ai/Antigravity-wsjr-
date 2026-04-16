@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { GraduationCap, TrendingUp } from 'lucide-react';
 
-const TOPSTOCX_URL = import.meta.env.VITE_TOPSTOCX_URL || 'https://topstocx.com';
+const TOPSTOCX_URL = 'https://topstocx.com';
 
 const LearnEarnToggle = () => {
     // Starts as 'learn' since we are on the Academy
