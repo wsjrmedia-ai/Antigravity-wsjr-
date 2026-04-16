@@ -205,7 +205,7 @@ const HeroSection = () => {
                     {/* Bottom: Paragraphs strictly matching the Left 1fr column width */}
                     <div className="hero-paragraphs" style={{
                         fontFamily: 'var(--font-body)',
-                        fontSize: 'clamp(10px, 0.8vw, 12px)',
+                        fontSize: '12px',
                         fontWeight: 400,
                         color: 'rgba(255,255,255,0.9)',
                         lineHeight: '1.4',
