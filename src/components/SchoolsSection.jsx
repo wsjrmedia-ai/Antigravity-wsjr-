@@ -31,7 +31,7 @@ const schoolsData = [
         title: 'School of Design',
         acronym: 'SOD',
         subtitle: 'Crafting Experiences That Shape\nHuman Behavior',
-        desc: 'Good design is not decoration. It is strategy made visible. The School of Design trains students to approach visu...',
+        desc: 'Good design is not decoration. It is strategy made visible. The School of Design trains students to approach vishnu...',
         ideal: 'Ideal for:\nAspiring designers, brand strategists,\nand product thinkers looking to elevate...',
         image: '/images/figma/school-design.jpg'
     },
