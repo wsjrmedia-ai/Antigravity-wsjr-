@@ -83,7 +83,7 @@ const LearnBeyond = () => {
                         lineHeight: 1.4,
                         maxWidth: '1000px'
                     }}>
-                        At Wall Street Jr., your education does not end when the session does. We have built an ecosystem designed to keep you connected, challenged, and inspired - wherever you are in your journey.
+                        At Wall Street Jr, your education does not end when the session does. We have built an ecosystem designed to keep you connected, challenged, and inspired - wherever you are in your journey.
                     </p>
                 </div>
 
@@ -104,7 +104,7 @@ const LearnBeyond = () => {
                         },
                         { 
                             title: 'Global Network', 
-                            desc: 'When you join Wall Street Jr., you join a growing network of students, alumni, and mentors across Dubai, Kerala, Mumbai, Bangalore, Delhi, and Chicago. This network is one of the most practical assets you will develop during your time with us.' 
+                            desc: 'When you join Wall Street Jr, you join a growing network of students, alumni, and mentors across Dubai, Kerala, Mumbai, Bangalore, Delhi, and Chicago. This network is one of the most practical assets you will develop during your time with us.' 
                         }
                     ].map((card, i) => (
                         <div key={i} className="beyond-card" style={{

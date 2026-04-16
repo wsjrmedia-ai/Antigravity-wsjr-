@@ -46,7 +46,7 @@ const Footer = () => {
                         margin: 0,
                         letterSpacing: '-1px'
                     }}>
-                        WALL STREET Jr. Academy
+                        WALL STREET Jr Academy
                     </h2>
                     
                     <p style={{
@@ -58,12 +58,12 @@ const Footer = () => {
                         opacity: 0.9
                     }}>
                         Relentless pursuit of financial excellence and educational innovation.<br/><br/>
-                        Headquartered in Dubai with a global presence across India and the United States, Wall Street Jr. is building the institution that the next generation of financial and business leaders deserves.
+                        Headquartered in Dubai with a global presence across India and the United States, Wall Street Jr is building the institution that the next generation of financial and business leaders deserves.
                     </p>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginTop: '20px' }}>
                         <p style={{ color: '#FFF', fontSize: '1.1rem', margin: 0, fontFamily: 'var(--font-body)', fontWeight: 600 }}>Dubai - Global Headquarters</p>
-                        <p style={{ color: '#FFF', fontSize: '1.1rem', margin: 0, fontFamily: 'var(--font-body)', fontWeight: 600 }}>Chicago - Wall Street Jr. Investments Ltd.</p>
+                        <p style={{ color: '#FFF', fontSize: '1.1rem', margin: 0, fontFamily: 'var(--font-body)', fontWeight: 600 }}>Chicago - Wall Street Jr Investments Ltd.</p>
                         <p style={{ color: '#FFF', fontSize: '1.1rem', margin: 0, fontFamily: 'var(--font-body)', fontWeight: 600 }}>India - Cochin, Bangalore, Mumbai, Delhi</p>
                     </div>
                 </div>
@@ -123,7 +123,7 @@ const Footer = () => {
                 fontFamily: 'var(--font-body)',
                 fontSize: '0.9rem'
             }}>
-                <span>© {new Date().getFullYear()} Wall Street Jr. Academy. All rights reserved.</span>
+                <span>© {new Date().getFullYear()} Wall Street Jr Academy. All rights reserved.</span>
                 <Link to="/legal" style={{ color: 'inherit', textDecoration: 'none' }}>Legal Notice</Link>
             </div>
         </footer>
