@@ -85,7 +85,7 @@ const InstitutionalSignals = () => {
                             color: 'transparent', // Fallback
                             transition: 'background-image 0.1s ease-out' // Smooth flashlight engagement
                         }}>
-                            Institutional Signals
+                            Institutional
                         </h2>
                     </div>
                     
