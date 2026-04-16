@@ -8,6 +8,7 @@ import {
 import { useMarketData } from '../context/MarketDataContext';
 import HomeHeader from '../components/layout/HomeHeader';
 import LearnEarnToggle from '../components/layout/LearnEarnToggle';
+import { TickerTape } from 'react-ts-tradingview-widgets';
 
 // ── Lazy loaded heavy components ─────────────────────────────────────────────
 const GlobeSection       = lazy(() => import('../components/effects/GlobeSection'));
@@ -183,6 +184,19 @@ export default function HomePage() {
     <div style={{ color: '#fff', overflowX: 'hidden', background: '#03050e', position: 'relative' }}>
       <HomeHeader />
 
+      <div style={{ marginTop: '72px', background: '#131722', borderBottom: '1px solid #2a2e39' }}>
+          <TickerTape 
+              colorTheme="dark" 
+              displayMode="adaptive"
+              symbols={[
+                { proName: "FOREXCOM:SPXUSD", title: "S&P 500" },
+                { proName: "FOREXCOM:NSXUSD", title: "US 100" },
+                { proName: "FX_IDC:EURUSD", title: "EUR / USD" },
+                { proName: "BITSTAMP:BTCUSD", title: "Bitcoin" },
+                { proName: "BITSTAMP:ETHUSD", title: "Ethereum" }
+              ]}
+          />
+      </div>
 
       {/* ── Hero ── */}
       <section className="hp-hero responsive-padding" style={{
