@@ -61,13 +61,7 @@ const SchoolsHeader = () => {
                 </p>
             </div>
 
-            <style>{`
-                @media (max-width: 768px) {
-                    .schools-header { padding: 0 5% !important; height: auto !important; min-height: 80vh !important; }
-                    .schools-header h2 { font-size: clamp(2.5rem, 10vw, 3.5rem) !important; }
-                    .schools-header p { font-size: 1.1rem !important; margin-top: 10px !important; }
-                }
-            `}</style>
+
         </section>
     )
 }

@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -sL -o earth_atmos_2048.jpg \"https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_atmos_2048.jpg\")",
+      "Bash(curl -sL -o earth_normal_2048.jpg \"https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_normal_2048.jpg\")",
+      "Bash(curl -sL -o earth_specular_2048.jpg \"https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_specular_2048.jpg\")",
+      "Bash(curl -sL -o earth_clouds_1024.png \"https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_clouds_1024.png\")",
+      "mcp__b93e9373-6000-4700-848a-4f1f4a54fd29__list_teams",
+      "mcp__b93e9373-6000-4700-848a-4f1f4a54fd29__list_projects",
+      "mcp__b93e9373-6000-4700-848a-4f1f4a54fd29__get_project",
+      "mcp__b93e9373-6000-4700-848a-4f1f4a54fd29__list_deployments",
+      "mcp__b93e9373-6000-4700-848a-4f1f4a54fd29__get_deployment_build_logs",
+      "Bash(npm run:*)"
+    ]
+  }
+}

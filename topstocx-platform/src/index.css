@@ -117,6 +117,11 @@ body {
 }
 
 /* ── RESPONSIVE MOBILE UTILITIES ── */
+.feature-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
 .show-on-mobile {
   display: none !important;
 }
@@ -134,6 +139,10 @@ body {
   .responsive-grid-4 {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 1.5rem !important;
+  }
+
+  .feature-cards-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
   }
 }
 
@@ -160,6 +169,10 @@ body {
   .responsive-grid-4 {
     grid-template-columns: 1fr !important;
     gap: 2rem !important;
+  }
+
+  .feature-cards-grid {
+    grid-template-columns: 1fr !important;
   }
 
   .responsive-padding {
@@ -212,6 +225,11 @@ body {
   button, a, [role="button"] {
     min-height: 44px;
   }
+
+  /* HP Hero */
+  .hp-hero { padding-top: 80px !important; min-height: auto !important; }
+  .hp-search-bar { max-width: 100% !important; }
+  .hp-cta-buttons a { flex: 1; justify-content: center; }
 }
 
 /* ── PHONE ── */
@@ -224,4 +242,15 @@ body {
   .mobile-font-scale {
     font-size: clamp(26px, 8vw, 36px) !important;
   }
+
+  /* HP Hero */
+  .hp-hero { padding-top: 72px !important; padding-bottom: 2rem !important; }
+  .hp-search-bar input { font-size: 14px !important; }
+  .hp-cta-buttons a { width: 100%; }
+}
+
+/* ── ANIMATIONS ── */
+@keyframes scrollLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }

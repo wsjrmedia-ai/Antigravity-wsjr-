@@ -226,9 +226,7 @@ const FeatureCard3D = ({ feature, index }) => {
 
 const FeatureCards3D = () => {
     return (
-        <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+        <div className="feature-cards-grid" style={{
             gap: '2rem',
             perspective: '1200px',
         }}>

@@ -110,13 +110,7 @@ function NewsCarousel() {
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
-        <style>{`
-          div::-webkit-scrollbar { display: none; }
-          @keyframes scrollLeft {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-          }
-        `}</style>
+
 
         <div style={{
           display: 'flex',
@@ -188,18 +182,7 @@ export default function HomePage() {
   return (
     <div style={{ color: '#fff', overflowX: 'hidden', background: '#03050e', position: 'relative' }}>
       <HomeHeader />
-      <style>{`
-          @media (max-width: 768px) {
-              .hp-hero { padding-top: 80px !important; min-height: auto !important; }
-              .hp-search-bar { max-width: 100% !important; }
-              .hp-cta-buttons a { flex: 1; justify-content: center; }
-          }
-          @media (max-width: 480px) {
-              .hp-hero { padding-top: 72px !important; padding-bottom: 2rem !important; }
-              .hp-search-bar input { font-size: 14px !important; }
-              .hp-cta-buttons a { width: 100%; }
-          }
-      `}</style>
+
 
       {/* ── Hero ── */}
       <section className="hp-hero responsive-padding" style={{

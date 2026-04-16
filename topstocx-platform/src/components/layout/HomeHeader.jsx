@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import topstocxLogo from '../../assets/topstocx-logo.png';
-import { ChevronDown, Search } from 'lucide-react';
+import { ChevronDown, Search, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePlan } from '../../context/PlanContext';
 import LearnEarnToggle from './LearnEarnToggle';
 
 const HomeHeader = () => {
     const [isProductsOpen, setIsProductsOpen] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { userPlan, setShowPricing, isPro } = usePlan();
 
     const navLinks = [
@@ -50,7 +51,7 @@ const HomeHeader = () => {
                     <img src={topstocxLogo} alt="TopStocX Logo" style={{ height: '50px', objectFit: 'contain', marginTop: '6px' }} />
                 </Link>
 
-                <nav style={{ display: 'flex', gap: '2rem' }}>
+                <nav className="hide-on-mobile" style={{ display: 'flex', gap: '2rem' }}>
                     {navLinks.map((link) => (
                         <div
                             key={link.name}
@@ -99,7 +100,7 @@ const HomeHeader = () => {
                                             {[
                                                 { title: 'Supercharts', desc: 'Market data for everyone', to: '/chart' },
                                                 { title: 'Indicators & Strategies', desc: 'Powerful technical tools', to: '/indicators' },
-                                                { title: 'Education', desc: 'Master the markets', href: 'http://localhost:5173/' },
+                                                { title: 'Education', desc: 'Master the markets', href: 'https://wsjrschool.com/' },
                                                 { title: 'Copy Trade', desc: 'Follow top performers', to: '/copy-trade' },
                                                 { title: 'Investments', desc: 'WallStreet JR Investments', href: 'https://www.wallstreetjrinvestments.com/' },
                                             ].map((item, idx) => {
@@ -138,9 +139,7 @@ const HomeHeader = () => {
                 </nav>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 0.8, justifyContent: 'flex-end' }}>
-
-
+            <div className="hide-on-mobile" style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 0.8, justifyContent: 'flex-end' }}>
 
                 {/* Upgrade Button */}
                 <button
@@ -195,9 +194,52 @@ const HomeHeader = () => {
                     transition: 'all 0.2s'
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1e4bd8'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2962ff'}
                 >Sign in</Link>
             </div>
+
+            {/* Mobile Hamburger Toggle */}
+            <div className="show-on-mobile" style={{ marginLeft: 'auto', cursor: 'pointer', zIndex: 1001, alignItems: 'center' }} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                {isMobileMenuOpen ? <X size={28} color="#fff" /> : <Menu size={28} color="#fff" />}
+            </div>
+
+            {/* Mobile Drawer */}
+            <AnimatePresence>
+                {isMobileMenuOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        style={{
+                            position: 'absolute',
+                            top: '72px',
+                            left: 0,
+                            right: 0,
+                            backgroundColor: 'rgba(19, 23, 34, 0.98)',
+                            backdropFilter: 'blur(20px)',
+                            borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+                            padding: '2rem',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '1.25rem',
+                            boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
+                            zIndex: 999
+                        }}
+                    >
+                        {navLinks.map((link) => (
+                            <Link key={link.name} to={link.href || '#'} style={{ color: '#fff', fontSize: '18px', fontWeight: 600, textDecoration: 'none' }} onClick={() => setIsMobileMenuOpen(false)}>
+                                {link.name}
+                            </Link>
+                        ))}
+                        <hr style={{ borderColor: 'rgba(255,255,255,0.05)', margin: '0.5rem 0'}} />
+                        <button onClick={() => { setIsMobileMenuOpen(false); setShowPricing(true); }} style={{ padding: '1rem', background: '#2962ff', border: 'none', color: '#fff', borderRadius: 8, fontSize: '16px', fontWeight: 800, cursor: 'pointer' }}>
+                            {isPro ? '★ Manage Plan' : '⚡ Upgrade'}
+                        </button>
+                        <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} style={{ padding: '1rem', background: 'transparent', border: '1px solid #30363d', color: '#fff', borderRadius: 8, fontSize: '16px', fontWeight: 700, textAlign: 'center', textDecoration: 'none' }}>
+                            Sign In
+                        </Link>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </header>
     );
 };
