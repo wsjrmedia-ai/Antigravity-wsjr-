@@ -24,7 +24,7 @@ const AdvancedChart = () => {
     }, [selectedSymbol]);
 
     return (
-        <div style={{ position: 'relative', width: '100%', height: '100%', background: '#131722', display: 'flex' }}>
+        <div style={{ position: 'relative', width: '100%', height: '100%', background: '#131722' }}>
             <AdvancedRealTimeChart
                 theme="dark"
                 symbol={tvSymbol}
@@ -37,7 +37,8 @@ const AdvancedChart = () => {
                 hide_legend={false}
                 save_image={false}
                 container_id="tv_advanced_chart"
-                autosize
+                width="100%"
+                height="100%"
             />
         </div>
     );
