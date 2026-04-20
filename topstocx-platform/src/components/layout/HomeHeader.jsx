@@ -48,7 +48,10 @@ const HomeHeader = () => {
                     onMouseEnter={(e) => e.target.style.opacity = '0.8'}
                     onMouseLeave={(e) => e.target.style.opacity = '1'}
                 >
-                    <img src={topstocxLogo} alt="TopStocX Logo" style={{ height: '50px', objectFit: 'contain', marginTop: '6px' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '6px' }}>
+                        <img src={topstocxLogo} alt="TopStocX Logo" style={{ height: '50px', objectFit: 'contain' }} />
+                        <span style={{ fontSize: '26px', fontWeight: 800, letterSpacing: '-0.5px' }}>topstocx</span>
+                    </div>
                 </Link>
 
                 <nav className="hide-on-mobile" style={{ display: 'flex', gap: '2rem' }}>
