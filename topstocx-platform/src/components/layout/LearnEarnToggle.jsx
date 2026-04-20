@@ -29,7 +29,7 @@ const LearnEarnToggle = () => {
             backgroundColor: 'rgba(255, 255, 255, 0.08)',
             backdropFilter: 'blur(16px)',
             borderRadius: '100px',
-            border: `2.5px solid ${activeColor}`,
+            border: `2px solid ${activeColor}`,
             boxShadow: `0 0 35px ${glowColor}`,
             display: 'flex',
             alignItems: 'center',
@@ -43,7 +43,7 @@ const LearnEarnToggle = () => {
             <motion.div
                 initial={false}
                 animate={{ 
-                    x: isLearn ? '0px' : '126px',
+                    x: isLearn ? '0px' : '124px',
                     background: isLearn 
                         ? 'linear-gradient(135deg, #d4af37 0%, #f1d592 50%, #d4af37 100%)' 
                         : 'linear-gradient(135deg, #005AFF 0%, #60a5fa 50%, #005AFF 100%)'
@@ -53,8 +53,8 @@ const LearnEarnToggle = () => {
                     position: 'absolute',
                     top: '4px',
                     left: '4px',
-                    width: '126px',
-                    height: '39px',
+                    width: '124px',
+                    height: '40px',
                     borderRadius: '100px',
                     zIndex: 0,
                     boxShadow: isLearn ? '0 3px 15px rgba(212, 175, 55, 0.5)' : '0 4px 15px rgba(0, 90, 255, 0.5)'
