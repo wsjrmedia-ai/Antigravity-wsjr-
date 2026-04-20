@@ -66,7 +66,7 @@ export default function AuthPage() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: '2rem' }}>
                     <div style={{
                         width: 48, height: 48, borderRadius: 12,
-                        background: 'linear-gradient(135deg, #005AFF, #00d2ff)',
+                        background: 'var(--brand-gradient-blue)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         boxShadow: '0 8px 32px rgba(0, 90, 255,0.4)'
                     }}>
@@ -244,7 +244,7 @@ export default function AuthPage() {
                                     marginTop: 12,
                                     width: '100%',
                                     padding: '14px',
-                                    background: 'linear-gradient(90deg, #005AFF, #00d2ff)',
+                                    background: 'var(--brand-gradient-blue)',
                                     color: '#fff',
                                     border: 'none',
                                     borderRadius: 8,

@@ -85,53 +85,6 @@ export default function MarketsPage() {
                 height="100%" 
                 width="100%"
                 showFloatingTooltip={true}
-                tabs={[
-                  {
-                    title: "US Stocks",
-                    symbols: [
-                      { s: "NASDAQ:AAPL", d: "Apple Inc." },
-                      { s: "NASDAQ:MSFT", d: "Microsoft Corp." },
-                      { s: "NASDAQ:AMZN", d: "Amazon.com Inc." },
-                      { s: "NASDAQ:TSLA", d: "Tesla Inc." },
-                      { s: "NASDAQ:NVDA", d: "NVIDIA Corp." },
-                      { s: "NASDAQ:GOOGL", d: "Alphabet Inc." },
-                      { s: "NYSE:XOM", d: "Exxon Mobil" },
-                      { s: "NYSE:WMT", d: "Walmart" }
-                    ]
-                  },
-                  {
-                    title: "Crypto",
-                    symbols: [
-                      { s: "BINANCE:BTCUSDT", d: "Bitcoin" },
-                      { s: "BINANCE:ETHUSDT", d: "Ethereum" },
-                      { s: "BINANCE:SOLUSDT", d: "Solana" },
-                      { s: "BINANCE:BNBUSDT", d: "Binance Coin" },
-                      { s: "BINANCE:XRPUSDT", d: "Ripple" },
-                      { s: "BINANCE:DOGEUSDT", d: "Dogecoin" }
-                    ]
-                  },
-                  {
-                    title: "Forex",
-                    symbols: [
-                      { s: "FX:EURUSD", d: "EUR/USD" },
-                      { s: "FX:GBPUSD", d: "GBP/USD" },
-                      { s: "FX:USDJPY", d: "USD/JPY" },
-                      { s: "FX:AUDUSD", d: "AUD/USD" },
-                      { s: "FX:USDCAD", d: "USD/CAD" }
-                    ]
-                  },
-                  {
-                    title: "Indices",
-                    symbols: [
-                      { s: "FOREXCOM:SPXUSD", d: "S&P 500" },
-                      { s: "FOREXCOM:NSXUSD", d: "Nasdaq 100" },
-                      { s: "FOREXCOM:DJI", d: "Dow Jones" },
-                      { s: "INDEX:NKY", d: "Nikkei 225" },
-                      { s: "INDEX:DAX", d: "DAX" },
-                      { s: "INDEX:UKX", d: "UK 100" }
-                    ]
-                  }
-                ]}
             />
           ), [])}
         </div>
@@ -153,7 +106,7 @@ export default function MarketsPage() {
           </div>
           <div style={{ display: 'flex', gap: '0.75rem' }}>
             <Link to="/chart" style={{
-              padding: '0.65rem 1.5rem', background: '#005AFF', color: '#fff',
+              padding: '0.65rem 1.5rem', background: 'var(--brand-gradient-blue)', color: '#fff',
               borderRadius: 6, textDecoration: 'none', fontSize: 14, fontWeight: 700,
             }}>
               Open Chart
