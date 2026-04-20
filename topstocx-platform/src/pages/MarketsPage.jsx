@@ -204,7 +204,7 @@ const STOCK_COLS = [
   { field: 'volume',    label: 'Volume',   render: (v) => <span style={{ color: '#8b949e' }}>{fmtVol(v)}</span> },
   { field: 'sector',    label: 'Sector',   render: (v) => (
       <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 4,
-        background: 'rgba(41,98,255,0.1)', color: '#2962ff', fontWeight: 600 }}>
+        background: 'rgba(0, 90, 255,0.1)', color: '#005AFF', fontWeight: 600 }}>
         {v}
       </span>
     )
@@ -356,7 +356,7 @@ export default function MarketsPage() {
             {TABS.map((t) => (
               <button key={t.key} onClick={() => setActiveTab(t.key)} style={{
                 padding: '14px 18px', background: 'none', border: 'none',
-                borderBottom: `2px solid ${activeTab === t.key ? '#2962ff' : 'transparent'}`,
+                borderBottom: `2px solid ${activeTab === t.key ? '#005AFF' : 'transparent'}`,
                 color: activeTab === t.key ? '#fff' : '#555',
                 fontWeight: activeTab === t.key ? 700 : 500,
                 fontSize: 13, cursor: 'pointer', transition: 'all 0.2s', whiteSpace: 'nowrap',
@@ -375,8 +375,8 @@ export default function MarketsPage() {
         {/* Bottom CTA */}
         <div style={{
           marginTop: '2rem', padding: '1.5rem 2rem',
-          background: 'linear-gradient(135deg, rgba(41,98,255,0.08), rgba(41,98,255,0.02))',
-          border: '1px solid rgba(41,98,255,0.2)', borderRadius: 12,
+          background: 'linear-gradient(135deg, rgba(0, 90, 255,0.08), rgba(0, 90, 255,0.02))',
+          border: '1px solid rgba(0, 90, 255,0.2)', borderRadius: 12,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem',
         }}>
           <div>
@@ -389,7 +389,7 @@ export default function MarketsPage() {
           </div>
           <div style={{ display: 'flex', gap: '0.75rem' }}>
             <Link to="/chart" style={{
-              padding: '0.65rem 1.5rem', background: '#2962ff', color: '#fff',
+              padding: '0.65rem 1.5rem', background: '#005AFF', color: '#fff',
               borderRadius: 6, textDecoration: 'none', fontSize: 14, fontWeight: 700,
             }}>
               Open Chart

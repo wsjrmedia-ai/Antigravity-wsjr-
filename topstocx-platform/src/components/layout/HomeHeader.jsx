@@ -119,12 +119,12 @@ const HomeHeader = () => {
                                                             fontSize: '14px',
                                                             transition: 'all 0.2s'
                                                         }}
-                                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(41, 98, 255, 0.15)'}
+                                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 90, 255, 0.15)'}
                                                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                                                     >
                                                         <div style={{ fontWeight: 700, marginBottom: '2px', display: 'flex', alignItems: 'center', gap: 6 }}>
                                                             {item.title} 
-                                                            {item.href && <span style={{fontSize: 10, color: '#2962ff', padding: '1px 4px', background: 'rgba(41,98,255,0.1)', borderRadius: 4}}>WSJR</span>}
+                                                            {item.href && <span style={{fontSize: 10, color: '#005AFF', padding: '1px 4px', background: 'rgba(0, 90, 255,0.1)', borderRadius: 4}}>WSJR</span>}
                                                         </div>
                                                         <div style={{ fontSize: '12px', color: '#868993' }}>{item.desc}</div>
                                                     </Component>
@@ -159,20 +159,20 @@ const HomeHeader = () => {
                         background: isPro
                             ? userPlan === 'ultimate'
                                 ? 'linear-gradient(90deg, #d4af37, #f9e077, #d4af37)'
-                                : 'linear-gradient(90deg, #2962ff, #00d2ff)'
-                            : 'rgba(41, 98, 255, 0.12)',
+                                : 'linear-gradient(90deg, #005AFF, #00d2ff)'
+                            : 'rgba(0, 90, 255, 0.12)',
                         color: userPlan === 'ultimate' ? '#0a0800' : '#fff',
                         boxShadow: isPro
                             ? userPlan === 'ultimate'
                                 ? '0 0 18px #d4af3755'
-                                : '0 0 18px #2962ff55'
+                                : '0 0 18px #005AFF55'
                             : 'none',
-                        border: isPro ? 'none' : '1px solid #2962ff66',
+                        border: isPro ? 'none' : '1px solid #005AFF66',
                     }}
-                    onMouseEnter={e => { if (!isPro) { e.currentTarget.style.background = '#2962ff'; e.currentTarget.style.boxShadow = '0 0 18px #2962ff55'; } else { e.currentTarget.style.transform = 'scale(1.04)'; } }}
+                    onMouseEnter={e => { if (!isPro) { e.currentTarget.style.background = '#005AFF'; e.currentTarget.style.boxShadow = '0 0 18px #005AFF55'; } else { e.currentTarget.style.transform = 'scale(1.04)'; } }}
                     onMouseLeave={e => {
                         e.currentTarget.style.transform = 'none';
-                        if (!isPro) { e.currentTarget.style.background = 'rgba(41, 98, 255, 0.12)'; e.currentTarget.style.boxShadow = 'none'; }
+                        if (!isPro) { e.currentTarget.style.background = 'rgba(0, 90, 255, 0.12)'; e.currentTarget.style.boxShadow = 'none'; }
                     }}
                 >
                     {isPro
@@ -183,7 +183,7 @@ const HomeHeader = () => {
 
 
                 <Link to="/login" style={{
-                    backgroundColor: '#2962ff',
+                    backgroundColor: '#005AFF',
                     color: '#fff',
                     textDecoration: 'none',
                     padding: '0.6rem 1.4rem',
@@ -231,7 +231,7 @@ const HomeHeader = () => {
                             </Link>
                         ))}
                         <hr style={{ borderColor: 'rgba(255,255,255,0.05)', margin: '0.5rem 0'}} />
-                        <button onClick={() => { setIsMobileMenuOpen(false); setShowPricing(true); }} style={{ padding: '1rem', background: '#2962ff', border: 'none', color: '#fff', borderRadius: 8, fontSize: '16px', fontWeight: 800, cursor: 'pointer' }}>
+                        <button onClick={() => { setIsMobileMenuOpen(false); setShowPricing(true); }} style={{ padding: '1rem', background: '#005AFF', border: 'none', color: '#fff', borderRadius: 8, fontSize: '16px', fontWeight: 800, cursor: 'pointer' }}>
                             {isPro ? '★ Manage Plan' : '⚡ Upgrade'}
                         </button>
                         <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} style={{ padding: '1rem', background: 'transparent', border: '1px solid #30363d', color: '#fff', borderRadius: 8, fontSize: '16px', fontWeight: 700, textAlign: 'center', textDecoration: 'none' }}>

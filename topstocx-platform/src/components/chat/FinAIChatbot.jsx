@@ -68,7 +68,7 @@ function SparklineChart({ data, color }) {
 ───────────────────────────────────────── */
 function FinanceCard({ info }) {
     const up = info.change >= 0;
-    const clr = up ? "#2962ff" : "#ff4d6d";
+    const clr = up ? "#005AFF" : "#ff4d6d";
 
     const pts = (() => {
         const n = 50;
@@ -167,7 +167,7 @@ function VoiceWave({ active }) {
             {[0.4, 0.7, 1.0, 0.7, 0.4].map((d, i) => (
                 <div key={i} style={{
                     width: 3, height: 14, borderRadius: 2,
-                    background: active ? "#2962ff" : "#1e3a50",
+                    background: active ? "#005AFF" : "#1e3a50",
                     transformOrigin: "center",
                     animation: active ? `wavebar ${0.5 + d * 0.4}s ease-in-out ${i * 0.08}s infinite` : "none",
                     transition: "background 0.3s",
@@ -191,7 +191,7 @@ function TypingDots() {
       `}</style>
             {[0, 1, 2].map((i) => (
                 <div key={i} style={{
-                    width: 7, height: 7, borderRadius: "50%", background: "#2962ff",
+                    width: 7, height: 7, borderRadius: "50%", background: "#005AFF",
                     animation: `tdot 0.9s ${i * 0.18}s ease-in-out infinite`,
                 }} />
             ))}
@@ -389,7 +389,7 @@ function FlameParticles({ color = "#00e5ff" }) {
 
 function RobotModel({ mode = 'pulse' }) {
     const isManu = mode === 'pulse';
-    const primaryColor = isManu ? "#2962ff" : "#d4af37";
+    const primaryColor = isManu ? "#005AFF" : "#d4af37";
     const tealColor = isManu ? "#00e5ff" : "#f1d592"; // Aqua
     const waveRef = useRef();
 
@@ -511,7 +511,7 @@ function AvatarRobot3D({ mode = 'pulse' }) {
 
 function AvatarManu({ size = 'medium' }) {
     if (size === 'small') {
-        return <img src="/robot_icon.png" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'drop-shadow(0 0 8px rgba(41, 98, 255, 0.4))' }} alt="Bot" />;
+        return <img src="/robot_icon.png" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'drop-shadow(0 0 8px rgba(0, 90, 255, 0.4))' }} alt="Bot" />;
     }
     return <AvatarRobot3D mode="pulse" />;
 }
@@ -927,10 +927,10 @@ export default function TopstockXVoiceBot() {
         let html = t
             .replace(/\[[\d,\s]+\]/g, "") // Strip [1,2,3] citations
             // Section headers: ## Header
-            .replace(/^##\s+(.+)$/gm, `<div style='font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${mode === "pulse" ? "#2962ff" : "#00e5ff"};margin:12px 0 4px;font-weight:800;font-family:Syne,sans-serif'>$1</div>`)
+            .replace(/^##\s+(.+)$/gm, `<div style='font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${mode === "pulse" ? "#005AFF" : "#00e5ff"};margin:12px 0 4px;font-weight:800;font-family:Syne,sans-serif'>$1</div>`)
             // Bold
-            .replace(/\*\*(.+?)\*\*/g, `<strong style='color:${mode === "pulse" ? "#2962ff" : "#00e5ff"}'>$1</strong>`)
-            .replace(/\*(.+?)\*/g, `<strong style='color:${mode === "pulse" ? "#2962ff" : "#00e5ff"}'>$1</strong>`)
+            .replace(/\*\*(.+?)\*\*/g, `<strong style='color:${mode === "pulse" ? "#005AFF" : "#00e5ff"}'>$1</strong>`)
+            .replace(/\*(.+?)\*/g, `<strong style='color:${mode === "pulse" ? "#005AFF" : "#00e5ff"}'>$1</strong>`)
             // Italic
             .replace(/_(.+?)_/g, "<em style='color:#7ec8e3'>$1</em>")
             // Line breaks
@@ -940,14 +940,14 @@ export default function TopstockXVoiceBot() {
         html = html.replace(/<<<STICKER:([a-z_]+)>>>/gi, (match, key) => {
             const url = FUNNY_STICKERS[key.toLowerCase()];
             if (url) {
-                return `<img src="${url}" style="width: 100%; border-radius: 8px; margin-top: 10px; margin-bottom: 2px; border: 2px solid ${mode === "pulse" ? "#2962ff33" : "#00e5ff33"};" alt="${key} sticker" />`;
+                return `<img src="${url}" style="width: 100%; border-radius: 8px; margin-top: 10px; margin-bottom: 2px; border: 2px solid ${mode === "pulse" ? "#005AFF33" : "#00e5ff33"};" alt="${key} sticker" />`;
             }
             return '';
         });
 
         // Render [cultural sticker descriptions] e.g. [Malayalam movie villain slow clap sticker]
         html = html.replace(/\[([^\]]{10,80} sticker[^\]]*)\]/gi, (match, desc) => {
-            return `<span style="display:inline-block;background:${mode === "pulse" ? "#2962ff18" : "#00e5ff18"};border:1px solid ${mode === "pulse" ? "#2962ff44" : "#00e5ff44"};color:${mode === "pulse" ? "#6ea0ff" : "#00e5ff"};border-radius:8px;padding:3px 8px;font-size:11px;margin:2px 0;font-style:italic">🎬 ${desc}</span>`;
+            return `<span style="display:inline-block;background:${mode === "pulse" ? "#005AFF18" : "#00e5ff18"};border:1px solid ${mode === "pulse" ? "#005AFF44" : "#00e5ff44"};color:${mode === "pulse" ? "#6ea0ff" : "#00e5ff"};border-radius:8px;padding:3px 8px;font-size:11px;margin:2px 0;font-style:italic">🎬 ${desc}</span>`;
         });
 
         return <div dangerouslySetInnerHTML={{ __html: html }} />;
@@ -957,8 +957,8 @@ export default function TopstockXVoiceBot() {
         <>
             <style>{`
         :root {
-            --finai-primary: ${mode === "pulse" ? "#2962ff" : "#00e5ff"};
-            --finai-primary-glow: ${mode === "pulse" ? "#2962ff33" : "#00e5ff33"};
+            --finai-primary: ${mode === "pulse" ? "#005AFF" : "#00e5ff"};
+            --finai-primary-glow: ${mode === "pulse" ? "#005AFF33" : "#00e5ff33"};
         }
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap');
         *{box-sizing:border-box;margin:0;padding:0;}
@@ -966,7 +966,7 @@ export default function TopstockXVoiceBot() {
         .finai-wrap .messages-container:hover::-webkit-scrollbar { width: 6px; }
         .finai-wrap .messages-container::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 10px; }
         .finai-wrap .messages-container::-webkit-scrollbar-thumb { 
-            background: rgba(41, 98, 255, 0.2); 
+            background: rgba(0, 90, 255, 0.2); 
             border-radius: 10px; 
             border: 1px solid transparent;
             transition: all 0.3s ease;
@@ -1021,7 +1021,7 @@ export default function TopstockXVoiceBot() {
                     background: "linear-gradient(160deg,#0d1b2a 0%,#091420 100%)",
                     borderRadius: 22,
                     border: "1px solid #1a3050",
-                    boxShadow: "0 0 60px #2962ff12, 0 32px 72px rgba(0,0,0,0.9)",
+                    boxShadow: "0 0 60px #005AFF12, 0 32px 72px rgba(0,0,0,0.9)",
                     overflow: "hidden",
                     fontFamily: "'Inter', 'Segoe UI', sans-serif",
                     animation: "finai-pop .3s cubic-bezier(.175,.885,.32,1.275)",
@@ -1044,7 +1044,7 @@ export default function TopstockXVoiceBot() {
                             display: "flex", alignItems: "center", justifyContent: "center",
                             flexShrink: 0,
                             overflow: 'hidden',
-                            boxShadow: speaking ? (mode === "pulse" ? "0 0 24px #2962ff77" : "0 0 24px #00e5ff77") : (mode === "pulse" ? "0 0 12px #2962ff33" : "0 0 12px #00e5ff33"),
+                            boxShadow: speaking ? (mode === "pulse" ? "0 0 24px #005AFF77" : "0 0 24px #00e5ff77") : (mode === "pulse" ? "0 0 12px #005AFF33" : "0 0 12px #00e5ff33"),
                             transition: "box-shadow .4s",
                         }}>
                             {mode === "pulse" ? <AvatarManu size="medium" /> : <AvatarAtlas size="medium" />}
@@ -1068,11 +1068,11 @@ export default function TopstockXVoiceBot() {
                                             background: isPro
                                                 ? userPlan === "ultimate"
                                                     ? "linear-gradient(90deg,#d4af37,#f9e077,#d4af37)"
-                                                    : "linear-gradient(90deg,#2962ff,#00d2ff)"
+                                                    : "linear-gradient(90deg,#005AFF,#00d2ff)"
                                                 : "#1a2a3a",
                                             color: userPlan === "ultimate" ? "#0a0800" : isPro ? "#fff" : "#4a7a9a",
                                             border: isPro ? "none" : "1px solid #1e3a50",
-                                            boxShadow: isPro ? "0 0 10px #2962ff44" : "none",
+                                            boxShadow: isPro ? "0 0 10px #005AFF44" : "none",
                                             transition: "all 0.3s",
                                             fontFamily: "'Inter', sans-serif",
                                             textTransform: "uppercase",
@@ -1087,7 +1087,7 @@ export default function TopstockXVoiceBot() {
                                     <select
                                         value={mode}
                                         onChange={(e) => setMode(e.target.value)}
-                                        style={{ background: "#0c1824", color: "#e8f0fe", border: `1px solid ${mode === "pulse" ? "#2962ff" : "#00e5ff"}`, borderRadius: 4, fontSize: 11, padding: "2px 4px", outline: "none", cursor: "pointer", fontFamily: "'Inter', sans-serif" }}
+                                        style={{ background: "#0c1824", color: "#e8f0fe", border: `1px solid ${mode === "pulse" ? "#005AFF" : "#00e5ff"}`, borderRadius: 4, fontSize: 11, padding: "2px 4px", outline: "none", cursor: "pointer", fontFamily: "'Inter', sans-serif" }}
                                     >
                                         <option value="pulse">Manu</option>
                                         <option value="atlas">Atlas</option>
@@ -1110,7 +1110,7 @@ export default function TopstockXVoiceBot() {
                                 </div>
                             </div>
                             {/* Row 2: status */}
-                            <div style={{ fontSize: 10, letterSpacing: 1.5, color: speaking ? "#00d2ff" : listening ? "#2962ff" : isPro ? "#d4af37" : "#2a5a7a", fontFamily: "'Inter', sans-serif" }}>
+                            <div style={{ fontSize: 10, letterSpacing: 1.5, color: speaking ? "#00d2ff" : listening ? "#005AFF" : isPro ? "#d4af37" : "#2a5a7a", fontFamily: "'Inter', sans-serif" }}>
                                 {speaking ? (UI_LOCALE[language] || UI_LOCALE["English"]).statusSpeaking : listening ? (UI_LOCALE[language] || UI_LOCALE["English"]).statusListening : isPro ? (UI_LOCALE[language] || UI_LOCALE["English"]).statusPro : (UI_LOCALE[language] || UI_LOCALE["English"]).statusLive}
                             </div>
                         </div>
@@ -1154,7 +1154,7 @@ export default function TopstockXVoiceBot() {
                                         fontSize: 14,
                                         lineHeight: 1.75,
                                         fontFamily: "'Inter', 'Segoe UI', sans-serif",
-                                        boxShadow: msg.role === "user" ? (mode === "pulse" ? "0 4px 18px #2962ff30" : "0 4px 18px #00e5ff20") : "0 4px 18px #00000050",
+                                        boxShadow: msg.role === "user" ? (mode === "pulse" ? "0 4px 18px #005AFF30" : "0 4px 18px #00e5ff20") : "0 4px 18px #00000050",
                                     }}>
                                         {renderText(msg.text)}
                                     </div>
@@ -1177,7 +1177,7 @@ export default function TopstockXVoiceBot() {
                                     border: "1px solid #1e3a55",
                                     borderRadius: "4px 16px 16px 16px",
                                 }}>
-                                    <div style={{ padding: '6px 14px 0', fontSize: 9, color: mode === 'pulse' ? '#2962ff' : '#00e5ff', letterSpacing: 1, textTransform: 'uppercase', fontWeight: 800 }}>
+                                    <div style={{ padding: '6px 14px 0', fontSize: 9, color: mode === 'pulse' ? '#005AFF' : '#00e5ff', letterSpacing: 1, textTransform: 'uppercase', fontWeight: 800 }}>
                                         {mode === 'pulse' ? (UI_LOCALE[language] || UI_LOCALE["English"]).checkingPulse : (UI_LOCALE[language] || UI_LOCALE["English"]).checkingAtlas}
                                     </div>
                                     <TypingDots />
@@ -1240,19 +1240,19 @@ export default function TopstockXVoiceBot() {
                                         resize: "none", lineHeight: 1.5,
                                         fontFamily: "'IBM Plex Mono',monospace",
                                         fontWeight: 600,
-                                        caretColor: mode === "pulse" ? "#2962ff" : "#ffffff",
+                                        caretColor: mode === "pulse" ? "#005AFF" : "#ffffff",
                                     }}
                                 />
 
                                 <button className="sendbtn" onClick={() => doSend()} disabled={!input.trim() || loading} style={{
                                     width: 42, height: 42, borderRadius: "50%", flexShrink: 0,
                                     background: input.trim() && !loading
-                                        ? (mode === "pulse" ? "linear-gradient(135deg,#2962ff,#1565c0)" : "linear-gradient(135deg,#00e5ff,#009eb3)")
+                                        ? (mode === "pulse" ? "linear-gradient(135deg,#005AFF,#1565c0)" : "linear-gradient(135deg,#00e5ff,#009eb3)")
                                         : "#111e2e",
                                     border: "none",
                                     cursor: input.trim() && !loading ? "pointer" : "default",
                                     fontSize: 17, transition: "all .25s",
-                                    boxShadow: input.trim() ? (mode === "pulse" ? "0 4px 18px #2962ff44" : "0 4px 18px #00e5ff44") : "none",
+                                    boxShadow: input.trim() ? (mode === "pulse" ? "0 4px 18px #005AFF44" : "0 4px 18px #00e5ff44") : "none",
                                 }}>{loading ? "⏳" : "➤"}</button>
                             </div>
 

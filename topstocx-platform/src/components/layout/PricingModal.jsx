@@ -58,7 +58,7 @@ export default function PricingModal() {
                             padding: '2.5rem 2rem',
                             width: '100%',
                             maxWidth: 900,
-                            boxShadow: '0 0 80px #2962ff18, 0 40px 80px rgba(0,0,0,0.9)',
+                            boxShadow: '0 0 80px #005AFF18, 0 40px 80px rgba(0,0,0,0.9)',
                             fontFamily: "'Inter', sans-serif",
                             position: 'relative',
                         }}>
@@ -79,7 +79,7 @@ export default function PricingModal() {
 
                             {/* Header */}
                             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                                <div style={{ fontSize: 11, letterSpacing: 3, color: '#2962ff', textTransform: 'uppercase', marginBottom: 8, fontWeight: 700 }}>
+                                <div style={{ fontSize: 11, letterSpacing: 3, color: '#005AFF', textTransform: 'uppercase', marginBottom: 8, fontWeight: 700 }}>
                                     Topstocx Intelligence
                                 </div>
                                 <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 800, color: '#e8f0fe', margin: 0, fontFamily: 'Syne, sans-serif' }}>
@@ -134,7 +134,7 @@ export default function PricingModal() {
                                                     position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)',
                                                     background: plan.id === 'ultimate'
                                                         ? 'linear-gradient(90deg, #d4af37, #f9e077, #d4af37)'
-                                                        : 'linear-gradient(90deg, #2962ff, #00d2ff)',
+                                                        : 'linear-gradient(90deg, #005AFF, #00d2ff)',
                                                     color: plan.id === 'ultimate' ? '#0a0800' : '#fff',
                                                     fontSize: 9, fontWeight: 800, letterSpacing: 2,
                                                     padding: '3px 12px', borderRadius: 20,
@@ -196,7 +196,7 @@ export default function PricingModal() {
                                                         : plan.id === 'ultimate'
                                                             ? 'linear-gradient(90deg, #d4af37, #f9e077)'
                                                             : plan.id === 'pro'
-                                                                ? 'linear-gradient(90deg, #2962ff, #00d2ff)'
+                                                                ? 'linear-gradient(90deg, #005AFF, #00d2ff)'
                                                                 : 'rgba(255,255,255,0.06)',
                                                     color: plan.id === 'ultimate' ? '#0a0800' : '#fff',
                                                     border: isActive ? 'none' : `1px solid ${plan.color}66`,

@@ -254,7 +254,7 @@ export default function MainChart() {
             <button key={iv.value} onClick={() => setInterval(iv.value)} style={{
               padding: '3px 9px', borderRadius: 4, fontSize: 12, fontWeight: 600,
               cursor: 'pointer', border: 'none', fontFamily: 'inherit',
-              background: interval === iv.value ? '#2962ff' : 'transparent',
+              background: interval === iv.value ? '#005AFF' : 'transparent',
               color:      interval === iv.value ? '#fff'    : '#666',
               transition: 'all 0.15s',
             }}>
@@ -270,9 +270,9 @@ export default function MainChart() {
           {CHART_TYPES.map((t) => (
             <button key={t} onClick={() => setChartType(t)} style={{
               padding: '3px 9px', borderRadius: 4, fontSize: 12, fontWeight: 600,
-              cursor: 'pointer', border: `1px solid ${chartType === t ? '#2962ff' : 'transparent'}`,
+              cursor: 'pointer', border: `1px solid ${chartType === t ? '#005AFF' : 'transparent'}`,
               background: 'transparent',
-              color: chartType === t ? '#2962ff' : '#666',
+              color: chartType === t ? '#005AFF' : '#666',
               fontFamily: 'inherit', transition: 'all 0.15s',
             }}>
               {t}
@@ -325,7 +325,7 @@ export default function MainChart() {
             <div style={{
               width: 36, height: 36, borderRadius: '50%',
               border: '3px solid #1e2432',
-              borderTopColor: '#2962ff',
+              borderTopColor: '#005AFF',
               animation: 'chart-spin 0.8s linear infinite',
             }} />
             <span style={{ fontSize: 13, color: '#555' }}>Loading {symbol}…</span>

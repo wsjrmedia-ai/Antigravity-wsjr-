@@ -80,14 +80,14 @@ const TABS = [
     gradient: 'linear-gradient(90deg, #0d2820 0%, #089981 30%, #f59e0b 65%, #f23645 100%)',
   },
   { id: 'gdp',            label: 'GDP Growth',     unit: '%', desc: 'Real GDP Growth Rate YoY', data: GDP_GROWTH,
-    scale: scaleLinear().domain([-2, 0, 3, 8]).range(['#f23645', '#1a1f2e', '#2962ff', '#089981']),
+    scale: scaleLinear().domain([-2, 0, 3, 8]).range(['#f23645', '#1a1f2e', '#005AFF', '#089981']),
     legend: { min: '-2%', mid: '3%', max: '8%+' },
-    gradient: 'linear-gradient(90deg, #f23645 0%, #1a1f2e 25%, #2962ff 60%, #089981 100%)',
+    gradient: 'linear-gradient(90deg, #f23645 0%, #1a1f2e 25%, #005AFF 60%, #089981 100%)',
   },
   { id: 'rates',          label: 'Interests',      unit: '%', desc: 'Central Bank Policy Rate', data: INTEREST_RATES,
-    scale: scaleLinear().domain([0, 5, 15, 40]).range(['#0d1530', '#2962ff', '#7c3aed', '#f23645']),
+    scale: scaleLinear().domain([0, 5, 15, 40]).range(['#0d1530', '#005AFF', '#7c3aed', '#f23645']),
     legend: { min: '0%', mid: '15%', max: '40%+' },
-    gradient: 'linear-gradient(90deg, #0d1530 0%, #2962ff 35%, #7c3aed 65%, #f23645 100%)',
+    gradient: 'linear-gradient(90deg, #0d1530 0%, #005AFF 35%, #7c3aed 65%, #f23645 100%)',
   },
 ];
 
@@ -130,8 +130,8 @@ export default function GlobalInflationMap() {
             <p style={{ fontSize: 13, color: '#666', margin: 0 }}>{current.desc}</p>
           </div>
           <div style={{
-             padding: '4px 12px', borderRadius: 6, background: 'rgba(41, 98, 255, 0.1)',
-             border: '1px solid rgba(41, 98, 255, 0.2)', fontSize: 11, color: '#2962ff', fontWeight: 700
+             padding: '4px 12px', borderRadius: 6, background: 'rgba(0, 90, 255, 0.1)',
+             border: '1px solid rgba(0, 90, 255, 0.2)', fontSize: 11, color: '#005AFF', fontWeight: 700
           }}>
              LIVE DATA
           </div>
@@ -145,10 +145,10 @@ export default function GlobalInflationMap() {
               onClick={() => setTab(t.id)}
               style={{
                 padding: '10px 22px',
-                background: tab === t.id ? 'rgba(41, 98, 255, 0.1)' : 'transparent',
+                background: tab === t.id ? 'rgba(0, 90, 255, 0.1)' : 'transparent',
                 border: 'none',
                 borderRadius: '8px 8px 0 0',
-                borderBottom: `2.5px solid ${tab === t.id ? '#2962ff' : 'transparent'}`,
+                borderBottom: `2.5px solid ${tab === t.id ? '#005AFF' : 'transparent'}`,
                 color: tab === t.id ? '#fff' : '#666',
                 fontWeight: tab === t.id ? 800 : 500,
                 fontSize: 14,

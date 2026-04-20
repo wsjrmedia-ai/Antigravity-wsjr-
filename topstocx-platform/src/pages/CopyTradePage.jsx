@@ -143,7 +143,7 @@ export default function CopyTradePage() {
                         
                         <div className="ct-hero-stats" style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', marginBottom: '4rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                <Users size={20} color="#2962ff" />
+                                <Users size={20} color="#005AFF" />
                                 <span style={{ fontWeight: 600 }}>10,000+ Active Copiers</span>
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -167,7 +167,7 @@ export default function CopyTradePage() {
                                 <h2 style={{ fontSize: '24px', fontWeight: 800, margin: 0 }}>Verified Master Traders</h2>
                                 <p style={{ color: '#8b949e', margin: '4px 0 0' }}>Ranked by risk-adjusted monthly performance.</p>
                             </div>
-                            <button style={{ color: '#2962ff', background: 'none', border: 'none', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+                            <button style={{ color: '#005AFF', background: 'none', border: 'none', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
                                 View Methodology <Info size={16} />
                             </button>
                         </div>

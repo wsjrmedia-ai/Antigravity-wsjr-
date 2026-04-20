@@ -30,7 +30,7 @@ const NEWS = [
   { time: '12h ago', tag: 'Macro',    title: 'Global supply chain pressures ease as freight rates stabilize' },
   { time: '14h ago', tag: 'Forex',    title: 'Euro gains ground on ECB hawkish commentary' },
 ];
-const tagColor = { Crypto: '#f59e0b', Stocks: '#2962ff', Macro: '#7c3aed', Forex: '#10b981' };
+const tagColor = { Crypto: '#f59e0b', Stocks: '#005AFF', Macro: '#7c3aed', Forex: '#10b981' };
 
 function NewsCarousel() {
   const [isPaused, setIsPaused] = useState(false);
@@ -64,13 +64,13 @@ function NewsCarousel() {
           onClick={() => scroll('left')}
           style={{
             width: 48, height: 48, borderRadius: '50%', background: 'rgba(13, 17, 23, 0.8)',
-            border: '1px solid rgba(41, 98, 255, 0.3)', color: '#fff', 
+            border: '1px solid rgba(0, 90, 255, 0.3)', color: '#fff', 
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             cursor: 'pointer', transition: 'all 0.3s', backdropFilter: 'blur(8px)',
             boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = '#2962ff'; e.currentTarget.style.borderColor = '#2962ff'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(13, 17, 23, 0.8)'; e.currentTarget.style.borderColor = 'rgba(41, 98, 255, 0.3)'; }}
+          onMouseEnter={e => { e.currentTarget.style.background = '#005AFF'; e.currentTarget.style.borderColor = '#005AFF'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(13, 17, 23, 0.8)'; e.currentTarget.style.borderColor = 'rgba(0, 90, 255, 0.3)'; }}
         >
           <ChevronLeft size={24} />
         </button>
@@ -84,13 +84,13 @@ function NewsCarousel() {
           onClick={() => scroll('right')}
           style={{
             width: 48, height: 48, borderRadius: '50%', background: 'rgba(13, 17, 23, 0.8)',
-            border: '1px solid rgba(41, 98, 255, 0.3)', color: '#fff', 
+            border: '1px solid rgba(0, 90, 255, 0.3)', color: '#fff', 
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             cursor: 'pointer', transition: 'all 0.3s', backdropFilter: 'blur(8px)',
             boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = '#2962ff'; e.currentTarget.style.borderColor = '#2962ff'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(13, 17, 23, 0.8)'; e.currentTarget.style.borderColor = 'rgba(41, 98, 255, 0.3)'; }}
+          onMouseEnter={e => { e.currentTarget.style.background = '#005AFF'; e.currentTarget.style.borderColor = '#005AFF'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(13, 17, 23, 0.8)'; e.currentTarget.style.borderColor = 'rgba(0, 90, 255, 0.3)'; }}
         >
           <ChevronRight size={24} />
         </button>
@@ -133,7 +133,7 @@ function NewsCarousel() {
               boxShadow: '0 4px 24px rgba(0,0,0,0.2)'
             }}
             onMouseEnter={e => {
-              e.currentTarget.style.borderColor = 'rgba(41, 98, 255, 0.5)';
+              e.currentTarget.style.borderColor = 'rgba(0, 90, 255, 0.5)';
               e.currentTarget.style.transform = 'translateY(-5px)';
               e.currentTarget.style.background = 'rgba(13, 17, 23, 0.8)';
             }}
@@ -166,7 +166,7 @@ function NewsCarousel() {
               
               <div style={{ marginTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                  <span style={{ fontSize: 11, color: '#444' }}>Read coverage</span>
-                 <ChevronRight size={14} color="#2962ff" />
+                 <ChevronRight size={14} color="#005AFF" />
               </div>
             </div>
           ))}
@@ -214,30 +214,31 @@ export default function HomePage() {
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
                 padding: '6px 16px', borderRadius: 20,
-                border: '1px solid rgba(41,98,255,0.3)',
-                background: 'rgba(41,98,255,0.08)',
-                fontSize: 13, color: '#2962ff', fontWeight: 600, marginBottom: '1.5rem',
+                border: '1px solid rgba(0, 90, 255,0.3)',
+                background: 'rgba(0, 90, 255,0.08)',
+                fontSize: 13, color: '#005AFF', fontWeight: 600, marginBottom: '1.5rem',
               }}
             >
-              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#2962ff',
-                boxShadow: '0 0 8px #2962ff', display: 'inline-block' }} />
-              Real-time data. Professional tools.
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#005AFF',
+                boxShadow: '0 0 8px #005AFF', display: 'inline-block' }} />
+              Real-time data.
             </motion.div>
             <LearnEarnToggle />
             <motion.h1
+              className="font-primary"
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
               style={{ fontSize: 'clamp(42px, 7vw, 88px)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-2px', marginBottom: '1.5rem' }}
             >
-              Where the world<br />
-              <span style={{ color: '#2962ff' }}>does markets.</span>
+              TopStocX:<br />
+              <span style={{ background: 'var(--primary-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>your edge at the summit.</span>
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.25 }}
               style={{ fontSize: 18, color: '#8b949e', maxWidth: 600, margin: '0 auto 2.5rem', lineHeight: 1.7 }}
             >
-              Professional-grade charts, real-time data, copy trading, and market intelligence — all in one platform. Free forever.
+              Timeless thinking. Real-time data. For those who do not compromise being at the top.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
@@ -250,13 +251,13 @@ export default function HomePage() {
                 placeholder="Search symbols — AAPL, BTC, EUR/USD…"
                 style={{ flex: 1, padding: '14px 0', background: 'none', border: 'none', outline: 'none', color: '#e8f0fe', fontSize: 15, fontFamily: 'inherit' }}
               />
-              <Link to="/chart" style={{ padding: '14px 22px', background: '#2962ff', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 700 }}>Search</Link>
+              <Link to="/chart" style={{ padding: '14px 22px', background: '#005AFF', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 700 }}>Search</Link>
             </motion.div>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
               className="hp-cta-buttons flex-stack-mobile"
               style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}
             >
-              <Link to="/chart" style={{ padding: '0.75rem 2rem', background: '#2962ff', color: '#fff', borderRadius: 8, textDecoration: 'none', fontSize: 15, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Link to="/chart" style={{ padding: '0.75rem 2rem', background: '#005AFF', color: '#fff', borderRadius: 8, textDecoration: 'none', fontSize: 15, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
                 Open Chart <ArrowRight size={16} />
               </Link>
               <Link to="/copy-trade" style={{ padding: '0.75rem 2rem', border: '1px solid #30363d', color: '#e8f0fe', borderRadius: 8, textDecoration: 'none', fontSize: 15, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -281,7 +282,7 @@ export default function HomePage() {
       <section className="responsive-padding" style={{ maxWidth: 1400, margin: '0 auto', padding: '0 2rem 4rem' }}>
         <div style={{ marginBottom: '2.5rem', textAlign: 'center' }}>
           <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 900, margin: '0 0 8px', letterSpacing: '-1.5px' }}>
-            International <span style={{ color: '#2962ff' }}>Market Intelligence</span>
+            International <span style={{ color: '#005AFF' }}>Market Intelligence</span>
           </h2>
           <p style={{ color: '#555', fontSize: 16, maxWidth: 600, margin: '0 auto' }}>
             Visualize global stock performance, inflation, and GDP growth in real-time across the world’s major economies.
@@ -314,9 +315,9 @@ export default function HomePage() {
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
               padding: '5px 16px', borderRadius: 20,
-              border: '1px solid rgba(41,98,255,0.3)',
-              background: 'rgba(41,98,255,0.08)',
-              fontSize: 12, color: '#2962ff', fontWeight: 700,
+              border: '1px solid rgba(0, 90, 255,0.3)',
+              background: 'rgba(0, 90, 255,0.08)',
+              fontSize: 12, color: '#005AFF', fontWeight: 700,
               letterSpacing: '0.1em', textTransform: 'uppercase',
               marginBottom: '1.2rem',
             }}>
@@ -351,7 +352,7 @@ export default function HomePage() {
             <h3 style={{ margin: '0 0 1.5rem', fontSize: 18, fontWeight: 700, color: '#e8f0fe' }}>Quick Access</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
               {[
-                { label: 'Open Advanced Chart', to: '/chart',       color: '#2962ff', icon: <BarChart3 size={18} /> },
+                { label: 'Open Advanced Chart', to: '/chart',       color: '#005AFF', icon: <BarChart3 size={18} /> },
                 { label: 'Copy Elite Traders',  to: '/copy-trade',  color: '#00c979', icon: <Users size={18} /> },
                 { label: 'Browse Markets',       to: '/markets',     color: '#f59e0b', icon: <Globe size={18} /> },
                 { label: 'Trade Ideas Feed',     to: '/trade-ideas', color: '#7c3aed', icon: <Newspaper size={18} /> },
@@ -393,7 +394,7 @@ export default function HomePage() {
             </p>
             <div className="flex-stack-mobile" style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link to="/login" style={{
-                padding: '0.9rem 2.5rem', background: '#2962ff', color: '#fff',
+                padding: '0.9rem 2.5rem', background: '#005AFF', color: '#fff',
                 borderRadius: 8, textDecoration: 'none', fontSize: 16, fontWeight: 800, transition: 'all 0.2s',
               }}>
                 Sign in — it's free
@@ -429,7 +430,7 @@ export default function HomePage() {
           ))}
         </div>
         <div className="flex-stack-mobile mobile-text-center" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 12 }}>
-          <span>TOP<span style={{ color: '#2962ff' }}>STOCX</span> — © 2024 TopStocX Ltd. All rights reserved.</span>
+          <span>TOP<span style={{ color: '#005AFF' }}>STOCX</span> — © 2024 TopStocX Ltd. All rights reserved.</span>
           <span>Wall Street Jr. Academy Platform</span>
         </div>
       </footer>

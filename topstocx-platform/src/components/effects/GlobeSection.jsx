@@ -27,7 +27,7 @@ const GlobeSection = () => {
                 top: '50%', left: '50%',
                 width: '900px', height: '900px',
                 transform: 'translate(-50%, -50%)',
-                background: 'radial-gradient(circle, rgba(41,98,255,0.06) 0%, transparent 70%)',
+                background: 'radial-gradient(circle, rgba(0, 90, 255,0.06) 0%, transparent 70%)',
                 pointerEvents: 'none',
                 zIndex: 0,
             }} />
@@ -47,9 +47,9 @@ const GlobeSection = () => {
                         gap: '8px',
                         padding: '5px 16px',
                         borderRadius: '100px',
-                        border: '1px solid rgba(41,98,255,0.3)',
-                        background: 'rgba(41,98,255,0.08)',
-                        color: '#2962ff',
+                        border: '1px solid rgba(0, 90, 255,0.3)',
+                        background: 'rgba(0, 90, 255,0.08)',
+                        color: '#005AFF',
                         fontSize: '12px',
                         fontWeight: 700,
                         letterSpacing: '0.1em',
@@ -67,7 +67,7 @@ const GlobeSection = () => {
                         color: '#fff',
                     }}>
                         Trade the world,<br />
-                        <span style={{ color: '#2962ff' }}>from anywhere.</span>
+                        <span style={{ color: '#005AFF' }}>from anywhere.</span>
                     </h2>
                     <p style={{
                         fontSize: '1.2rem',
@@ -187,7 +187,7 @@ const GlobeSection = () => {
                                     { label: 'Data Points/sec', value: '2.4M' },
                                 ].map((s, i) => (
                                     <div key={i}>
-                                        <div style={{ fontSize: '16px', fontWeight: 800, color: '#2962ff' }}>{s.value}</div>
+                                        <div style={{ fontSize: '16px', fontWeight: 800, color: '#005AFF' }}>{s.value}</div>
                                         <div style={{ fontSize: '11px', color: '#434651', marginTop: '2px' }}>{s.label}</div>
                                     </div>
                                 ))}
@@ -209,7 +209,7 @@ const GlobeSection = () => {
                             top: '50%', left: '50%',
                             width: '350px', height: '350px',
                             transform: 'translate(-50%, -50%)',
-                            background: 'radial-gradient(circle, rgba(41,98,255,0.15), transparent 70%)',
+                            background: 'radial-gradient(circle, rgba(0, 90, 255,0.15), transparent 70%)',
                             borderRadius: '50%',
                             pointerEvents: 'none',
                             zIndex: 0,

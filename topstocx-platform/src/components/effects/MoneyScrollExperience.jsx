@@ -153,7 +153,7 @@ const BW = 18.0, BH = 12.0;
 const FW = BW / COLS, FH = BH / ROWS;
 
 const PLANS = [
-  { name:'Starter', price:'Free',    color:'#2962ff', bill:'$5 bill',  features:['Real-time charts','5 watchlists','3 alerts / day'] },
+  { name:'Starter', price:'Free',    color:'#005AFF', bill:'$5 bill',  features:['Real-time charts','5 watchlists','3 alerts / day'] },
   { name:'Pro',     price:'$29/mo',  color:'#00c979', bill:'$20 bill', features:['Advanced tools','Unlimited watchlists','Copy 5 traders'] },
   { name:'Elite',   price:'$99/mo',  color:'#f59e0b', bill:'$20 bill', features:['All features','Unlimited copy trade','Priority support'] },
 ];
@@ -318,8 +318,8 @@ export default function MoneyScrollExperience() {
         {/* Removed radial gradient as requested */}
 
         <motion.div style={{ position: 'absolute', bottom: '8vh', left: '50%', translateX: '-50%', opacity: scrollHintOp, zIndex: 15, pointerEvents: 'none' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '8px 22px', borderRadius: 24, border: '1px solid rgba(41,98,255,0.4)', background: 'rgba(41,98,255,0.08)', fontSize: 12, color: '#2962ff', fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase' }}>
-            <motion.span animate={{ opacity: [1, 0.2, 1] }} transition={{ duration: 1.5, repeat: Infinity }} style={{ width: 6, height: 6, borderRadius: '50%', background: '#2962ff', display: 'inline-block' }} />
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '8px 22px', borderRadius: 24, border: '1px solid rgba(0, 90, 255,0.4)', background: 'rgba(0, 90, 255,0.08)', fontSize: 12, color: '#005AFF', fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase' }}>
+            <motion.span animate={{ opacity: [1, 0.2, 1] }} transition={{ duration: 1.5, repeat: Infinity }} style={{ width: 6, height: 6, borderRadius: '50%', background: '#005AFF', display: 'inline-block' }} />
             Scroll to break down the cost
           </div>
         </motion.div>

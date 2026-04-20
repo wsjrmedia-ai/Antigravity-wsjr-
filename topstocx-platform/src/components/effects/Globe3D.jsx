@@ -17,18 +17,18 @@ function latLonToVec3(lat, lon, radius = 1.52) {
 
 // ─── Market nodes — all WHITE dots ───────────────────────────────────────────
 const MARKET_NODES = [
-    { name: 'New York',   lat: 40.7,  lon: -74.0,  color: '#ffffff', arcColor: '#2962ff', size: 0.044, vol: '$24.1T', region: 'Americas' },
+    { name: 'New York',   lat: 40.7,  lon: -74.0,  color: '#ffffff', arcColor: '#005AFF', size: 0.044, vol: '$24.1T', region: 'Americas' },
     { name: 'London',     lat: 51.5,  lon: -0.1,   color: '#ffffff', arcColor: '#089981', size: 0.040, vol: '$18.3T', region: 'Europe'   },
     { name: 'Tokyo',      lat: 35.7,  lon: 139.7,  color: '#ffffff', arcColor: '#d4af37', size: 0.038, vol: '$6.1T',  region: 'Asia'     },
     { name: 'Shanghai',   lat: 31.2,  lon: 121.5,  color: '#ffffff', arcColor: '#f23645', size: 0.036, vol: '$8.7T',  region: 'Asia'     },
-    { name: 'Hong Kong',  lat: 22.3,  lon: 114.2,  color: '#ffffff', arcColor: '#2962ff', size: 0.034, vol: '$4.2T',  region: 'Asia'     },
+    { name: 'Hong Kong',  lat: 22.3,  lon: 114.2,  color: '#ffffff', arcColor: '#005AFF', size: 0.034, vol: '$4.2T',  region: 'Asia'     },
     { name: 'Singapore',  lat: 1.3,   lon: 103.8,  color: '#ffffff', arcColor: '#089981', size: 0.030, vol: '$3.8T',  region: 'SE Asia'  },
     { name: 'Dubai',      lat: 25.2,  lon: 55.3,   color: '#ffffff', arcColor: '#d4af37', size: 0.032, vol: '$2.4T',  region: 'MENA'     },
-    { name: 'Sydney',     lat: -33.9, lon: 151.2,  color: '#ffffff', arcColor: '#2962ff', size: 0.028, vol: '$1.9T',  region: 'Oceania'  },
+    { name: 'Sydney',     lat: -33.9, lon: 151.2,  color: '#ffffff', arcColor: '#005AFF', size: 0.028, vol: '$1.9T',  region: 'Oceania'  },
     { name: 'Frankfurt',  lat: 50.1,  lon: 8.7,    color: '#ffffff', arcColor: '#f23645', size: 0.030, vol: '$2.1T',  region: 'Europe'   },
     { name: 'São Paulo',  lat: -23.5, lon: -46.6,  color: '#ffffff', arcColor: '#089981', size: 0.026, vol: '$1.2T',  region: 'Americas' },
     { name: 'Mumbai',     lat: 19.1,  lon: 72.9,   color: '#ffffff', arcColor: '#d4af37', size: 0.028, vol: '$1.8T',  region: 'Asia'     },
-    { name: 'Toronto',    lat: 43.7,  lon: -79.4,  color: '#ffffff', arcColor: '#2962ff', size: 0.026, vol: '$1.1T',  region: 'Americas' },
+    { name: 'Toronto',    lat: 43.7,  lon: -79.4,  color: '#ffffff', arcColor: '#005AFF', size: 0.026, vol: '$1.1T',  region: 'Americas' },
     { name: 'Seoul',      lat: 37.6,  lon: 126.9,  color: '#ffffff', arcColor: '#f23645', size: 0.026, vol: '$1.5T',  region: 'Asia'     },
     { name: 'Riyadh',     lat: 24.7,  lon: 46.7,   color: '#ffffff', arcColor: '#d4af37', size: 0.026, vol: '$0.9T',  region: 'MENA'     },
     { name: 'Zürich',     lat: 47.4,  lon: 8.5,    color: '#ffffff', arcColor: '#089981', size: 0.024, vol: '$0.8T',  region: 'Europe'   },
@@ -230,7 +230,7 @@ const EquatorialRing = () => {
     return (
         <mesh ref={r} rotation={[Math.PI / 2, 0, 0]}>
             <ringGeometry args={[1.63, 1.645, 120]} />
-            <meshBasicMaterial color="#2962ff" transparent opacity={0.15} side={THREE.DoubleSide} />
+            <meshBasicMaterial color="#005AFF" transparent opacity={0.15} side={THREE.DoubleSide} />
         </mesh>
     );
 };
@@ -306,7 +306,7 @@ const Globe3D = () => {
                 zIndex: 2, pointerEvents: 'none',
             }}>
                 {[
-                    { label: 'Americas', color: '#2962ff' },
+                    { label: 'Americas', color: '#005AFF' },
                     { label: 'Europe',   color: '#089981' },
                     { label: 'Asia',     color: '#d4af37' },
                     { label: 'MENA',     color: '#f23645' },

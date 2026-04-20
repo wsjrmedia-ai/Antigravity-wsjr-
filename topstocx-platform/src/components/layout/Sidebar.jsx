@@ -43,7 +43,7 @@ const Sidebar = () => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         color: tool.active ? 'var(--brand-blue)' : 'var(--text-muted)',
-                        backgroundColor: tool.active ? 'rgba(41, 98, 255, 0.1)' : 'transparent',
+                        backgroundColor: tool.active ? 'rgba(0, 90, 255, 0.1)' : 'transparent',
                         cursor: 'pointer',
                         borderRadius: '8px',
                         transition: 'all 0.2s ease'

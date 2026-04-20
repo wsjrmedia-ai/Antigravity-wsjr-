@@ -31,7 +31,7 @@ export default function AuthPage() {
             {/* Background Effects */}
             <div style={{
                 position: 'absolute', top: -200, right: -200, width: 800, height: 800,
-                background: 'radial-gradient(circle, rgba(41,98,255,0.08) 0%, rgba(0,0,0,0) 70%)',
+                background: 'radial-gradient(circle, rgba(0, 90, 255,0.08) 0%, rgba(0,0,0,0) 70%)',
                 borderRadius: '50%', filter: 'blur(80px)', pointerEvents: 'none'
             }} />
             <div style={{
@@ -66,14 +66,14 @@ export default function AuthPage() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: '2rem' }}>
                     <div style={{
                         width: 48, height: 48, borderRadius: 12,
-                        background: 'linear-gradient(135deg, #2962ff, #00d2ff)',
+                        background: 'linear-gradient(135deg, #005AFF, #00d2ff)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        boxShadow: '0 8px 32px rgba(41,98,255,0.4)'
+                        boxShadow: '0 8px 32px rgba(0, 90, 255,0.4)'
                     }}>
                         <Briefcase size={24} color="#fff" />
                     </div>
                     <div style={{ fontSize: 28, fontWeight: 900, fontFamily: "'Syne', sans-serif", letterSpacing: 1 }}>
-                        TOP<span style={{ color: '#2962ff' }}>STOCX</span>
+                        TOP<span style={{ color: '#005AFF' }}>STOCX</span>
                     </div>
                 </div>
 
@@ -201,7 +201,7 @@ export default function AuthPage() {
                                                 cursor: 'pointer',
                                                 transition: 'all 0.2s',
                                             }}
-                                                onMouseEnter={(e) => { e.currentTarget.style.border = '1.5px dashed #2962ff'; e.currentTarget.style.background = 'rgba(41,98,255,0.05)' }}
+                                                onMouseEnter={(e) => { e.currentTarget.style.border = '1.5px dashed #005AFF'; e.currentTarget.style.background = 'rgba(0, 90, 255,0.05)' }}
                                                 onMouseLeave={(e) => { e.currentTarget.style.border = '1.5px dashed #2a3f5f'; e.currentTarget.style.background = 'rgba(255,255,255,0.02)' }}
                                             >
                                                 <input
@@ -233,7 +233,7 @@ export default function AuthPage() {
                                 {/* Forgot Password for Login */}
                                 {isLogin && (
                                     <div style={{ textAlign: 'right' }}>
-                                        <a href="#" style={{ color: '#2962ff', fontSize: 13, textDecoration: 'none', fontWeight: 500 }}>
+                                        <a href="#" style={{ color: '#005AFF', fontSize: 13, textDecoration: 'none', fontWeight: 500 }}>
                                             Forgot password?
                                         </a>
                                     </div>
@@ -244,7 +244,7 @@ export default function AuthPage() {
                                     marginTop: 12,
                                     width: '100%',
                                     padding: '14px',
-                                    background: 'linear-gradient(90deg, #2962ff, #00d2ff)',
+                                    background: 'linear-gradient(90deg, #005AFF, #00d2ff)',
                                     color: '#fff',
                                     border: 'none',
                                     borderRadius: 8,
@@ -256,11 +256,11 @@ export default function AuthPage() {
                                     justifyContent: 'center',
                                     gap: 8,
                                     fontFamily: "'Inter', sans-serif",
-                                    boxShadow: '0 8px 24px rgba(41,98,255,0.3)',
+                                    boxShadow: '0 8px 24px rgba(0, 90, 255,0.3)',
                                     transition: 'transform 0.2s, box-shadow 0.2s',
                                 }}
-                                    onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(41,98,255,0.4)' }}
-                                    onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(41,98,255,0.3)' }}
+                                    onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(0, 90, 255,0.4)' }}
+                                    onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 90, 255,0.3)' }}
                                 >
                                     {isLogin ? 'Sign In Securely' : 'Complete Verification'}
                                     <ArrowRight size={18} />
@@ -288,8 +288,8 @@ export default function AuthPage() {
                 }
                 .auth-input:focus, .auth-select:focus {
                     outline: none;
-                    border-color: #2962ff !important;
-                    box-shadow: 0 0 0 3px rgba(41,98,255,0.15) !important;
+                    border-color: #005AFF !important;
+                    box-shadow: 0 0 0 3px rgba(0, 90, 255,0.15) !important;
                 }
                 .auth-input::placeholder {
                     color: #4a5a7a;

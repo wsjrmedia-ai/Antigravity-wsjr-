@@ -83,9 +83,9 @@
 .siri-orb-core {
     width: 14px;
     height: 14px;
-    background: linear-gradient(135deg, #2962ff 0%, #00d2ff 100%);
+    background: linear-gradient(135deg, #005AFF 0%, #00d2ff 100%);
     border-radius: 50%;
-    box-shadow: 0 0 15px rgba(41, 98, 255, 0.8);
+    box-shadow: 0 0 15px rgba(0, 90, 255, 0.8);
     z-index: 2;
 }
 
@@ -94,12 +94,12 @@
     width: 100%;
     height: 100%;
     border-radius: 40%;
-    border: 1px solid rgba(41, 98, 255, 0.3);
+    border: 1px solid rgba(0, 90, 255, 0.3);
     z-index: 1;
 }
 
 .wave-1 {
-    background: rgba(41, 98, 255, 0.1);
+    background: rgba(0, 90, 255, 0.1);
 }
 
 .wave-2 {
@@ -155,7 +155,7 @@
 
 .premium-scroll {
     scrollbar-width: thin;
-    scrollbar-color: rgba(41, 98, 255, 0.4) transparent;
+    scrollbar-color: rgba(0, 90, 255, 0.4) transparent;
 }
 
 /* Chrome, Edge, Safari */
@@ -173,15 +173,15 @@
 }
 
 .premium-scroll::-webkit-scrollbar-thumb {
-    background: rgba(41, 98, 255, 0.2);
+    background: rgba(0, 90, 255, 0.2);
     border-radius: 10px;
     transition: all 0.3s ease;
     border: 1px solid transparent;
 }
 
 .premium-scroll:hover::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #2962ff 0%, #00d2ff 100%);
-    box-shadow: 0 0 10px rgba(41, 98, 255, 0.6);
+    background: linear-gradient(180deg, #005AFF 0%, #00d2ff 100%);
+    box-shadow: 0 0 10px rgba(0, 90, 255, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -207,7 +207,7 @@
 
 .message.user {
     align-self: flex-end;
-    background: linear-gradient(135deg, #2962ff 0%, #1565c0 100%);
+    background: linear-gradient(135deg, #005AFF 0%, #1565c0 100%);
     color: #fff;
     border-bottom-right-radius: 4px;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -246,7 +246,7 @@
     background: rgba(0, 0, 0, 0.4);
     border-radius: 15px;
     padding: 15px;
-    border: 1px solid rgba(41, 98, 255, 0.2);
+    border: 1px solid rgba(0, 90, 255, 0.2);
     width: 100%;
 }
 
@@ -255,7 +255,7 @@
     align-items: center;
     gap: 8px;
     font-size: 11px;
-    color: #2962ff;
+    color: #005AFF;
     margin-bottom: 15px;
     text-transform: uppercase;
 }
@@ -299,7 +299,7 @@
 }
 
 .mic-btn.active {
-    color: #2962ff;
+    color: #005AFF;
     animation: mic-pulse 1.5s infinite;
 }
 
@@ -318,7 +318,7 @@
 .send-btn-premium {
     width: 36px;
     height: 36px;
-    background: #2962ff;
+    background: #005AFF;
     border: none;
     border-radius: 50%;
     color: #fff;
@@ -333,14 +333,14 @@
     width: 65px;
     height: 65px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #2962ff 0%, #1565c0 100%);
+    background: linear-gradient(135deg, #005AFF 0%, #1565c0 100%);
     border: none;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
     cursor: pointer;
-    box-shadow: 0 10px 25px rgba(41, 98, 255, 0.4);
+    box-shadow: 0 10px 25px rgba(0, 90, 255, 0.4);
     transition: all 0.3s;
 }
 
@@ -354,10 +354,10 @@
     width: 65px;
     height: 65px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #2962ff 0%, #1565c0 100%);
+    background: linear-gradient(135deg, #005AFF 0%, #1565c0 100%);
     border: none;
     cursor: pointer;
-    box-shadow: 0 10px 25px rgba(41, 98, 255, 0.4);
+    box-shadow: 0 10px 25px rgba(0, 90, 255, 0.4);
     transition: all 0.3s;
 }
 
@@ -388,7 +388,7 @@
 .send-button {
     width: 36px;
     height: 36px;
-    background: #2962ff;
+    background: #005AFF;
     border: none;
     border-radius: 50%;
     color: #fff;

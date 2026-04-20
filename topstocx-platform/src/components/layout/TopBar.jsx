@@ -83,7 +83,7 @@ const TopBar = ({ onToggleWatchlist, watchlistOpen }) => {
                             borderRadius: '4px',
                             whiteSpace: 'nowrap',
                             color: selectedPeriod === tf.value ? 'var(--brand-blue)' : 'var(--text-secondary)',
-                            backgroundColor: selectedPeriod === tf.value ? 'rgba(41, 98, 255, 0.1)' : 'transparent'
+                            backgroundColor: selectedPeriod === tf.value ? 'rgba(0, 90, 255, 0.1)' : 'transparent'
                         }} onMouseEnter={e => tf.value !== selectedPeriod && (e.currentTarget.style.backgroundColor = 'var(--bg-accent)')}
                             onMouseLeave={e => tf.value !== selectedPeriod && (e.currentTarget.style.backgroundColor = 'transparent')}>
                         {tf.label}
@@ -117,7 +117,7 @@ const TopBar = ({ onToggleWatchlist, watchlistOpen }) => {
                 <div className="ws-mobile-toggle" onClick={onToggleWatchlist}
                     style={{ width: 40, height: 40, cursor: 'pointer', borderRadius: 8,
                         alignItems: 'center', justifyContent: 'center',
-                        backgroundColor: watchlistOpen ? 'rgba(41,98,255,0.15)' : 'transparent' }}>
+                        backgroundColor: watchlistOpen ? 'rgba(0, 90, 255,0.15)' : 'transparent' }}>
                     <LayoutList size={18} color={watchlistOpen ? 'var(--brand-blue)' : 'var(--text-muted)'} />
                 </div>
 

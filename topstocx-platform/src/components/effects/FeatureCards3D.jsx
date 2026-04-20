@@ -6,8 +6,8 @@ const FEATURES = [
         icon: '⚡',
         title: 'Advanced Supercharts',
         desc: 'Institutional-grade charting with 100+ indicators and advanced drawing tools for deep technical analysis.',
-        color: '#2962ff',
-        accentColor: 'rgba(41, 98, 255, 0.12)',
+        color: '#005AFF',
+        accentColor: 'rgba(0, 90, 255, 0.12)',
         tag: 'PRO',
     },
     {
@@ -38,8 +38,8 @@ const FEATURES = [
         icon: '👥',
         title: 'Copy Trading',
         desc: 'Automatically mirror the portfolios and live trade execution of the world\'s most profitable verified analysts.',
-        color: '#2962ff',
-        accentColor: 'rgba(41, 98, 255, 0.12)',
+        color: '#005AFF',
+        accentColor: 'rgba(0, 90, 255, 0.12)',
         tag: 'SOCIAL',
     },
     {

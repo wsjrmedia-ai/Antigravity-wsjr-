@@ -31,8 +31,8 @@ export const PLANS = {
         label: 'Pro',
         price: '$29',
         period: '/month',
-        color: '#2962ff',
-        glow: '#2962ff44',
+        color: '#005AFF',
+        glow: '#005AFF44',
         badge: 'MOST POPULAR',
         features: [
             'Everything in Free',

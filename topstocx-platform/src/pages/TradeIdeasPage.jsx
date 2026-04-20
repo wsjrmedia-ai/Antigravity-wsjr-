@@ -195,7 +195,7 @@ export default function TradeIdeasPage() {
 
                         <div className="ti-toolbar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #30363d' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-                                <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, color: '#2962ff', fontSize: 14, fontWeight: 600, padding: '6px 10px', borderRadius: 8 }}>
+                                <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, color: '#005AFF', fontSize: 14, fontWeight: 600, padding: '6px 10px', borderRadius: 8 }}>
                                     <Image size={18} /><span>Media</span>
                                     <input type="file" accept="image/*" style={{ display: 'none' }} onChange={e => { if (e.target.files[0]) setNewPostImage(e.target.files[0]) }} />
                                 </label>
@@ -213,7 +213,7 @@ export default function TradeIdeasPage() {
                             </div>
 
                             <button type="submit" disabled={!newPostContent.trim() && !newPostImage} style={{
-                                background: (!newPostContent.trim() && !newPostImage) ? '#21262d' : '#2962ff', color: (!newPostContent.trim() && !newPostImage) ? '#8b949e' : '#fff',
+                                background: (!newPostContent.trim() && !newPostImage) ? '#21262d' : '#005AFF', color: (!newPostContent.trim() && !newPostImage) ? '#8b949e' : '#fff',
                                 border: 'none', borderRadius: 20, padding: '8px 20px', fontSize: 14, fontWeight: 700, cursor: (!newPostContent.trim() && !newPostImage) ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: 6
                             }}>Post <Send size={16} /></button>
                         </div>
@@ -255,7 +255,7 @@ export default function TradeIdeasPage() {
                                 {/* Content */}
                                 <p style={{ fontSize: 15, lineHeight: 1.6, color: '#c9d1d9', marginBottom: 14, whiteSpace: 'pre-wrap' }}>
                                     {post.content.split(/(\$[A-Z]+)/).map((part, i) =>
-                                        part.startsWith('$') ? <span key={i} style={{ color: '#2962ff', fontWeight: 600, cursor: 'pointer' }}>{part}</span> : part
+                                        part.startsWith('$') ? <span key={i} style={{ color: '#005AFF', fontWeight: 600, cursor: 'pointer' }}>{part}</span> : part
                                     )}
                                 </p>
 
@@ -310,7 +310,7 @@ export default function TradeIdeasPage() {
                                                         onChange={(e) => handleCommentChange(post.id, e.target.value)}
                                                         style={{ flex: 1, background: '#1c2128', border: '1px solid #30363d', color: '#e8f0fe', padding: '8px 12px', borderRadius: 20, fontSize: 14, outline: 'none' }}
                                                     />
-                                                    <button type="submit" disabled={!commentInputs[post.id]?.trim()} style={{ background: 'none', border: 'none', color: commentInputs[post.id]?.trim() ? '#2962ff' : '#8b949e', cursor: commentInputs[post.id]?.trim() ? 'pointer' : 'not-allowed', padding: '0 8px' }}>
+                                                    <button type="submit" disabled={!commentInputs[post.id]?.trim()} style={{ background: 'none', border: 'none', color: commentInputs[post.id]?.trim() ? '#005AFF' : '#8b949e', cursor: commentInputs[post.id]?.trim() ? 'pointer' : 'not-allowed', padding: '0 8px' }}>
                                                         <Send size={18} />
                                                     </button>
                                                 </form>
