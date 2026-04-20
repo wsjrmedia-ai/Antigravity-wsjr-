@@ -153,6 +153,7 @@ export default function AcademyChatbot() {
         ) : (
           <img 
             src="/robot_icon.png" 
+            alt="Robot Icon"
             style={{ 
               width: '100%', height: '100%', objectFit: 'contain',
               filter: 'drop-shadow(0 0 12px #d4af37aa) contrast(1.1) brightness(1.1)' 
@@ -178,7 +179,7 @@ export default function AcademyChatbot() {
           {/* Header */}
           <div style={{ padding: '20px 24px', background: 'rgba(212, 175, 55, 0.1)', borderBottom: '1px solid rgba(212, 175, 55, 0.2)', display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'rgba(212, 175, 55, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #d4af37', overflow: 'hidden', boxShadow: '0 0 15px rgba(212, 175, 55, 0.3)' }}>
-              <img src="/robot_icon.png" style={{ width: '90%', height: '90%', objectFit: 'contain' }} />
+              <img src="/robot_icon.png" alt="Robot Icon" style={{ width: '90%', height: '90%', objectFit: 'contain' }} />
             </div>
             <div>
               <div style={{ color: '#fff', fontSize: 14, fontWeight: 800 }}>Academy Advisor</div>
@@ -196,7 +197,7 @@ export default function AcademyChatbot() {
                 <div style={{ display: 'flex', gap: 8 }}>
                   {m.role === 'assistant' && (
                     <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'rgba(212, 175, 55, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #d4af37', overflow: 'hidden', flexShrink: 0, alignSelf: 'flex-end' }}>
-                      <img src="/robot_icon.png" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                      <img src="/robot_icon.png" alt="Robot Icon" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                     </div>
                   )}
                   <div style={{

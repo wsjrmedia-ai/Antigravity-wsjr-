@@ -14,14 +14,14 @@ import TravelLearn from '../components/TravelLearn'
 const HomePage = () => {
     useEffect(() => {
         // SEO Initialization
-        document.title = "Wall Street Jr. Academy | Where Finance Meets Real-World Mastery"
+        document.title = "Wall Street Jr. Academy | Real-World Finance Mastery"
         let metaDesc = document.querySelector('meta[name="description"]')
         if (!metaDesc) {
             metaDesc = document.createElement('meta')
             metaDesc.name = "description"
             document.head.appendChild(metaDesc)
         }
-        metaDesc.content = "UAE's premier multidisciplinary academy for finance, technology, design and management. Most finance courses teach you theory at Wall Street Jr. Academy we teach real world mastery."
+        metaDesc.content = "UAE's premier academy for finance, technology, design & management. We teach real-world mastery, going beyond theory at Wall Street Jr."
     }, [])
 
     const scrollTrackerRef = useRef(null);
