@@ -184,20 +184,6 @@ export default function HomePage() {
     <div style={{ color: '#fff', overflowX: 'hidden', background: '#03050e', position: 'relative' }}>
       <HomeHeader />
 
-      <div style={{ marginTop: '72px', background: '#131722', borderBottom: '1px solid #2a2e39' }}>
-          <TickerTape 
-              colorTheme="dark" 
-              displayMode="adaptive"
-              symbols={[
-                { proName: "FOREXCOM:SPXUSD", title: "S&P 500" },
-                { proName: "FOREXCOM:NSXUSD", title: "US 100" },
-                { proName: "FX_IDC:EURUSD", title: "EUR / USD" },
-                { proName: "BITSTAMP:BTCUSD", title: "Bitcoin" },
-                { proName: "BITSTAMP:ETHUSD", title: "Ethereum" }
-              ]}
-          />
-      </div>
-
       {/* ── Hero ── */}
       <section className="hp-hero responsive-padding" style={{
         minHeight: '100vh',
@@ -267,7 +253,19 @@ export default function HomePage() {
           </div>
         </section>
 
-    
+      <div style={{ background: '#131722', borderBottom: '1px solid rgba(255,255,255,0.05)', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+          <TickerTape 
+              colorTheme="dark" 
+              displayMode="adaptive"
+              symbols={[
+                { proName: "FOREXCOM:SPXUSD", title: "S&P 500" },
+                { proName: "FOREXCOM:NSXUSD", title: "US 100" },
+                { proName: "FX_IDC:EURUSD", title: "EUR / USD" },
+                { proName: "BITSTAMP:BTCUSD", title: "Bitcoin" },
+                { proName: "BITSTAMP:ETHUSD", title: "Ethereum" }
+              ]}
+          />
+      </div>
 
       {/* ── Market Summary ── */}
       {/* ── Market Summary ── */}
