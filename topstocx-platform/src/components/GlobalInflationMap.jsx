@@ -68,23 +68,23 @@ const INTEREST_RATES = {
   'Pakistan': 22.0, 'Bangladesh': 8.0,
 };
 
-const TABS = [
-  { id: 'stocks',         label: 'Markets',        unit: '%', desc: 'Major Stock Index Performance (24h)', data: STOCKS,
+const getTabs = (dataMap) => [
+  { id: 'stocks',         label: 'Markets',        unit: '%', desc: 'Major Stock Index Performance (24h)', data: dataMap.STOCKS,
     scale: scaleLinear().domain([-3, 0, 3]).range(['#f23645', '#1a1f2e', '#089981']),
     legend: { min: '-3%', mid: '0%', max: '3%+' },
     gradient: 'linear-gradient(90deg, #f23645 0%, #1a1f2e 50%, #089981 100%)',
   },
-  { id: 'inflation',      label: 'Inflation',      unit: '%', desc: 'Consumer Price Index YoY', data: INFLATION,
+  { id: 'inflation',      label: 'Inflation',      unit: '%', desc: 'Consumer Price Index YoY', data: dataMap.INFLATION,
     scale: scaleLinear().domain([0, 4, 10, 30]).range(['#0d2820', '#089981', '#f59e0b', '#f23645']),
     legend: { min: '0%', mid: '10%', max: '30%+' },
     gradient: 'linear-gradient(90deg, #0d2820 0%, #089981 30%, #f59e0b 65%, #f23645 100%)',
   },
-  { id: 'gdp',            label: 'GDP Growth',     unit: '%', desc: 'Real GDP Growth Rate YoY', data: GDP_GROWTH,
+  { id: 'gdp',            label: 'GDP Growth',     unit: '%', desc: 'Real GDP Growth Rate YoY', data: dataMap.GDP_GROWTH,
     scale: scaleLinear().domain([-2, 0, 3, 8]).range(['#f23645', '#1a1f2e', '#005AFF', '#089981']),
     legend: { min: '-2%', mid: '3%', max: '8%+' },
     gradient: 'linear-gradient(90deg, #f23645 0%, #1a1f2e 25%, #005AFF 60%, #089981 100%)',
   },
-  { id: 'rates',          label: 'Interests',      unit: '%', desc: 'Central Bank Policy Rate', data: INTEREST_RATES,
+  { id: 'rates',          label: 'Interests',      unit: '%', desc: 'Central Bank Policy Rate', data: dataMap.INTEREST_RATES,
     scale: scaleLinear().domain([0, 5, 15, 40]).range(['#0d1530', '#005AFF', '#7c3aed', '#f23645']),
     legend: { min: '0%', mid: '15%', max: '40%+' },
     gradient: 'linear-gradient(90deg, #0d1530 0%, #005AFF 35%, #7c3aed 65%, #f23645 100%)',
@@ -98,11 +98,26 @@ export default function GlobalInflationMap() {
   const [tab, setTab]           = useState('stocks'); // Start with Markets
   const [tooltip, setTooltip]   = useState(null);
   const [mouse, setMouse]       = useState({ x: 0, y: 0 });
+  const [dataMap, setDataMap]   = useState({ INFLATION, STOCKS, GDP_GROWTH, INTEREST_RATES });
+  const [isLive, setIsLive]     = useState(false);
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => { 
+    setMounted(true); 
+    fetch('/api/macro')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.INFLATION) {
+          setDataMap(data);
+          setIsLive(true);
+        }
+      })
+      .catch(err => console.warn('Live macro data unavailable. Using fallbacks.', err));
+  }, []);
+  
   if (!mounted) return null;
 
-  const current = TABS.find(t => t.id === tab);
+  const currentTabs = getTabs(dataMap);
+  const current = currentTabs.find(t => t.id === tab);
 
   return (
     <div
@@ -130,16 +145,17 @@ export default function GlobalInflationMap() {
             <p style={{ fontSize: 13, color: '#666', margin: 0 }}>{current.desc}</p>
           </div>
           <div style={{
-             padding: '4px 12px', borderRadius: 6, background: 'rgba(0, 90, 255, 0.1)',
-             border: '1px solid rgba(0, 90, 255, 0.2)', fontSize: 11, color: '#005AFF', fontWeight: 700
+             padding: '4px 12px', borderRadius: 6, background: isLive ? 'rgba(0, 90, 255, 0.1)' : 'rgba(255, 255, 255, 0.1)',
+             border: `1px solid ${isLive ? 'rgba(0, 90, 255, 0.2)' : 'rgba(255, 255, 255, 0.2)'}`, 
+             fontSize: 11, color: isLive ? '#005AFF' : '#aaa', fontWeight: 700
           }}>
-             LIVE DATA
+             {isLive ? 'LIVE DATA' : 'LOADING DATA...'}
           </div>
         </div>
 
         {/* Tab bar */}
         <div style={{ display: 'flex', gap: 8, paddingBottom: 1 }}>
-          {TABS.map(t => (
+          {currentTabs.map(t => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}

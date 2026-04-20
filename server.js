@@ -13,6 +13,7 @@ import bcrypt from 'bcryptjs';
 import Stripe from 'stripe';
 import axios from 'axios';
 import { createClient } from 'redis';
+import macroHandler from './topstocx-platform/api/macro.js';
 import {
   getSystemPrompt,
   buildUserContext,
@@ -466,6 +467,11 @@ app.get('/api/copy-trade/brief/:ticket', authMiddleware, async (req, res) => {
   if (!data) return res.status(404).json({ error: 'Brief not found' });
   res.json(JSON.parse(data));
 });
+
+// ─────────────────────────────────────────────────────────────
+// GET /api/macro (Local Dev Proxy)
+// ─────────────────────────────────────────────────────────────
+app.get('/api/macro', macroHandler);
 
 // ─────────────────────────────────────────────────────────────
 // LEVERATE API PROXY
