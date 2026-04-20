@@ -106,7 +106,7 @@ export default function MarketsPage() {
           </div>
           <div style={{ display: 'flex', gap: '0.75rem' }}>
             <Link to="/chart" style={{
-              padding: '0.65rem 1.5rem', background: 'var(--brand-gradient-blue)', color: '#fff',
+              padding: '0.65rem 1.5rem', background: 'var(--primary-gradient)', color: '#fff',
               borderRadius: 6, textDecoration: 'none', fontSize: 14, fontWeight: 700,
             }}>
               Open Chart

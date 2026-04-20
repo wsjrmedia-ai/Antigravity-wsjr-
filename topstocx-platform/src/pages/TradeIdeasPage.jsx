@@ -213,7 +213,7 @@ export default function TradeIdeasPage() {
                             </div>
 
                             <button type="submit" disabled={!newPostContent.trim() && !newPostImage} style={{
-                                background: (!newPostContent.trim() && !newPostImage) ? '#21262d' : 'var(--brand-gradient-blue)', color: (!newPostContent.trim() && !newPostImage) ? '#8b949e' : '#fff',
+                                background: (!newPostContent.trim() && !newPostImage) ? '#21262d' : 'var(--primary-gradient)', color: (!newPostContent.trim() && !newPostImage) ? '#8b949e' : '#fff',
                                 border: 'none', borderRadius: 20, padding: '8px 20px', fontSize: 14, fontWeight: 700, cursor: (!newPostContent.trim() && !newPostImage) ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: 6
                             }}>Post <Send size={16} /></button>
                         </div>

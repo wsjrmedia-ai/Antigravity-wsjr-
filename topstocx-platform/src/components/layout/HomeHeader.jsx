@@ -186,7 +186,7 @@ const HomeHeader = () => {
 
 
                 <Link to="/login" style={{
-                    background: 'var(--brand-gradient-blue)',
+                    background: 'var(--primary-gradient)',
                     color: '#fff',
                     textDecoration: 'none',
                     padding: '0.6rem 1.4rem',
@@ -198,7 +198,7 @@ const HomeHeader = () => {
                     border: 'none'
                 }}
                 onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--brand-blue)'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 90, 255, 0.4)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--brand-gradient-blue)'; e.currentTarget.style.boxShadow = 'none'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--primary-gradient)'; e.currentTarget.style.boxShadow = 'none'; }}
                 >Sign in</Link>
             </div>
 
@@ -236,7 +236,7 @@ const HomeHeader = () => {
                             </Link>
                         ))}
                         <hr style={{ borderColor: 'rgba(255,255,255,0.05)', margin: '0.5rem 0'}} />
-                        <button onClick={() => { setIsMobileMenuOpen(false); setShowPricing(true); }} style={{ padding: '1rem', background: 'var(--brand-gradient-blue)', border: 'none', color: '#fff', borderRadius: 8, fontSize: '16px', fontWeight: 800, cursor: 'pointer' }}>
+                        <button onClick={() => { setIsMobileMenuOpen(false); setShowPricing(true); }} style={{ padding: '1rem', background: 'var(--primary-gradient)', border: 'none', color: '#fff', borderRadius: 8, fontSize: '16px', fontWeight: 800, cursor: 'pointer' }}>
                             {isPro ? '★ Manage Plan' : '⚡ Upgrade'}
                         </button>
                         <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} style={{ padding: '1rem', background: 'transparent', border: '1px solid #30363d', color: '#fff', borderRadius: 8, fontSize: '16px', fontWeight: 700, textAlign: 'center', textDecoration: 'none' }}>

@@ -36,7 +36,7 @@ export default function AuthPage() {
             }} />
             <div style={{
                 position: 'absolute', bottom: -200, left: -200, width: 600, height: 600,
-                background: 'radial-gradient(circle, rgba(0,210,255,0.05) 0%, rgba(0,0,0,0) 70%)',
+                background: 'radial-gradient(circle, rgba(57, 181, 74,0.05) 0%, rgba(0,0,0,0) 70%)',
                 borderRadius: '50%', filter: 'blur(60px)', pointerEvents: 'none'
             }} />
 
@@ -66,7 +66,7 @@ export default function AuthPage() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: '2rem' }}>
                     <div style={{
                         width: 48, height: 48, borderRadius: 12,
-                        background: 'var(--brand-gradient-blue)',
+                        background: 'var(--primary-gradient)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         boxShadow: '0 8px 32px rgba(0, 90, 255,0.4)'
                     }}>
@@ -244,7 +244,7 @@ export default function AuthPage() {
                                     marginTop: 12,
                                     width: '100%',
                                     padding: '14px',
-                                    background: 'var(--brand-gradient-blue)',
+                                    background: 'var(--primary-gradient)',
                                     color: '#fff',
                                     border: 'none',
                                     borderRadius: 8,

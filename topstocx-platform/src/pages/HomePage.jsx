@@ -237,13 +237,13 @@ export default function HomePage() {
                 placeholder="Search symbols — AAPL, BTC, EUR/USD…"
                 style={{ flex: 1, padding: '14px 0', background: 'none', border: 'none', outline: 'none', color: '#e8f0fe', fontSize: 15, fontFamily: 'inherit' }}
               />
-              <Link to="/chart" style={{ padding: '14px 22px', background: 'var(--brand-gradient-blue)', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 700 }}>Search</Link>
+              <Link to="/chart" style={{ padding: '14px 22px', background: 'var(--primary-gradient)', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 700 }}>Search</Link>
             </motion.div>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
               className="hp-cta-buttons flex-stack-mobile"
               style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}
             >
-              <Link to="/chart" style={{ padding: '0.75rem 2rem', background: 'var(--brand-gradient-blue)', color: '#fff', borderRadius: 8, textDecoration: 'none', fontSize: 15, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Link to="/chart" style={{ padding: '0.75rem 2rem', background: 'var(--primary-gradient)', color: '#fff', borderRadius: 8, textDecoration: 'none', fontSize: 15, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
                 Open Chart <ArrowRight size={16} />
               </Link>
               <Link to="/copy-trade" style={{ padding: '0.75rem 2rem', border: '1px solid #30363d', color: '#e8f0fe', borderRadius: 8, textDecoration: 'none', fontSize: 15, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -392,7 +392,7 @@ export default function HomePage() {
             </p>
             <div className="flex-stack-mobile" style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link to="/login" style={{
-                padding: '0.9rem 2.5rem', background: 'var(--brand-gradient-blue)', color: '#fff',
+                padding: '0.9rem 2.5rem', background: 'var(--primary-gradient)', color: '#fff',
                 borderRadius: 8, textDecoration: 'none', fontSize: 16, fontWeight: 800, transition: 'all 0.2s',
               }}>
                 Sign in — it's free
