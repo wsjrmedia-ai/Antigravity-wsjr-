@@ -18,8 +18,8 @@ const LearnEarnToggle = () => {
     };
 
     // Platform colors
-    const activeColor = isLearn ? '#d4af37' : '#005AFF'; // Gold for Academy, Blue for Platform
-    const glowColor = isLearn ? 'rgba(212, 175, 55, 0.4)' : 'rgba(0, 90, 255, 0.4)';
+    const activeColor = isLearn ? '#39B54A' : '#005AFF'; // Green for Academy, Blue for Platform
+    const glowColor = isLearn ? 'rgba(57, 181, 74, 0.4)' : 'rgba(0, 90, 255, 0.4)';
 
     return (
         <div style={{
@@ -45,8 +45,8 @@ const LearnEarnToggle = () => {
                 animate={{ 
                     x: isLearn ? '0px' : '124px',
                     background: isLearn 
-                        ? 'linear-gradient(135deg, #d4af37 0%, #f1d592 50%, #d4af37 100%)' 
-                        : 'linear-gradient(135deg, #005AFF 0%, #60a5fa 50%, #005AFF 100%)'
+                        ? 'var(--brand-gradient-green)' 
+                        : 'var(--brand-gradient-blue)'
                 }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 style={{
@@ -57,7 +57,7 @@ const LearnEarnToggle = () => {
                     height: '40px',
                     borderRadius: '100px',
                     zIndex: 0,
-                    boxShadow: isLearn ? '0 3px 15px rgba(212, 175, 55, 0.5)' : '0 4px 15px rgba(0, 90, 255, 0.5)'
+                    boxShadow: isLearn ? '0 3px 15px rgba(57, 181, 74, 0.5)' : '0 4px 15px rgba(0, 90, 255, 0.5)'
                 }}
             />
 
