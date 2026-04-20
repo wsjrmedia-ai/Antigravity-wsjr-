@@ -50,7 +50,7 @@ const HomeHeader = () => {
                 >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '6px' }}>
                         <img src={topstocxLogo} alt="TopStocX Logo" style={{ height: '50px', objectFit: 'contain' }} />
-                        <span style={{ fontSize: '26px', fontWeight: 800, letterSpacing: '-0.5px' }}>topstocx</span>
+                        <span style={{ fontFamily: 'Cygre, sans-serif', fontSize: '26px', fontWeight: 800, letterSpacing: '-0.5px' }}>TOPSTOCX</span>
                     </div>
                 </Link>
 
