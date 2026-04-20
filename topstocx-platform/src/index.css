@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap');
 
-.font-primary { font-family: 'Cygre', 'Outfit', sans-serif !important; }
+.font-primary, h1, h2, h3, h4, h5, h6 { 
+  font-family: 'Cygre', 'Outfit', sans-serif !important; 
+}
 
 html {
   scroll-behavior: smooth;
@@ -20,6 +22,8 @@ html {
   --brand-dark-green: #14421A;
   --brand-red: #f23645;
   --primary-gradient: linear-gradient(135deg, #77A6FF 0%, #59E16C 100%);
+  --brand-gradient-blue: linear-gradient(180deg, #77A6FF 0%, #00276F 100%);
+  --brand-gradient-green: linear-gradient(180deg, #59E16C 0%, #14421A 100%);
   --border-color: #2a2e39;
   --glass-bg: rgba(19, 23, 34, 0.8);
   --glass-border: rgba(255, 255, 255, 0.05);
