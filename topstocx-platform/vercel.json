@@ -2,8 +2,8 @@
   "version": 2,
   "rewrites": [
     {
-      "source": "/api/leverate/(.*)",
-      "destination": "/api/leverate.js"
+      "source": "/api/leverate/:path*",
+      "destination": "/api/leverate.js?path=:path*"
     }
   ]
 }
