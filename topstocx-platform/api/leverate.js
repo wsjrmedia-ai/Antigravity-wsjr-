@@ -34,8 +34,15 @@ export default async function handler(req, res) {
       body: JSON.stringify(req.body)
     });
     
-    // Parse response
-    const data = await fetchRes.json();
+    // Parse response safely incase of empty body
+    const text = await fetchRes.text();
+    let data;
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch(e) {
+      data = { rawText: text };
+    }
+    
     return res.status(fetchRes.status).json(data);
   } catch (err) {
     console.error('Leverate Proxy Error:', err);

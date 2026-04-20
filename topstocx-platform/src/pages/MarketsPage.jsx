@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import HomeHeader from '../components/layout/HomeHeader';
 import { useMarketData } from '../context/MarketDataContext';
@@ -78,59 +79,61 @@ export default function MarketsPage() {
 
         {/* TradingView MarketOverview Embed */}
         <div style={{ height: '700px', width: '100%', borderRadius: '12px', overflow: 'hidden', border: '1px solid #2a2e39', background: '#131722' }}>
-          <MarketOverview 
-              colorTheme="dark" 
-              height="100%" 
-              width="100%"
-              showFloatingTooltip={true}
-              tabs={[
-                {
-                  title: "US Stocks",
-                  symbols: [
-                    { s: "NASDAQ:AAPL", d: "Apple Inc." },
-                    { s: "NASDAQ:MSFT", d: "Microsoft Corp." },
-                    { s: "NASDAQ:AMZN", d: "Amazon.com Inc." },
-                    { s: "NASDAQ:TSLA", d: "Tesla Inc." },
-                    { s: "NASDAQ:NVDA", d: "NVIDIA Corp." },
-                    { s: "NASDAQ:GOOGL", d: "Alphabet Inc." },
-                    { s: "NYSE:XOM", d: "Exxon Mobil" },
-                    { s: "NYSE:WMT", d: "Walmart" }
-                  ]
-                },
-                {
-                  title: "Crypto",
-                  symbols: [
-                    { s: "BINANCE:BTCUSDT", d: "Bitcoin" },
-                    { s: "BINANCE:ETHUSDT", d: "Ethereum" },
-                    { s: "BINANCE:SOLUSDT", d: "Solana" },
-                    { s: "BINANCE:BNBUSDT", d: "Binance Coin" },
-                    { s: "BINANCE:XRPUSDT", d: "Ripple" },
-                    { s: "BINANCE:DOGEUSDT", d: "Dogecoin" }
-                  ]
-                },
-                {
-                  title: "Forex",
-                  symbols: [
-                    { s: "FX:EURUSD", d: "EUR/USD" },
-                    { s: "FX:GBPUSD", d: "GBP/USD" },
-                    { s: "FX:USDJPY", d: "USD/JPY" },
-                    { s: "FX:AUDUSD", d: "AUD/USD" },
-                    { s: "FX:USDCAD", d: "USD/CAD" }
-                  ]
-                },
-                {
-                  title: "Indices",
-                  symbols: [
-                    { s: "FOREXCOM:SPXUSD", d: "S&P 500" },
-                    { s: "FOREXCOM:NSXUSD", d: "Nasdaq 100" },
-                    { s: "FOREXCOM:DJI", d: "Dow Jones" },
-                    { s: "INDEX:NKY", d: "Nikkei 225" },
-                    { s: "INDEX:DAX", d: "DAX" },
-                    { s: "INDEX:UKX", d: "UK 100" }
-                  ]
-                }
-              ]}
-          />
+          {useMemo(() => (
+            <MarketOverview 
+                colorTheme="dark" 
+                height="100%" 
+                width="100%"
+                showFloatingTooltip={true}
+                tabs={[
+                  {
+                    title: "US Stocks",
+                    symbols: [
+                      { s: "NASDAQ:AAPL", d: "Apple Inc." },
+                      { s: "NASDAQ:MSFT", d: "Microsoft Corp." },
+                      { s: "NASDAQ:AMZN", d: "Amazon.com Inc." },
+                      { s: "NASDAQ:TSLA", d: "Tesla Inc." },
+                      { s: "NASDAQ:NVDA", d: "NVIDIA Corp." },
+                      { s: "NASDAQ:GOOGL", d: "Alphabet Inc." },
+                      { s: "NYSE:XOM", d: "Exxon Mobil" },
+                      { s: "NYSE:WMT", d: "Walmart" }
+                    ]
+                  },
+                  {
+                    title: "Crypto",
+                    symbols: [
+                      { s: "BINANCE:BTCUSDT", d: "Bitcoin" },
+                      { s: "BINANCE:ETHUSDT", d: "Ethereum" },
+                      { s: "BINANCE:SOLUSDT", d: "Solana" },
+                      { s: "BINANCE:BNBUSDT", d: "Binance Coin" },
+                      { s: "BINANCE:XRPUSDT", d: "Ripple" },
+                      { s: "BINANCE:DOGEUSDT", d: "Dogecoin" }
+                    ]
+                  },
+                  {
+                    title: "Forex",
+                    symbols: [
+                      { s: "FX:EURUSD", d: "EUR/USD" },
+                      { s: "FX:GBPUSD", d: "GBP/USD" },
+                      { s: "FX:USDJPY", d: "USD/JPY" },
+                      { s: "FX:AUDUSD", d: "AUD/USD" },
+                      { s: "FX:USDCAD", d: "USD/CAD" }
+                    ]
+                  },
+                  {
+                    title: "Indices",
+                    symbols: [
+                      { s: "FOREXCOM:SPXUSD", d: "S&P 500" },
+                      { s: "FOREXCOM:NSXUSD", d: "Nasdaq 100" },
+                      { s: "FOREXCOM:DJI", d: "Dow Jones" },
+                      { s: "INDEX:NKY", d: "Nikkei 225" },
+                      { s: "INDEX:DAX", d: "DAX" },
+                      { s: "INDEX:UKX", d: "UK 100" }
+                    ]
+                  }
+                ]}
+            />
+          ), [])}
         </div>
 
         {/* Bottom CTA */}

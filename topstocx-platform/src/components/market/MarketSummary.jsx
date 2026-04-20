@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { MarketOverview } from 'react-ts-tradingview-widgets';
 import { ChevronRight } from 'lucide-react';
 
@@ -13,12 +13,14 @@ export default function MarketSummary() {
 
       {/* TradingView Market Data Embed */}
       <div style={{ height: '600px', width: '100%', borderRadius: '12px', overflow: 'hidden', border: '1px solid #2a2e39', background: '#131722' }}>
-          <MarketOverview 
-              colorTheme="dark" 
-              height="100%" 
-              width="100%"
-              showFloatingTooltip={true}
-          />
+          {useMemo(() => (
+            <MarketOverview 
+                colorTheme="dark" 
+                height="100%" 
+                width="100%"
+                showFloatingTooltip={true}
+            />
+          ), [])}
       </div>
     </div>
   );
