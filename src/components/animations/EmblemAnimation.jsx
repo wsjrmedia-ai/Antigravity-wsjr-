@@ -98,6 +98,9 @@ const EmblemAnimation = ({ targetRef }) => {
     const rotateX = useTransform(smoothMouseY, [-1, 1], [30, -30]); // Increased tilt depth slightly
     const rotateY = useTransform(smoothMouseX, [-1, 1], [-30, 30]);
 
+    // On mobile, the scrolling emblem crowds the hero — the SchoolsHeader has its own fixed crest instead.
+    if (isMobile) return null;
+
     return (
         <div style={{
             position: 'absolute',
