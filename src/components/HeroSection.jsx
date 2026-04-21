@@ -317,10 +317,8 @@ const HeroSection = () => {
                     /* Title adjustment */
                     h1 { font-size: clamp(2rem, 10vw, 3rem) !important; margin-bottom: 20px !important; }
 
-                    /* "Earn" Toggle sizing for phones */
-                    .earn-toggle-container { width: 170px !important; height: 40px !important; margin-bottom: 15px !important; }
-                    .earn-toggle-container .toggle-thumb { width: 33px !important; height: 33px !important; }
-                    .earn-toggle-container .toggle-text { font-size: 20px !important; right: 20px !important; }
+                    /* Learn/Earn toggle spacing on phones (keep native 260px width so the internal slider + labels line up) */
+                    .earn-toggle-container { margin-bottom: 15px !important; }
 
                     /* Header adjustments */
                     header { padding: 15px 5% !important; }
