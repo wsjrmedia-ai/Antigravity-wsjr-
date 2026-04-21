@@ -92,15 +92,28 @@ const SchoolsHeader = () => {
                     .schools-crest { animation: none !important; }
                 }
                 @media (max-width: 768px) {
+                    /* Mobile layout: content sits at the top, crest fills the lower white space fully visible */
+                    .schools-header {
+                        justify-content: flex-start !important;
+                        padding: 8vh 6% 4vh !important;
+                        align-items: center !important;
+                        text-align: left !important;
+                    }
+                    .schools-header > div:not(.schools-crest) {
+                        margin-top: 0 !important;
+                        align-self: flex-start !important;
+                    }
                     .schools-crest {
                         top: auto !important;
-                        bottom: 6% !important;
+                        bottom: 4vh !important;
                         right: 50% !important;
+                        left: auto !important;
                         transform: translateX(50%) !important;
-                        width: min(78vw, 420px) !important;
-                        height: min(78vw, 420px) !important;
-                        opacity: 0.35 !important;
-                        animation: schoolsCrestFloatMobile 11s ease-in-out infinite;
+                        width: min(82vw, 460px) !important;
+                        height: min(82vw, 460px) !important;
+                        opacity: 1 !important;
+                        filter: drop-shadow(0 14px 36px rgba(106, 7, 21, 0.28)) !important;
+                        animation: schoolsCrestFloatMobile 9s ease-in-out infinite;
                     }
                     @keyframes schoolsCrestFloatMobile {
                         0%, 100% { transform: translateX(50%) translateY(0) rotate(0deg); }
