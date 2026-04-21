@@ -48,10 +48,22 @@ const HomeHeader = () => {
                     onMouseEnter={(e) => e.target.style.opacity = '0.8'}
                     onMouseLeave={(e) => e.target.style.opacity = '1'}
                 >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '6px' }}>
+                    <div className="ts-logo-wrap" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '6px' }}>
                         <img src={topstocxLogo} alt="TopStocX Logo" style={{ height: '50px', objectFit: 'contain' }} />
-                        <span style={{ fontFamily: 'Cygre, sans-serif', fontSize: '26px', fontWeight: 800, letterSpacing: '-0.5px' }}>TOPSTOCX</span>
+                        <span className="ts-logo-word" style={{ fontFamily: 'Cygre, sans-serif', fontSize: '26px', fontWeight: 800, letterSpacing: '-0.5px' }}>TOPSTOCX</span>
                     </div>
+                    <style>{`
+                        @media (max-width: 768px) {
+                            .ts-logo-word { display: none !important; }
+                            .ts-logo-wrap {
+                                position: absolute;
+                                left: 50%;
+                                top: 50%;
+                                transform: translate(-50%, -50%);
+                                margin-top: 0 !important;
+                            }
+                        }
+                    `}</style>
                 </Link>
 
                 <nav className="hide-on-mobile" style={{ display: 'flex', gap: '2rem' }}>
