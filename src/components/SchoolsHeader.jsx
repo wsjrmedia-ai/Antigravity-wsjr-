@@ -34,28 +34,7 @@ const SchoolsHeader = () => {
             position: 'relative',
             overflow: 'hidden'
         }}>
-            {/* Decorative crest anchored inside this section */}
-            <div className="schools-crest" aria-hidden="true" style={{
-                position: 'absolute',
-                top: '50%',
-                right: '-6%',
-                transform: 'translateY(-50%)',
-                width: 'min(52vw, 640px)',
-                height: 'min(52vw, 640px)',
-                pointerEvents: 'none',
-                zIndex: 0,
-                opacity: 0.85,
-                animation: 'schoolsCrestFloat 11s ease-in-out infinite',
-                filter: 'drop-shadow(0 18px 50px rgba(106, 7, 21, 0.25))'
-            }}>
-                <img
-                    src="https://api.builder.io/api/v1/image/assets/TEMP/a0aec7389b59c267fe9e6cb147a75e605ac97963?width=1760"
-                    alt=""
-                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                />
-            </div>
-
-            <div style={{ maxWidth: '800px', display: 'flex', flexDirection: 'column', gap: '30px', marginTop: '-10vh', position: 'relative', zIndex: 1 }}>
+            <div className="schools-content" style={{ maxWidth: '800px', display: 'flex', flexDirection: 'column', gap: '30px', marginTop: '-10vh', position: 'relative', zIndex: 1 }}>
                 <h2 className="header-fade" style={{
                     fontFamily: 'var(--font-hero)',
                     fontSize: 'clamp(3.5rem, 5vw, 5.5rem)',
@@ -83,6 +62,27 @@ const SchoolsHeader = () => {
                 </p>
             </div>
 
+            {/* Decorative crest — desktop: absolute right side. Mobile: flex item below content (see CSS) */}
+            <div className="schools-crest" aria-hidden="true" style={{
+                position: 'absolute',
+                top: '50%',
+                right: '-6%',
+                transform: 'translateY(-50%)',
+                width: 'min(52vw, 640px)',
+                height: 'min(52vw, 640px)',
+                pointerEvents: 'none',
+                zIndex: 0,
+                opacity: 0.85,
+                animation: 'schoolsCrestFloat 11s ease-in-out infinite',
+                filter: 'drop-shadow(0 18px 50px rgba(106, 7, 21, 0.25))'
+            }}>
+                <img
+                    src="https://api.builder.io/api/v1/image/assets/TEMP/a0aec7389b59c267fe9e6cb147a75e605ac97963?width=1760"
+                    alt=""
+                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                />
+            </div>
+
             <style>{`
                 @keyframes schoolsCrestFloat {
                     0%, 100% { transform: translateY(-50%) rotate(0deg); }
@@ -92,28 +92,29 @@ const SchoolsHeader = () => {
                     .schools-crest { animation: none !important; }
                 }
                 @media (max-width: 768px) {
-                    /* Mobile layout: content at top, crest as a real flex item below — fully visible, no overlap */
+                    /* Mobile: content at top, crest as a real flex item below, section grows to fit both */
                     .schools-header {
                         justify-content: flex-start !important;
-                        padding: 7vh 6% 5vh !important;
+                        padding: 6vh 6% 5vh !important;
                         align-items: stretch !important;
                         height: auto !important;
                         min-height: 100vh !important;
-                        gap: 4vh !important;
+                        overflow: visible !important;
                     }
-                    .schools-header > div:not(.schools-crest) {
+                    .schools-content {
                         margin-top: 0 !important;
+                        max-width: 100% !important;
                     }
                     .schools-crest {
                         position: static !important;
                         top: auto !important;
-                        bottom: auto !important;
                         right: auto !important;
+                        bottom: auto !important;
                         left: auto !important;
                         transform: none !important;
                         width: min(82vw, 460px) !important;
                         height: min(82vw, 460px) !important;
-                        margin: 2vh auto 0 !important;
+                        margin: 5vh auto 0 !important;
                         opacity: 1 !important;
                         filter: drop-shadow(0 14px 36px rgba(106, 7, 21, 0.28)) !important;
                         animation: schoolsCrestFloatMobile 9s ease-in-out infinite !important;
