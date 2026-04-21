@@ -8,11 +8,10 @@ const LearnEarnToggle = () => {
     const [isLearn, setIsLearn] = useState(false);
 
     const handleToggle = (platform) => {
-        if (platform === 'learn') {
+        if (platform === 'learn' && !isLearn) {
             setIsLearn(true);
             setTimeout(() => {
-                window.open(ACADEMY_URL, '_blank', 'noopener,noreferrer');
-                setIsLearn(false);
+                window.location.href = ACADEMY_URL;
             }, 400);
         }
     };
@@ -63,7 +62,7 @@ const LearnEarnToggle = () => {
                             x: isLearn ? 0 : 124, 
                             background: 'var(--primary-gradient)'
                         }}
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                        transition={{ type: "tween", ease: "easeInOut", duration: 0.4 }}
                         style={{
                             position: 'absolute',
                             left: '4px',
