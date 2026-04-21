@@ -77,9 +77,10 @@ const SchoolsHeader = () => {
                 filter: 'drop-shadow(0 18px 50px rgba(106, 7, 21, 0.25))'
             }}>
                 <img
-                    src="https://api.builder.io/api/v1/image/assets/TEMP/a0aec7389b59c267fe9e6cb147a75e605ac97963?width=1760"
+                    src="/jus.the.emblem.frame.red.whyte.highlights.png"
                     alt=""
-                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                    loading="lazy"
+                    style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
                 />
             </div>
 
