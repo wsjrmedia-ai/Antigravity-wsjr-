@@ -27,7 +27,8 @@ const HeroSection = () => {
                 zIndex: 0,
                 pointerEvents: 'none'
             }}>
-                <img 
+                <img
+                    className="hero-bg-columns"
                     src="https://api.builder.io/api/v1/image/assets/TEMP/bebe67a57cbec3535bac2521d32ecc1ba35224c3?width=4960"
                     alt="Background Columns"
                     style={{
@@ -38,7 +39,7 @@ const HeroSection = () => {
                         top: '-245px',
                         opacity: 0.75, // Increased visibility further
                         maxWidth: 'none'
-                    }} 
+                    }}
                 />
             </div>
 
@@ -347,6 +348,18 @@ const HeroSection = () => {
                     .main-content-wrapper { padding: 0 4% !important; margin-top: 20px !important; }
                     .enroll-button-container button { width: 180px !important; height: 48px !important; }
                     .hero-paragraphs { display: none !important; } /* Hide long text on very small screens */
+                }
+
+                @media (max-width: 768px) {
+                    .hero-bg-columns {
+                        width: 220vw !important;
+                        height: auto !important;
+                        left: -60vw !important;
+                        top: -10vh !important;
+                        opacity: 0.35 !important;
+                    }
+                    .explore-text { font-size: 13px !important; letter-spacing: 0 !important; }
+                    .explore-arrow { width: 60px !important; }
                 }
             `}</style>
         </section>

@@ -32,6 +32,102 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* ──────────────────────────────────────────────────────────────
+   SITE-WIDE RESPONSIVE SAFETY NET
+   Applies to the whole app (the topstocx-platform is a separate
+   project and not affected by this stylesheet).
+   ────────────────────────────────────────────────────────────── */
+
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+/* Prevent any media from overflowing a narrow viewport */
+img, video, canvas, svg, iframe {
+  max-width: 100%;
+  height: auto;
+}
+/* Background / absolute-positioned art should still be allowed to exceed */
+section img[style*="position: absolute"],
+section img[style*="position:absolute"] {
+  max-width: none;
+}
+
+/* Long words / URLs / email addresses shouldn't cause sideways scroll */
+p, h1, h2, h3, h4, h5, h6, li, a, span {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* Fluid headings baseline — components that hard-code huge sizes
+   will still win via their own inline styles, but anything relying
+   on defaults is now phone-safe */
+@media (max-width: 768px) {
+  h1 { font-size: clamp(2rem, 8vw, 3rem); line-height: 1.15; }
+  h2 { font-size: clamp(1.7rem, 6.5vw, 2.4rem); line-height: 1.2; }
+  h3 { font-size: clamp(1.35rem, 5vw, 1.8rem); line-height: 1.25; }
+  h4 { font-size: clamp(1.15rem, 4.2vw, 1.4rem); line-height: 1.3; }
+}
+
+/* Generic grid/flex collapsing for common hard-coded column counts.
+   This catches inline styles like `grid-template-columns: repeat(3, 1fr)`. */
+@media (max-width: 768px) {
+  [style*="grid-template-columns: repeat(4"],
+  [style*="grid-template-columns:repeat(4"],
+  [style*="grid-template-columns: repeat(3"],
+  [style*="grid-template-columns:repeat(3"],
+  [style*="grid-template-columns: 1fr 1fr 1fr"],
+  [style*="grid-template-columns:1fr 1fr 1fr"],
+  [style*="grid-template-columns: 1fr 1fr"],
+  [style*="grid-template-columns:1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Cap absurd section padding on phones */
+@media (max-width: 768px) {
+  section[style*="padding: 120px"],
+  section[style*="padding:120px"],
+  section[style*="padding: 150px"],
+  section[style*="padding:150px"],
+  section[style*="padding: 180px"],
+  section[style*="padding:180px"],
+  section[style*="padding: 100px"],
+  section[style*="padding:100px"] {
+    padding: 60px 5% !important;
+  }
+}
+
+/* Utility classes sites can opt into */
+.container-page {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 5%;
+}
+.auto-grid-sm { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.auto-grid-md { display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.auto-grid-lg { display: grid; gap: 30px; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
+.hide-on-mobile { }
+@media (max-width: 768px) {
+  .hide-on-mobile { display: none !important; }
+}
+.show-on-mobile { display: none; }
+@media (max-width: 768px) {
+  .show-on-mobile { display: block !important; }
+}
+
+/* Tables that overflow should scroll horizontally instead of breaking layout */
+.table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 a {
   text-decoration: none;
   color: inherit;
@@ -69,6 +165,11 @@ img {
 
 .custom-scrollbar-container.visible {
   opacity: 1;
+}
+
+/* Touch / narrow viewports: native scroll is better — hide the custom track */
+@media (max-width: 768px), (hover: none) and (pointer: coarse) {
+  .custom-scrollbar-container { display: none !important; }
 }
 
 .custom-scrollbar-thumb {
@@ -158,13 +259,18 @@ img {
 
 @media (max-width: 768px) {
   /* Schools Section */
-  .school-main-body { flex-direction: column !important; }
+  .school-main-body {
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: calc(100vh - 60px) !important;
+    padding-top: 40px !important;
+  }
   .school-right-col { display: none !important; }
   .school-left-col { justify-content: flex-start !important; padding: 30px 5% !important; gap: 20px !important; }
   .school-left-col h4 { font-size: 1.3rem !important; line-height: 1.3 !important; }
   .school-left-col p { font-size: 1.05rem !important; line-height: 1.35 !important; }
   .school-left-col h3 { font-size: 2rem !important; padding-bottom: 0 !important; letter-spacing: -1px !important; }
-  .school-tab { width: 100px !important; border-radius: 20px 20px 0 0 !important; }
+  .school-tab { width: 100px !important; height: 70px !important; border-radius: 20px 20px 0 0 !important; padding-top: 10px !important; }
   .school-tab span { font-size: 1.3rem !important; }
 
   /* Schools Header */

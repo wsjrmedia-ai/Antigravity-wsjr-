@@ -147,6 +147,9 @@ export default function AcademyChatbot() {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-8px); }
           }
+          @media (max-width: 480px) {
+            .finai-wrap { right: 12px !important; left: 12px !important; width: auto !important; max-width: none !important; bottom: 90px !important; height: 70vh !important; }
+          }
         `}</style>
         {isOpen ? (
           <div style={{ color: '#d4af37', fontSize: 24, fontWeight: 'bold' }}>✕</div>
@@ -164,9 +167,10 @@ export default function AcademyChatbot() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="academy-chat-pop" style={{
+        <div className="academy-chat-pop finai-wrap" style={{
           position: 'fixed', bottom: 110, right: 30, zIndex: 9998,
           width: 380, height: '65vh', maxHeight: 580,
+          maxWidth: 'calc(100vw - 40px)',
           background: 'rgba(10, 10, 15, 0.95)',
           backdropFilter: 'blur(20px)',
           border: '1px solid rgba(212, 175, 55, 0.3)',

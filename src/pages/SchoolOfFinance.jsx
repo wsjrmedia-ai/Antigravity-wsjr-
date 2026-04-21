@@ -99,7 +99,7 @@ const SchoolOfFinance = () => {
     ]
 
     return (
-        <div ref={pageRef} style={{ background: 'var(--bg-primary)', color: 'white', minHeight: '100vh', position: 'relative', overflowX: 'hidden' }}>
+        <div ref={pageRef} className="sof-root" style={{ background: 'var(--bg-primary)', color: 'white', minHeight: '100vh', position: 'relative', overflowX: 'hidden' }}>
             <GalaxyBackground />
 
             {/* Hero Section */}
@@ -218,6 +218,25 @@ const SchoolOfFinance = () => {
             </section>
 
             <style>{`
+                @media (max-width: 768px) {
+                    .sof-root .hero-content { padding-top: 5rem !important; }
+                    .sof-root .hero-content p { font-size: 1.15rem !important; }
+                    .sof-root .hero-content > div { font-size: 1rem !important; margin-top: 1.2rem !important; }
+                    .sof-root section { padding: 2rem 1rem !important; }
+                    .sof-root section[style*="padding: 5rem 3rem"] {
+                        padding: 3rem 1.2rem !important;
+                        border-radius: 24px !important;
+                    }
+                    .sof-root section h2 {
+                        font-size: clamp(1.6rem, 6vw, 2rem) !important;
+                        margin-bottom: 1.5rem !important;
+                    }
+                    .sof-root [style*="padding: 2.5rem"] { padding: 1.8rem !important; }
+                    .sof-root [style*="marginBottom: '4rem'"],
+                    .sof-root [style*="margin: '0 auto 4rem'"] { margin-bottom: 2rem !important; }
+                    .sof-root [style*="fontSize: '1.4rem'"] { font-size: 1.1rem !important; }
+                    .sof-root .glaze-button { padding: 1rem 2rem !important; font-size: 0.9rem !important; }
+                }
                 .glaze-button {
                     background: linear-gradient(135deg, #d4af37 0%, #f4d03f 50%, #d4af37 100%);
                     background-size: 200% auto;

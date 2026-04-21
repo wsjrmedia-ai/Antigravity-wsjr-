@@ -26,7 +26,7 @@ const LearnEarnToggle = () => {
     const glowColor = isLearn ? 'rgba(212, 175, 55, 0.4)' : 'rgba(41, 98, 255, 0.4)';
 
     return (
-        <div style={{
+        <div className="earn-toggle-container" style={{
             position: 'relative',
             zIndex: 999,
             padding: '4px',

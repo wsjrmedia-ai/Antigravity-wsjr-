@@ -69,7 +69,7 @@ const EnrollPage = () => {
   `;
 
   return (
-    <div style={{
+    <div className="enroll-root" style={{
       minHeight: '100vh',
       backgroundColor: 'var(--bg-primary)',
       position: 'relative',
@@ -279,6 +279,16 @@ const EnrollPage = () => {
       <style>{`
         @media (max-width: 992px) {
           .enroll-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+        }
+        @media (max-width: 700px) {
+          .enroll-root { padding: 90px 5% 50px !important; }
+          .enroll-grid { gap: 30px !important; }
+          .enroll-grid h1 { font-size: clamp(2rem, 8vw, 2.8rem) !important; }
+          .enroll-grid [style*="grid-template-columns: 1fr 1fr"],
+          .enroll-grid [style*="grid-template-columns:1fr 1fr"] {
+            grid-template-columns: 1fr !important;
+          }
+          .enroll-grid .glass-panel { padding: 30px 20px !important; }
         }
       `}</style>
     </div>

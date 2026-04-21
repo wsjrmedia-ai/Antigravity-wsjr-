@@ -73,11 +73,12 @@ const LoginPage = () => {
             </Link>
 
             {/* Login Card */}
-            <div ref={formRef} style={{
+            <div ref={formRef} className="login-card" style={{
                 position: 'relative',
                 zIndex: 1,
                 width: '100%',
                 maxWidth: '450px',
+                margin: '0 1rem',
                 padding: '3rem',
                 background: 'rgba(26, 26, 26, 0.9)', // Increased opacity
                 backdropFilter: 'blur(10px)',
@@ -170,6 +171,12 @@ const LoginPage = () => {
                     Don't have an account? <Link to="/signup" style={{ color: '#d4af37', textDecoration: 'none', fontWeight: 'bold' }}>Sign up here</Link>
                 </div>
             </div>
+            <style>{`
+                @media (max-width: 600px) {
+                    .login-card { padding: 2rem 1.4rem !important; border-radius: 18px !important; }
+                    .login-card h1 { font-size: clamp(1.7rem, 7vw, 2.2rem) !important; }
+                }
+            `}</style>
         </div>
     )
 }

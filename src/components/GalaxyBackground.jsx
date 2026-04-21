@@ -22,12 +22,15 @@ const GalaxyBackground = () => {
         // Renderer setup
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" })
         renderer.setSize(window.innerWidth, window.innerHeight)
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, window.innerWidth < 768 ? 1.5 : 2))
         containerRef.current.appendChild(renderer.domElement)
+
+        // Adaptive particle count for performance on narrow/touch devices
+        const isMobile = window.innerWidth < 768 || (window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches)
 
         // Parameters for Galaxy (Milky Way style)
         const parameters = {
-            count: 120000,
+            count: isMobile ? 35000 : 120000,
             size: 0.012,
             radius: 25,
             branches: 2,

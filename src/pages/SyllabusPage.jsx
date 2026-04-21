@@ -184,7 +184,7 @@ const SyllabusPage = () => {
     ]
 
     return (
-        <div ref={pageRef} style={{ background: 'var(--bg-primary)', color: 'white', minHeight: '100vh', position: 'relative', overflowX: 'hidden' }}>
+        <div ref={pageRef} className="syllabus-root" style={{ background: 'var(--bg-primary)', color: 'white', minHeight: '100vh', position: 'relative', overflowX: 'hidden' }}>
             <GalaxyBackground />
 
             {/* Hero Section */}
@@ -374,6 +374,23 @@ const SyllabusPage = () => {
                     .timeline-line {
                         display: block !important;
                     }
+                }
+                @media (max-width: 768px) {
+                    .syllabus-root section { padding: 2.5rem 1rem !important; }
+                    .syllabus-root .hero-content { padding-top: 6rem !important; padding-bottom: 2.5rem !important; }
+                    .syllabus-root .hero-content > div { font-size: 1rem !important; line-height: 1.6 !important; }
+                    .syllabus-root section h2 { font-size: clamp(1.6rem, 6vw, 2.1rem) !important; }
+                    .syllabus-root section h3 { font-size: 1.1rem !important; }
+                    .syllabus-root [style*="padding: 2.5rem"] { padding: 1.5rem !important; }
+                    .syllabus-root [style*="padding: '2rem'"] { padding: 1.25rem !important; }
+                    .syllabus-root [style*="padding: '4rem 2rem'"] { padding: 2.5rem 1.5rem !important; }
+                    .syllabus-root [style*="padding: '5rem 1.5rem'"] { padding: 3rem 1rem !important; }
+                    .syllabus-root [style*="marginBottom: '4rem'"] { margin-bottom: 2rem !important; }
+                    .syllabus-root [style*="marginBottom: '3rem'"] { margin-bottom: 1.75rem !important; }
+                    .syllabus-root [style*="fontSize: '1.8rem'"] { font-size: 1.25rem !important; }
+                    .syllabus-root [style*="fontSize: '1.5rem'"] { font-size: 1.15rem !important; }
+                    .syllabus-root [style*="fontSize: '1.3rem'"] { font-size: 1.05rem !important; }
+                    .syllabus-root [style*="fontSize: '1.1rem'"] { font-size: 1rem !important; }
                 }
                 .glaze-button:hover {
                     background-position: right center !important;

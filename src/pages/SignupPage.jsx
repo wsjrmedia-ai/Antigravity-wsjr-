@@ -160,7 +160,7 @@ const SignupPage = () => {
             </Link>
 
             {/* Signup Card */}
-            <div ref={containerRef} style={{
+            <div ref={containerRef} className="signup-card" style={{
                 position: 'relative',
                 zIndex: 1,
                 width: '100%',
@@ -408,6 +408,17 @@ const SignupPage = () => {
                     }}>Login here</Link>
                 </div>
             </div>
+            <style>{`
+                @media (max-width: 700px) {
+                    .signup-card { padding: 2rem 1.3rem !important; border-radius: 20px !important; }
+                    .signup-card h1 { font-size: clamp(1.8rem, 7vw, 2.3rem) !important; }
+                    .signup-card h3 { font-size: 1rem !important; }
+                    .signup-card [style*="grid-template-columns: 1fr 1fr"],
+                    .signup-card [style*="grid-template-columns:1fr 1fr"] {
+                        grid-template-columns: 1fr !important;
+                    }
+                }
+            `}</style>
         </div>
     )
 }

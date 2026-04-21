@@ -12,7 +12,7 @@ const metricsData = [
         desc: 'Finance, Technology, Design, and Management, each with its own curriculum, faculty, and real-world focus.'
     },
     {
-        num: 10000,
+        num: 5000,
         suffix: '+',
         title: 'STUDENTS',
         desc: 'A growing community of learners from Dubai, India, and beyond, building careers with institutional-grade knowledge.'
