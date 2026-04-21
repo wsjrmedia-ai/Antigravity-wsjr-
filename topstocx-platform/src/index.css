@@ -1,8 +1,63 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
-/* Cygre (brand primary) is commercial; Space Grotesk is the closest free
-   match with the same modern geometric sans character. Cygre is still listed
-   first so self-hosted Cygre takes over automatically when/if it's bundled. */
+/* Cygre — self-hosted brand typeface from /public/fonts */
+@font-face {
+  font-family: 'Cygre';
+  src: url('/fonts/Cygre-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cygre';
+  src: url('/fonts/Cygre-Book.ttf') format('truetype');
+  font-weight: 350;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cygre';
+  src: url('/fonts/Cygre-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cygre';
+  src: url('/fonts/Cygre-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cygre';
+  src: url('/fonts/Cygre-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cygre';
+  src: url('/fonts/Cygre-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cygre';
+  src: url('/fonts/Cygre-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cygre';
+  src: url('/fonts/Cygre-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 .font-primary, h1, h2, h3, h4, h5, h6, button {
   font-family: 'Cygre', 'Space Grotesk', 'Outfit', sans-serif !important;
   letter-spacing: -0.015em;
