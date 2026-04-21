@@ -62,19 +62,10 @@ const SchoolsHeader = () => {
                 </p>
             </div>
 
-            {/* Decorative crest — desktop: absolute right side. Mobile: flex item below content (see CSS) */}
+            {/* Decorative crest — mobile only. Desktop keeps the original scrolling EmblemAnimation behaviour. */}
             <div className="schools-crest" aria-hidden="true" style={{
-                position: 'absolute',
-                top: '50%',
-                right: '-6%',
-                transform: 'translateY(-50%)',
-                width: 'min(52vw, 640px)',
-                height: 'min(52vw, 640px)',
-                pointerEvents: 'none',
-                zIndex: 0,
-                opacity: 0.85,
-                animation: 'schoolsCrestFloat 11s ease-in-out infinite',
-                filter: 'drop-shadow(0 18px 50px rgba(106, 7, 21, 0.25))'
+                display: 'none',
+                pointerEvents: 'none'
             }}>
                 <img
                     src="/jus.the.emblem.frame.red.whyte.highlights.png"
@@ -85,10 +76,6 @@ const SchoolsHeader = () => {
             </div>
 
             <style>{`
-                @keyframes schoolsCrestFloat {
-                    0%, 100% { transform: translateY(-50%) rotate(0deg); }
-                    50%      { transform: translateY(calc(-50% - 14px)) rotate(2deg); }
-                }
                 @media (prefers-reduced-motion: reduce) {
                     .schools-crest { animation: none !important; }
                 }
@@ -107,12 +94,7 @@ const SchoolsHeader = () => {
                         max-width: 100% !important;
                     }
                     .schools-crest {
-                        position: static !important;
-                        top: auto !important;
-                        right: auto !important;
-                        bottom: auto !important;
-                        left: auto !important;
-                        transform: none !important;
+                        display: block !important;
                         width: min(82vw, 460px) !important;
                         height: min(82vw, 460px) !important;
                         margin: 5vh auto 0 !important;
