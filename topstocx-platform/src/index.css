@@ -107,6 +107,28 @@ body {
   overflow-x: hidden;
 }
 
+/* ── GLOBAL MEDIA & LAYOUT DEFAULTS (responsive) ── */
+img, video, canvas, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+iframe {
+  max-width: 100%;
+}
+
+/* Prevent long words/URLs from busting layouts on small screens */
+p, h1, h2, h3, h4, h5, h6, li, a, span, div {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* Fluid typography — scales every headline without per-component tweaks */
+h1 { font-size: clamp(28px, 5.2vw, 56px); line-height: 1.1; }
+h2 { font-size: clamp(24px, 4vw, 42px); line-height: 1.15; }
+h3 { font-size: clamp(20px, 2.8vw, 30px); line-height: 1.2; }
+h4 { font-size: clamp(18px, 2.2vw, 24px); line-height: 1.25; }
+
 body::before {
   content: '';
   position: fixed;
@@ -335,4 +357,141 @@ body::before {
 @keyframes scrollLeft {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
+}
+
+/* ── GLOBAL RESPONSIVE SAFETY NET ── */
+/* Any grid using auto-fit minmax will wrap naturally. Use .auto-grid-* helpers. */
+.auto-grid-sm { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; }
+.auto-grid-md { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; }
+.auto-grid-lg { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+
+.container-page {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 3vw, 2rem);
+  box-sizing: border-box;
+}
+
+/* Tables never overflow the viewport — they scroll horizontally */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Flex rows that should stack on small screens */
+.flex-row-responsive {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Tablet + mobile */
+@media (max-width: 1024px) {
+  /* Any 4-column inline grid */
+  [style*="repeat(4, 1fr)"] { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+@media (max-width: 768px) {
+  /* Collapse common inline grid patterns */
+  [style*="repeat(3, 1fr)"],
+  [style*="repeat(2, 1fr)"] { grid-template-columns: 1fr !important; }
+
+  /* Force page-level sections to respect viewport padding */
+  section, main {
+    padding-left: clamp(0.75rem, 3vw, 1.25rem);
+    padding-right: clamp(0.75rem, 3vw, 1.25rem);
+  }
+
+  /* Shrink oversized top padding used for fixed headers */
+  main[style*="paddingTop: 110"],
+  main[style*="padding-top: 110"] {
+    padding-top: 90px !important;
+  }
+
+  /* Prevent big heroes from blowing out phone viewport */
+  [style*="fontSize: 64"], [style*="font-size: 64"] { font-size: clamp(32px, 8vw, 48px) !important; }
+  [style*="fontSize: 56"], [style*="font-size: 56"] { font-size: clamp(30px, 7vw, 44px) !important; }
+  [style*="fontSize: 48"], [style*="font-size: 48"] { font-size: clamp(28px, 6.5vw, 40px) !important; }
+  [style*="fontSize: 42"], [style*="font-size: 42"] { font-size: clamp(26px, 6vw, 36px) !important; }
+  [style*="fontSize: 36"], [style*="font-size: 36"] { font-size: clamp(24px, 5.5vw, 32px) !important; }
+
+  /* Large fixed paddings -> shrink */
+  [style*="padding: 4rem"] { padding: 2rem 1rem !important; }
+  [style*="padding: 6rem"] { padding: 2.5rem 1rem !important; }
+  [style*="padding: 5rem"] { padding: 2rem 1rem !important; }
+
+  /* Topstocx workspace on phone — stack instead of three-col */
+  .ws-main { grid-template-columns: 1fr !important; }
+
+  /* Chat launcher button — smaller on mobile */
+  .finai-toggle {
+    width: 90px !important;
+    height: 90px !important;
+    bottom: 16px !important;
+    right: 16px !important;
+  }
+
+  /* Chat widget sizing (FinAIChatbot uses .finai-wrap) */
+  .finai-wrap {
+    width: calc(100vw - 1rem) !important;
+    max-width: 400px !important;
+    right: 0.5rem !important;
+    bottom: 100px !important;
+    height: 70vh !important;
+    max-height: 600px !important;
+  }
+
+  /* Modal/dialog responsive */
+  .modal-content, [role="dialog"] > div {
+    max-width: calc(100vw - 1.5rem) !important;
+    max-height: 90vh !important;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  /* News cards shrink on phone so at least one-and-a-half fits */
+  [style*="width: '320px'"],
+  [style*="width:\"320px\""] { width: 78vw !important; max-width: 300px !important; }
+}
+
+@media (max-width: 480px) {
+  /* Tight everything on phones */
+  [style*="padding: 3rem"] { padding: 1.5rem 0.75rem !important; }
+  [style*="padding: 2rem"] { padding: 1.25rem 0.75rem !important; }
+
+  /* Two-column button rows stack */
+  .hp-cta-buttons { flex-direction: column !important; gap: 0.75rem !important; }
+
+  .finai-toggle {
+    width: 72px !important;
+    height: 72px !important;
+    bottom: 12px !important;
+    right: 12px !important;
+  }
+
+  /* Chat full width on phones */
+  .finai-wrap {
+    width: calc(100vw - 1rem) !important;
+    height: 75vh !important;
+    max-height: none !important;
+    right: 0.5rem !important;
+    left: 0.5rem !important;
+    bottom: 100px !important;
+  }
+
+  /* Smaller headline size */
+  h1 { font-size: clamp(26px, 7.5vw, 34px) !important; }
+  h2 { font-size: clamp(22px, 6vw, 28px) !important; }
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

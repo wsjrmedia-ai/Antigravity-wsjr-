@@ -990,7 +990,7 @@ export default function TopstockXVoiceBot() {
             {/* ── FLOATING TOGGLE BUTTON ── */}
             <button
                 onClick={() => setIsOpen(o => !o)}
-                className={!isOpen ? "manu-mascot-active" : ""}
+                className={"finai-toggle " + (!isOpen ? "manu-mascot-active" : "")}
                 style={{
                     position: "fixed", bottom: 40, right: 30, zIndex: 9999,
                     width: 150, height: 150, borderRadius: "50%",
