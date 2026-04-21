@@ -32,7 +32,7 @@ export default function MarketsPage() {
   const btc = cryptoList.find((c) => c.symbol === 'BTCUSDT');
 
   return (
-    <div style={{ color: '#fff', minHeight: '100vh', background: '#03050e' }}>
+    <div style={{ color: '#fff', minHeight: '100vh', background: 'transparent' }}>
       <HomeHeader />
       <style>{`
           @media (max-width: 480px) {

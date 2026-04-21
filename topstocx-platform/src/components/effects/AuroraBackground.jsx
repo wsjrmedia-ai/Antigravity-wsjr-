@@ -1,11 +1,13 @@
 import { useMemo } from 'react';
 
 const BEAM_CONFIG = [
-    { left: '12%', width: 180, delay: '0s',    duration: '18s', color: 'rgba(0, 90, 255, 0.22)',    hueShift: '8deg'  },
-    { left: '28%', width: 220, delay: '-6s',   duration: '22s', color: 'rgba(0, 39, 111, 0.28)',    hueShift: '10deg' },
-    { left: '48%', width: 240, delay: '-4s',   duration: '24s', color: 'rgba(57, 181, 74, 0.2)',    hueShift: '4deg'  },
-    { left: '68%', width: 200, delay: '-2s',   duration: '20s', color: 'rgba(119, 166, 255, 0.18)', hueShift: '6deg'  },
-    { left: '85%', width: 210, delay: '-7s',   duration: '23s', color: 'rgba(57, 181, 74, 0.18)',   hueShift: '-4deg' },
+    { left: '10%', width: 190, delay: '0s',    duration: '17s', color: 'rgba(0, 90, 255, 0.38)',    hueShift: '8deg'  },
+    { left: '24%', width: 150, delay: '-3s',   duration: '19s', color: 'rgba(119, 166, 255, 0.3)',  hueShift: '0deg'  },
+    { left: '38%', width: 220, delay: '-6s',   duration: '21s', color: 'rgba(0, 39, 111, 0.42)',    hueShift: '10deg' },
+    { left: '52%', width: 230, delay: '-4s',   duration: '23s', color: 'rgba(57, 181, 74, 0.32)',   hueShift: '4deg'  },
+    { left: '66%', width: 200, delay: '-2s',   duration: '20s', color: 'rgba(0, 90, 255, 0.32)',    hueShift: '6deg'  },
+    { left: '80%', width: 170, delay: '-5s',   duration: '18s', color: 'rgba(89, 225, 108, 0.28)',  hueShift: '-4deg' },
+    { left: '92%', width: 180, delay: '-7s',   duration: '22s', color: 'rgba(57, 181, 74, 0.28)',   hueShift: '2deg'  },
 ];
 
 export default function AuroraBackground({ children, height = '100%', style = {} }) {
@@ -23,14 +25,14 @@ export default function AuroraBackground({ children, height = '100%', style = {}
         }}>
             <style>{`
                 @keyframes aurora-beam-sway {
-                    0%   { transform: translate(-50%, -10%) scaleY(1)    rotate(var(--tilt, 0deg)); opacity: 0.35; }
-                    50%  { transform: translate(-50%, -6%)  scaleY(1.1)  rotate(calc(var(--tilt, 0deg) + 3deg)); opacity: 0.55; }
-                    100% { transform: translate(-50%, -10%) scaleY(1)    rotate(var(--tilt, 0deg)); opacity: 0.35; }
+                    0%   { transform: translate(-50%, -10%) scaleY(1)    rotate(var(--tilt, 0deg)); opacity: 0.5; }
+                    50%  { transform: translate(-50%, -6%)  scaleY(1.15) rotate(calc(var(--tilt, 0deg) + 4deg)); opacity: 0.75; }
+                    100% { transform: translate(-50%, -10%) scaleY(1)    rotate(var(--tilt, 0deg)); opacity: 0.5; }
                 }
                 @keyframes aurora-haze-drift {
-                    0%   { transform: translate(-6%, 0) scale(1);    opacity: 0.35; }
-                    50%  { transform: translate(6%, -2%) scale(1.05); opacity: 0.5; }
-                    100% { transform: translate(-6%, 0) scale(1);    opacity: 0.35; }
+                    0%   { transform: translate(-7%, 0) scale(1);     opacity: 0.5; }
+                    50%  { transform: translate(7%, -3%) scale(1.08); opacity: 0.7; }
+                    100% { transform: translate(-7%, 0) scale(1);     opacity: 0.5; }
                 }
             `}</style>
 
@@ -38,11 +40,11 @@ export default function AuroraBackground({ children, height = '100%', style = {}
             <div aria-hidden="true" style={{
                 position: 'absolute', inset: '-10%', pointerEvents: 'none',
                 background: `
-                    radial-gradient(ellipse 55% 60% at 15% 20%, rgba(0, 90, 255, 0.22) 0%, transparent 60%),
-                    radial-gradient(ellipse 55% 55% at 85% 80%, rgba(57, 181, 74, 0.2) 0%, transparent 60%),
-                    radial-gradient(ellipse 40% 30% at 50% 50%, rgba(119, 166, 255, 0.08) 0%, transparent 70%)
+                    radial-gradient(ellipse 55% 60% at 15% 20%, rgba(0, 90, 255, 0.35) 0%, transparent 60%),
+                    radial-gradient(ellipse 55% 55% at 85% 80%, rgba(57, 181, 74, 0.32) 0%, transparent 60%),
+                    radial-gradient(ellipse 40% 30% at 50% 50%, rgba(119, 166, 255, 0.12) 0%, transparent 70%)
                 `,
-                filter: 'blur(50px)',
+                filter: 'blur(45px)',
                 animation: 'aurora-haze-drift 24s ease-in-out infinite',
                 zIndex: 0,
             }} />
@@ -67,7 +69,7 @@ export default function AuroraBackground({ children, height = '100%', style = {}
                                 ${b.color} 35%,
                                 ${b.color} 60%,
                                 transparent 100%)`,
-                            filter: 'blur(40px)',
+                            filter: 'blur(32px)',
                             mixBlendMode: 'screen',
                             '--tilt': b.hueShift,
                             animation: `aurora-beam-sway ${b.duration} ease-in-out infinite`,

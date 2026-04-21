@@ -182,7 +182,7 @@ export default function HomePage() {
   const [search, setSearch] = useState('');
 
   return (
-    <div style={{ color: '#fff', overflowX: 'hidden', background: '#03050e', position: 'relative' }}>
+    <div style={{ color: '#fff', overflowX: 'hidden', background: 'transparent', position: 'relative' }}>
       <HomeHeader />
 
       {/* ── Hero ── */}
