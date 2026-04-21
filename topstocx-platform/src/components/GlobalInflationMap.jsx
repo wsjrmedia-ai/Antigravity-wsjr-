@@ -150,8 +150,34 @@ export default function GlobalInflationMap() {
           </div>
         </div>
 
-        {/* Tab bar */}
-        <div style={{ display: 'flex', gap: 8, paddingBottom: 1 }}>
+        {/* Tab bar — horizontally swipeable on mobile */}
+        <div
+          className="gim-tabs"
+          style={{
+            display: 'flex',
+            gap: 8,
+            paddingBottom: 1,
+            overflowX: 'auto',
+            overflowY: 'hidden',
+            WebkitOverflowScrolling: 'touch',
+            scrollSnapType: 'x proximity',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            flexWrap: 'nowrap',
+            touchAction: 'pan-x',
+          }}
+        >
+          <style>{`
+            .gim-tabs::-webkit-scrollbar { display: none; height: 0; }
+            .gim-tabs > button { scroll-snap-align: start; flex-shrink: 0; }
+            /* subtle edge hint: fade right edge on mobile so user sees more tabs */
+            @media (max-width: 768px) {
+              .gim-tabs {
+                -webkit-mask-image: linear-gradient(to right, #000 0, #000 90%, transparent 100%);
+                        mask-image: linear-gradient(to right, #000 0, #000 90%, transparent 100%);
+              }
+            }
+          `}</style>
           {currentTabs.map(t => (
             <button
               key={t.id}
