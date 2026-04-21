@@ -123,26 +123,12 @@ export default function GlobalInflationMap() {
     <div
       onMouseMove={e => setMouse({ x: e.clientX, y: e.clientY })}
       style={{
-        position: 'relative',
-        background: 'rgba(10, 10, 10, 0.5)',
-        backdropFilter: 'blur(16px)',
+        background: 'transparent',
         borderRadius: 20,
         overflow: 'hidden',
         fontFamily: 'inherit',
-        border: '1.5px solid rgba(0, 90, 255, 0.35)',
-        boxShadow:
-          '0 25px 50px -12px rgba(0, 0, 0, 0.5),' +
-          '0 0 0 1px rgba(57, 181, 74, 0.15),' +
-          '0 0 32px rgba(0, 90, 255, 0.18),' +
-          '0 0 60px rgba(57, 181, 74, 0.12)',
       }}
     >
-      {/* Brand gradient border accent (top) */}
-      <div aria-hidden="true" style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-        background: 'linear-gradient(90deg, transparent 0%, #005AFF 25%, #39B54A 75%, transparent 100%)',
-        opacity: 0.85, pointerEvents: 'none', zIndex: 5,
-      }} />
       {/* ── Header ── */}
       <div style={{
         padding: '24px 24px 0',
