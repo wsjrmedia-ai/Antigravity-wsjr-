@@ -4,6 +4,7 @@ import { Float, Sphere, MeshDistortMaterial, Environment, Point, Points } from "
 import * as THREE from "three";
 import { usePlan } from "../../context/PlanContext";
 import { useMarketData } from "../../context/MarketDataContext";
+import BotAvatar from "./BotAvatar";
 
 /* ─────────────────────────────────────────
    SPARKLINE CHART
@@ -510,17 +511,13 @@ function AvatarRobot3D({ mode = 'pulse' }) {
 }
 
 function AvatarManu({ size = 'medium' }) {
-    if (size === 'small') {
-        return <img src="/robot_icon.png" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'drop-shadow(0 0 8px rgba(0, 90, 255, 0.4))' }} alt="Bot" />;
-    }
-    return <AvatarRobot3D mode="pulse" />;
+    const px = size === 'small' ? 30 : size === 'large' ? 120 : 70;
+    return <BotAvatar variant="manu" size={px} glow={size !== 'small'} style={{ width: '100%', height: '100%' }} />;
 }
 
 function AvatarAtlas({ size = 'medium' }) {
-    if (size === 'small') {
-        return <img src="/robot_icon.png" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'grayscale(1) brightness(1.2) drop-shadow(0 0 8px rgba(212, 175, 55, 0.4))' }} alt="Bot" />;
-    }
-    return <AvatarRobot3D mode="atlas" />;
+    const px = size === 'small' ? 30 : size === 'large' ? 120 : 70;
+    return <BotAvatar variant="atlas" size={px} glow={size !== 'small'} style={{ width: '100%', height: '100%' }} />;
 }
 
 /* ─────────────────────────────────────────
