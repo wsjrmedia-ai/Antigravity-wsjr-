@@ -16,6 +16,7 @@ const FeatureCards3D     = lazy(() => import('../components/effects/FeatureCards
 const MarketSummary      = lazy(() => import('../components/market/MarketSummary'));
 const GlobalInflationMap = lazy(() => import('../components/GlobalInflationMap'));
 const DNAFlowBackground  = lazy(() => import('../components/effects/DNAFlowBackground'));
+const AuroraBackground   = lazy(() => import('../components/effects/AuroraBackground'));
 
 const Fallback = ({ h = 200 }) => <div style={{ minHeight: h }} />;
 
@@ -278,13 +279,25 @@ export default function HomePage() {
           />
       </div>
 
-      {/* ── Market Summary ── */}
-      {/* ── Market Summary ── */}
-      <section className="responsive-padding" style={{ maxWidth: 1400, margin: '0 auto', padding: '4rem 2rem 2rem', position: 'relative', zIndex: 10, background: '#03050e' }}>
-        <Suspense fallback={<Fallback h={600} />}>
-          <MarketSummary />
-        </Suspense>
-      </section>
+      {/* ── Market Summary (brand aurora block) ── */}
+      <Suspense fallback={<Fallback h={800} />}>
+        <AuroraBackground style={{ padding: '4rem 0 3rem' }}>
+          <section
+            className="responsive-padding"
+            style={{
+              maxWidth: 1400,
+              margin: '0 auto',
+              padding: '0 2rem',
+              position: 'relative',
+              zIndex: 10,
+            }}
+          >
+            <Suspense fallback={<Fallback h={600} />}>
+              <MarketSummary />
+            </Suspense>
+          </section>
+        </AuroraBackground>
+      </Suspense>
 
       {/* ── Global Markets & Intelligence ── */}
       {/* ── Global Markets & Intelligence ── */}
