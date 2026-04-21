@@ -43,6 +43,7 @@ export default function PricingModal() {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.92, y: 24 }}
                         transition={{ type: 'spring', damping: 22, stiffness: 280 }}
+                        className="pm-overlay"
                         style={{
                             position: 'fixed', inset: 0, zIndex: 99999,
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -50,7 +51,20 @@ export default function PricingModal() {
                             pointerEvents: 'none',
                         }}
                     >
-                        <div style={{
+                        <style>{`
+                            @media (max-width: 768px) {
+                                .pm-overlay { padding: 0.5rem !important; align-items: flex-start !important; padding-top: 1rem !important; }
+                                .pm-card { padding: 1.5rem 1rem !important; max-height: calc(100vh - 2rem) !important; overflow-y: auto !important; border-radius: 18px !important; }
+                                .pm-grid { grid-template-columns: 1fr !important; gap: 1rem !important; }
+                                .pm-plan-card { padding: 1.25rem 1rem !important; }
+                                .pm-close { top: 10px !important; right: 10px !important; }
+                            }
+                            @media (max-width: 480px) {
+                                .pm-card { padding: 1.25rem 0.75rem !important; }
+                                .pm-plan-card { padding: 1rem 0.875rem !important; }
+                            }
+                        `}</style>
+                        <div className="pm-card" style={{
                             pointerEvents: 'auto',
                             background: 'linear-gradient(160deg, #0c1420 0%, #080f18 100%)',
                             border: '1px solid #1e3050',
@@ -58,12 +72,15 @@ export default function PricingModal() {
                             padding: '2.5rem 2rem',
                             width: '100%',
                             maxWidth: 900,
+                            maxHeight: 'calc(100vh - 2rem)',
+                            overflowY: 'auto',
                             boxShadow: '0 0 80px #005AFF18, 0 40px 80px rgba(0,0,0,0.9)',
                             fontFamily: "'Inter', sans-serif",
                             position: 'relative',
                         }}>
                             {/* Close */}
                             <button
+                                className="pm-close"
                                 onClick={() => setShowPricing(false)}
                                 style={{
                                     position: 'absolute', top: 18, right: 18,
@@ -91,7 +108,7 @@ export default function PricingModal() {
                             </div>
 
                             {/* Cards */}
-                            <div style={{
+                            <div className="pm-grid" style={{
                                 display: 'grid',
                                 gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
                                 gap: '1.25rem',
@@ -102,6 +119,7 @@ export default function PricingModal() {
                                     return (
                                         <div
                                             key={plan.id}
+                                            className="pm-plan-card"
                                             onClick={() => handleSelect(plan.id)}
                                             style={{
                                                 background: isActive
