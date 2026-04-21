@@ -92,32 +92,35 @@ const SchoolsHeader = () => {
                     .schools-crest { animation: none !important; }
                 }
                 @media (max-width: 768px) {
-                    /* Mobile layout: content sits at the top, crest fills the lower white space fully visible */
+                    /* Mobile layout: content at top, crest as a real flex item below — fully visible, no overlap */
                     .schools-header {
                         justify-content: flex-start !important;
-                        padding: 8vh 6% 4vh !important;
-                        align-items: center !important;
-                        text-align: left !important;
+                        padding: 7vh 6% 5vh !important;
+                        align-items: stretch !important;
+                        height: auto !important;
+                        min-height: 100vh !important;
+                        gap: 4vh !important;
                     }
                     .schools-header > div:not(.schools-crest) {
                         margin-top: 0 !important;
-                        align-self: flex-start !important;
                     }
                     .schools-crest {
+                        position: static !important;
                         top: auto !important;
-                        bottom: 4vh !important;
-                        right: 50% !important;
+                        bottom: auto !important;
+                        right: auto !important;
                         left: auto !important;
-                        transform: translateX(50%) !important;
+                        transform: none !important;
                         width: min(82vw, 460px) !important;
                         height: min(82vw, 460px) !important;
+                        margin: 2vh auto 0 !important;
                         opacity: 1 !important;
                         filter: drop-shadow(0 14px 36px rgba(106, 7, 21, 0.28)) !important;
-                        animation: schoolsCrestFloatMobile 9s ease-in-out infinite;
+                        animation: schoolsCrestFloatMobile 9s ease-in-out infinite !important;
                     }
                     @keyframes schoolsCrestFloatMobile {
-                        0%, 100% { transform: translateX(50%) translateY(0) rotate(0deg); }
-                        50%      { transform: translateX(50%) translateY(-10px) rotate(2deg); }
+                        0%, 100% { transform: translateY(0) rotate(0deg); }
+                        50%      { transform: translateY(-10px) rotate(2deg); }
                     }
                 }
             `}</style>
