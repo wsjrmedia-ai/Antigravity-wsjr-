@@ -249,7 +249,7 @@ export default function HomePage() {
                 placeholder="Search symbols — AAPL, BTC, EUR/USD…"
                 style={{ flex: 1, padding: '14px 0', background: 'none', border: 'none', outline: 'none', color: '#e8f0fe', fontSize: 15, fontFamily: 'inherit' }}
               />
-              <Link to="/chart" style={{ padding: '14px 22px', background: 'var(--primary-gradient)', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 700 }}>Search</Link>
+              <Link to="/chart" className="hp-search-btn" style={{ padding: '14px 22px', background: 'var(--primary-gradient)', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', whiteSpace: 'nowrap' }}>Search</Link>
             </motion.div>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
               className="hp-cta-buttons flex-stack-mobile"
