@@ -82,12 +82,12 @@ const HeroSection = () => {
                 </div>
 
                 {/* Center: Monogram - Refined position and size */}
-                <div style={{ position: 'absolute', top: '20px', left: '50%', transform: 'translateX(-50%)' }}>
-                    <img 
+                <div className="academy-monogram-wrap" style={{ position: 'absolute', top: '20px', left: '50%', transform: 'translateX(-50%)' }}>
+                    <img
                         className="academy-monogram"
-                        src="https://api.builder.io/api/v1/image/assets/TEMP/25031ebb293a7037f1fe8a947d41d183346733f4?width=464" 
-                        alt="Academy Monogram" 
-                        style={{ width: '130px', height: '130px', filter: 'brightness(0) invert(1)' }} 
+                        src="https://api.builder.io/api/v1/image/assets/TEMP/25031ebb293a7037f1fe8a947d41d183346733f4?width=464"
+                        alt="Academy Monogram"
+                        style={{ width: '130px', height: '130px', filter: 'brightness(0) invert(1)' }}
                     />
                 </div>
 
@@ -320,14 +320,23 @@ const HeroSection = () => {
                     /* Learn/Earn toggle spacing on phones (keep native 260px width so the internal slider + labels line up) */
                     .earn-toggle-container { margin-bottom: 15px !important; }
 
-                    /* Header adjustments */
-                    header { padding: 15px 5% !important; }
+                    /* Header adjustments — logo on the left, hamburger on the right, both inline at the top */
+                    header { padding: 14px 5% !important; justify-content: space-between !important; }
                     .header-en { display: none !important; } /* Hide EN to free up space */
-                    .academy-monogram { width: 90px !important; height: 90px !important; top: 10px !important; }
+                    .academy-monogram-wrap {
+                        position: static !important;
+                        top: auto !important;
+                        left: auto !important;
+                        transform: none !important;
+                        order: 0 !important;
+                        display: flex !important;
+                        align-items: center !important;
+                    }
+                    .academy-monogram { width: 56px !important; height: 56px !important; }
 
                     /* Hamburger shrink for mobile */
+                    .hamburger-menu { order: 1 !important; gap: 4px !important; align-self: center !important; }
                     .hamburger-bar { width: 28px !important; height: 3px !important; }
-                    .hamburger-menu { gap: 4px !important; }
 
                     /* Subtitle Adjustment */
                     h2 { font-size: clamp(1.2rem, 5vw, 1.5rem) !important; text-align: center !important; }
