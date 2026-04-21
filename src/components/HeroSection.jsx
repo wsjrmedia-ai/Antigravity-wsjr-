@@ -44,7 +44,7 @@ const HeroSection = () => {
             </div>
 
             {/* Huge Watermark background */}
-            <div style={{
+            <div className="hero-watermark" style={{
                 position: 'absolute',
                 top: '50%',
                 left: '50%',
@@ -56,8 +56,9 @@ const HeroSection = () => {
                 zIndex: 1,
                 opacity: 0.4
             }}>
-                <img 
-                    src="https://api.builder.io/api/v1/image/assets/TEMP/a0aec7389b59c267fe9e6cb147a75e605ac97963?width=1760" 
+                <img
+                    className="hero-watermark-img"
+                    src="https://api.builder.io/api/v1/image/assets/TEMP/a0aec7389b59c267fe9e6cb147a75e605ac97963?width=1760"
                     alt="Background Crest"
                     style={{ width: 'min(70vh, 750px)', height: 'min(70vh, 750px)' }}
                 />
@@ -367,6 +368,27 @@ const HeroSection = () => {
                     }
                     .explore-text { font-size: 13px !important; letter-spacing: 0 !important; }
                     .explore-arrow { width: 60px !important; }
+
+                    /* Reposition the large gold crest so it sits behind the title, not over the header, and gently floats */
+                    .hero-watermark {
+                        top: 34% !important;
+                        opacity: 0.22 !important;
+                        animation: heroCrestFloat 9s ease-in-out infinite;
+                    }
+                    .hero-watermark-img {
+                        width: min(82vw, 420px) !important;
+                        height: min(82vw, 420px) !important;
+                        filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.45));
+                    }
+                }
+
+                @keyframes heroCrestFloat {
+                    0%, 100% { transform: translate(-50%, -50%) translateY(0) rotate(0deg); }
+                    50%      { transform: translate(-50%, -50%) translateY(-10px) rotate(1.5deg); }
+                }
+
+                @media (prefers-reduced-motion: reduce) {
+                    .hero-watermark { animation: none !important; }
                 }
             `}</style>
         </section>
