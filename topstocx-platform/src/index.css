@@ -332,7 +332,19 @@ body::before {
 
   /* HP Hero */
   .hp-hero { padding-top: 80px !important; min-height: auto !important; }
-  .hp-search-bar { max-width: 100% !important; }
+  .hp-search-bar {
+    max-width: 100% !important;
+    border-radius: 8px !important;
+  }
+  .hp-search-bar input {
+    padding: 10px 0 !important;
+    font-size: 13px !important;
+  }
+  .hp-search-bar > div:first-child { padding: 0 10px !important; }
+  .hp-search-bar a {
+    padding: 10px 16px !important;
+    font-size: 13px !important;
+  }
   .hp-cta-buttons a { flex: 1; justify-content: center; }
 }
 
@@ -349,7 +361,9 @@ body::before {
 
   /* HP Hero */
   .hp-hero { padding-top: 72px !important; padding-bottom: 2rem !important; }
-  .hp-search-bar input { font-size: 14px !important; }
+  .hp-search-bar { max-width: 92% !important; margin-left: auto !important; margin-right: auto !important; }
+  .hp-search-bar input { padding: 8px 0 !important; font-size: 12px !important; }
+  .hp-search-bar a { padding: 8px 14px !important; font-size: 12px !important; }
   .hp-cta-buttons a { width: 100%; }
 }
 
