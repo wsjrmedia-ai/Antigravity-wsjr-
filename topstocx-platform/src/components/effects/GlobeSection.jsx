@@ -113,7 +113,7 @@ const GlobeSection = () => {
                                     Global Exchange Status
                                 </span>
                                 <div style={{ display: 'flex', gap: '6px' }}>
-                                    {['#f23645', '#d4af37', '#089981'].map((c, i) => (
+                                    {['#f23645', '#005AFF', '#39B54A'].map((c, i) => (
                                         <div key={i} style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: c }} />
                                     ))}
                                 </div>

@@ -86,7 +86,7 @@ export default function PricingModal() {
                                     Choose Your Plan
                                 </h2>
                                 <p style={{ color: '#4a7a9a', fontSize: 13, marginTop: 8 }}>
-                                    Pro & Ultimate unlock <strong style={{ color: '#d4af37' }}>JP Morgan-grade institutional AI analysis</strong>
+                                    Pro & Ultimate unlock <strong style={{ color: '#39B54A' }}>JP Morgan-grade institutional AI analysis</strong>
                                 </p>
                             </div>
 
@@ -133,9 +133,9 @@ export default function PricingModal() {
                                                 <div style={{
                                                     position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)',
                                                     background: plan.id === 'ultimate'
-                                                        ? 'linear-gradient(90deg, #d4af37, #f9e077, #d4af37)'
-                                                        : 'linear-gradient(90deg, #005AFF, #00d2ff)',
-                                                    color: plan.id === 'ultimate' ? '#0a0800' : '#fff',
+                                                        ? 'linear-gradient(90deg, #005AFF, #39B54A)'
+                                                        : 'linear-gradient(90deg, #005AFF, #77A6FF)',
+                                                    color: '#fff',
                                                     fontSize: 9, fontWeight: 800, letterSpacing: 2,
                                                     padding: '3px 12px', borderRadius: 20,
                                                     whiteSpace: 'nowrap',
@@ -194,11 +194,11 @@ export default function PricingModal() {
                                                     background: isActive
                                                         ? plan.color
                                                         : plan.id === 'ultimate'
-                                                            ? 'linear-gradient(90deg, #d4af37, #f9e077)'
+                                                            ? 'linear-gradient(90deg, #005AFF, #39B54A)'
                                                             : plan.id === 'pro'
-                                                                ? 'linear-gradient(90deg, #005AFF, #00d2ff)'
+                                                                ? 'linear-gradient(90deg, #005AFF, #77A6FF)'
                                                                 : 'rgba(255,255,255,0.06)',
-                                                    color: plan.id === 'ultimate' ? '#0a0800' : '#fff',
+                                                    color: '#fff',
                                                     border: isActive ? 'none' : `1px solid ${plan.color}66`,
                                                     borderRadius: 10,
                                                     fontSize: 13, fontWeight: 800, cursor: 'pointer',

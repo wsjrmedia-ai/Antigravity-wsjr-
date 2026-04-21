@@ -18,7 +18,7 @@ export const TRADERS = [
     bio: 'Systematic breakout trader. ICT concepts, NY session focus.',
     badge: '🏆',
     tier: 'elite',
-    accentColor: '#d4af37',
+    accentColor: '#39B54A',
   },
   {
     id: 'trader_02',

@@ -53,8 +53,8 @@ export const PLANS = {
         label: 'Ultimate',
         price: '$79',
         period: '/month',
-        color: '#d4af37',
-        glow: '#d4af3744',
+        color: '#39B54A',
+        glow: '#39B54A44',
         badge: 'INSTITUTIONAL',
         features: [
             'Everything in Pro',

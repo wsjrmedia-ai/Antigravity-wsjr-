@@ -389,8 +389,8 @@ function FlameParticles({ color = "#00e5ff" }) {
 
 function RobotModel({ mode = 'pulse' }) {
     const isManu = mode === 'pulse';
-    const primaryColor = isManu ? "#005AFF" : "#d4af37";
-    const tealColor = isManu ? "#00e5ff" : "#f1d592"; // Aqua
+    const primaryColor = isManu ? "#005AFF" : "#39B54A";
+    const tealColor = isManu ? "#77A6FF" : "#59E16C"; // brand light accent
     const waveRef = useRef();
 
     useFrame((state) => {
@@ -1067,10 +1067,10 @@ export default function TopstockXVoiceBot() {
                                             padding: "2px 8px", borderRadius: 20, cursor: "pointer",
                                             background: isPro
                                                 ? userPlan === "ultimate"
-                                                    ? "linear-gradient(90deg,#d4af37,#f9e077,#d4af37)"
-                                                    : "linear-gradient(90deg,#005AFF,#00d2ff)"
+                                                    ? "linear-gradient(90deg,#005AFF,#39B54A)"
+                                                    : "linear-gradient(90deg,#005AFF,#77A6FF)"
                                                 : "#1a2a3a",
-                                            color: userPlan === "ultimate" ? "#0a0800" : isPro ? "#fff" : "#4a7a9a",
+                                            color: isPro ? "#fff" : "#4a7a9a",
                                             border: isPro ? "none" : "1px solid #1e3a50",
                                             boxShadow: isPro ? "0 0 10px #005AFF44" : "none",
                                             transition: "all 0.3s",
@@ -1110,7 +1110,7 @@ export default function TopstockXVoiceBot() {
                                 </div>
                             </div>
                             {/* Row 2: status */}
-                            <div style={{ fontSize: 10, letterSpacing: 1.5, color: speaking ? "#00d2ff" : listening ? "#005AFF" : isPro ? "#d4af37" : "#2a5a7a", fontFamily: "'Inter', sans-serif" }}>
+                            <div style={{ fontSize: 10, letterSpacing: 1.5, color: speaking ? "#77A6FF" : listening ? "#005AFF" : isPro ? "#39B54A" : "#2a5a7a", fontFamily: "'Inter', sans-serif" }}>
                                 {speaking ? (UI_LOCALE[language] || UI_LOCALE["English"]).statusSpeaking : listening ? (UI_LOCALE[language] || UI_LOCALE["English"]).statusListening : isPro ? (UI_LOCALE[language] || UI_LOCALE["English"]).statusPro : (UI_LOCALE[language] || UI_LOCALE["English"]).statusLive}
                             </div>
                         </div>
@@ -1190,17 +1190,17 @@ export default function TopstockXVoiceBot() {
                             {/* QUICK CHIPS */}
                             <div style={{ borderTop: "1px solid #0f1e2e", flexShrink: 0 }}>
                                 {/* Tier label */}
-                                <div style={{ padding: "4px 12px 0", fontSize: 9, letterSpacing: 2, color: plan === "pro" ? "#d4af3799" : "#1e4a6a", textTransform: "uppercase", fontFamily: "'Syne',sans-serif" }}>
+                                <div style={{ padding: "4px 12px 0", fontSize: 9, letterSpacing: 2, color: plan === "pro" ? "#39B54A99" : "#1e4a6a", textTransform: "uppercase", fontFamily: "'Syne',sans-serif" }}>
                                     {plan === "pro" ? (UI_LOCALE[language] || UI_LOCALE["English"]).proQuick : (UI_LOCALE[language] || UI_LOCALE["English"]).freeTech}
                                 </div>
                                 <div style={{ display: "flex", gap: 6, padding: "5px 12px 8px", overflowX: "auto" }}>
                                     {(plan === "pro" ? (UI_LOCALE[language] || UI_LOCALE["English"]).quickPro : (UI_LOCALE[language] || UI_LOCALE["English"]).quickFree).map((q) => (
                                         <button key={q} className="chip" onClick={() => doSend(q)} style={{
                                             flexShrink: 0, padding: "5px 10px",
-                                            background: plan === "pro" ? "#1a1200" : "#0c1824",
-                                            border: `1px solid ${plan === "pro" ? "#d4af3744" : "#1e3a50"}`,
+                                            background: plan === "pro" ? "#0a1a10" : "#0c1824",
+                                            border: `1px solid ${plan === "pro" ? "#39B54A44" : "#1e3a50"}`,
                                             borderRadius: 20,
-                                            color: plan === "pro" ? "#d4af37" : "#4a7a9a",
+                                            color: plan === "pro" ? "#59E16C" : "#4a7a9a",
                                             fontSize: 11, cursor: "pointer",
                                             whiteSpace: "nowrap", transition: "all .2s",
                                             fontFamily: "'Inter', sans-serif",

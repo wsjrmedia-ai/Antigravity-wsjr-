@@ -161,13 +161,13 @@ const HomeHeader = () => {
                         transition: 'all 0.25s',
                         background: isPro
                             ? userPlan === 'ultimate'
-                                ? 'linear-gradient(90deg, #d4af37, #f9e077, #d4af37)'
-                                : 'linear-gradient(90deg, #005AFF, #00d2ff)'
+                                ? 'linear-gradient(90deg, #005AFF, #39B54A)'
+                                : 'linear-gradient(90deg, #005AFF, #77A6FF)'
                             : 'rgba(0, 90, 255, 0.12)',
-                        color: userPlan === 'ultimate' ? '#0a0800' : '#fff',
+                        color: '#fff',
                         boxShadow: isPro
                             ? userPlan === 'ultimate'
-                                ? '0 0 18px #d4af3755'
+                                ? '0 0 18px #39B54A66'
                                 : '0 0 18px #005AFF55'
                             : 'none',
                         border: isPro ? 'none' : '1px solid #005AFF66',

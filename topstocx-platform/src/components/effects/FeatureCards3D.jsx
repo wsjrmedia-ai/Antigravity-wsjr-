@@ -22,8 +22,8 @@ const FEATURES = [
         icon: '🎓',
         title: 'Education',
         desc: 'Comprehensive trading masterclasses, tutorials, and strategy guides to elevate your skills from beginner to expert.',
-        color: '#d4af37',
-        accentColor: 'rgba(212, 175, 55, 0.12)',
+        color: '#39B54A',
+        accentColor: 'rgba(57, 181, 74, 0.12)',
         tag: 'NEW',
     },
     {
