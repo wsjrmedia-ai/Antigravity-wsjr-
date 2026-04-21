@@ -31,9 +31,31 @@ const SchoolsHeader = () => {
             justifyContent: 'center', // Center vertically
             textAlign: 'left',
             height: '100vh',
-            position: 'relative'
+            position: 'relative',
+            overflow: 'hidden'
         }}>
-            <div style={{ maxWidth: '800px', display: 'flex', flexDirection: 'column', gap: '30px', marginTop: '-10vh' }}>
+            {/* Decorative crest anchored inside this section */}
+            <div className="schools-crest" aria-hidden="true" style={{
+                position: 'absolute',
+                top: '50%',
+                right: '-6%',
+                transform: 'translateY(-50%)',
+                width: 'min(52vw, 640px)',
+                height: 'min(52vw, 640px)',
+                pointerEvents: 'none',
+                zIndex: 0,
+                opacity: 0.85,
+                animation: 'schoolsCrestFloat 11s ease-in-out infinite',
+                filter: 'drop-shadow(0 18px 50px rgba(106, 7, 21, 0.25))'
+            }}>
+                <img
+                    src="https://api.builder.io/api/v1/image/assets/TEMP/a0aec7389b59c267fe9e6cb147a75e605ac97963?width=1760"
+                    alt=""
+                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                />
+            </div>
+
+            <div style={{ maxWidth: '800px', display: 'flex', flexDirection: 'column', gap: '30px', marginTop: '-10vh', position: 'relative', zIndex: 1 }}>
                 <h2 className="header-fade" style={{
                     fontFamily: 'var(--font-hero)',
                     fontSize: 'clamp(3.5rem, 5vw, 5.5rem)',
@@ -46,7 +68,7 @@ const SchoolsHeader = () => {
                     Four <span style={{ fontFamily: 'var(--font-body)', fontStyle: 'italic', fontWeight: 500, color: '#CC972B' }}>World-Class</span> Schools.<br/>
                     One <span style={{ fontFamily: 'var(--font-body)', fontStyle: 'italic', fontWeight: 500, color: '#6A0715' }}>Unified Framework.</span>
                 </h2>
-                
+
                 <p className="header-fade" style={{
                     fontFamily: 'var(--font-hero)',
                     fontSize: 'clamp(1rem, 1.2vw, 1.2rem)', // Scaled down as per the image
@@ -61,7 +83,31 @@ const SchoolsHeader = () => {
                 </p>
             </div>
 
-
+            <style>{`
+                @keyframes schoolsCrestFloat {
+                    0%, 100% { transform: translateY(-50%) rotate(0deg); }
+                    50%      { transform: translateY(calc(-50% - 14px)) rotate(2deg); }
+                }
+                @media (prefers-reduced-motion: reduce) {
+                    .schools-crest { animation: none !important; }
+                }
+                @media (max-width: 768px) {
+                    .schools-crest {
+                        top: auto !important;
+                        bottom: 6% !important;
+                        right: 50% !important;
+                        transform: translateX(50%) !important;
+                        width: min(78vw, 420px) !important;
+                        height: min(78vw, 420px) !important;
+                        opacity: 0.35 !important;
+                        animation: schoolsCrestFloatMobile 11s ease-in-out infinite;
+                    }
+                    @keyframes schoolsCrestFloatMobile {
+                        0%, 100% { transform: translateX(50%) translateY(0) rotate(0deg); }
+                        50%      { transform: translateX(50%) translateY(-10px) rotate(2deg); }
+                    }
+                }
+            `}</style>
         </section>
     )
 }

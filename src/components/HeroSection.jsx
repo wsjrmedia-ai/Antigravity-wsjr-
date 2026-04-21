@@ -43,27 +43,6 @@ const HeroSection = () => {
                 />
             </div>
 
-            {/* Huge Watermark background */}
-            <div className="hero-watermark" style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-                pointerEvents: 'none',
-                zIndex: 1,
-                opacity: 0.4
-            }}>
-                <img
-                    className="hero-watermark-img"
-                    src="https://api.builder.io/api/v1/image/assets/TEMP/a0aec7389b59c267fe9e6cb147a75e605ac97963?width=1760"
-                    alt="Background Crest"
-                    style={{ width: 'min(70vh, 750px)', height: 'min(70vh, 750px)' }}
-                />
-            </div>
-
             {/* 1. Top Header Navigation */}
             <header style={{
                 display: 'flex',
@@ -321,22 +300,19 @@ const HeroSection = () => {
                     /* Learn/Earn toggle spacing on phones (keep native 260px width so the internal slider + labels line up) */
                     .earn-toggle-container { margin-bottom: 15px !important; }
 
-                    /* Header adjustments — logo on the left, hamburger on the right, both inline at the top */
-                    header { padding: 14px 5% !important; justify-content: space-between !important; }
+                    /* Header adjustments — logo centered, hamburger on the right */
+                    header { padding: 14px 5% !important; min-height: 96px !important; align-items: center !important; }
                     .header-en { display: none !important; } /* Hide EN to free up space */
                     .academy-monogram-wrap {
-                        position: static !important;
-                        top: auto !important;
-                        left: auto !important;
-                        transform: none !important;
-                        order: 0 !important;
-                        display: flex !important;
-                        align-items: center !important;
+                        position: absolute !important;
+                        top: 50% !important;
+                        left: 50% !important;
+                        transform: translate(-50%, -50%) !important;
                     }
-                    .academy-monogram { width: 56px !important; height: 56px !important; }
+                    .academy-monogram { width: 80px !important; height: 80px !important; }
 
                     /* Hamburger shrink for mobile */
-                    .hamburger-menu { order: 1 !important; gap: 4px !important; align-self: center !important; }
+                    .hamburger-menu { gap: 4px !important; margin-left: auto !important; }
                     .hamburger-bar { width: 28px !important; height: 3px !important; }
 
                     /* Subtitle Adjustment */
@@ -368,27 +344,6 @@ const HeroSection = () => {
                     }
                     .explore-text { font-size: 13px !important; letter-spacing: 0 !important; }
                     .explore-arrow { width: 60px !important; }
-
-                    /* Reposition the large gold crest so it sits behind the title, not over the header, and gently floats */
-                    .hero-watermark {
-                        top: 34% !important;
-                        opacity: 0.22 !important;
-                        animation: heroCrestFloat 9s ease-in-out infinite;
-                    }
-                    .hero-watermark-img {
-                        width: min(82vw, 420px) !important;
-                        height: min(82vw, 420px) !important;
-                        filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.45));
-                    }
-                }
-
-                @keyframes heroCrestFloat {
-                    0%, 100% { transform: translate(-50%, -50%) translateY(0) rotate(0deg); }
-                    50%      { transform: translate(-50%, -50%) translateY(-10px) rotate(1.5deg); }
-                }
-
-                @media (prefers-reduced-motion: reduce) {
-                    .hero-watermark { animation: none !important; }
                 }
             `}</style>
         </section>
