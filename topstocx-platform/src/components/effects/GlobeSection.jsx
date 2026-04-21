@@ -15,12 +15,16 @@ const LIVE_FEED = [
 
 const GlobeSection = () => {
     return (
-        <section style={{
+        <section className="gs-section" style={{
             padding: '10rem 2rem',
             backgroundColor: '#000',
             position: 'relative',
             overflow: 'hidden',
         }}>
+            <style>{`
+                @media (max-width: 1024px) { .gs-section { padding: 5rem 1.5rem !important; } }
+                @media (max-width: 600px)  { .gs-section { padding: 3rem 1rem !important; } }
+            `}</style>
             {/* Ambient radial glow */}
             <div style={{
                 position: 'absolute',
@@ -80,13 +84,29 @@ const GlobeSection = () => {
                     </p>
                 </motion.div>
 
-                {/* Main Two-Column Layout */}
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1.2fr',
-                    gap: '4rem',
-                    alignItems: 'center',
-                }}>
+                {/* Main Two-Column Layout — stacks on tablet/mobile */}
+                <style>{`
+                    .gs-two-col {
+                        display: grid;
+                        grid-template-columns: 1fr 1.2fr;
+                        gap: 4rem;
+                        align-items: center;
+                    }
+                    @media (max-width: 1024px) {
+                        .gs-two-col {
+                            grid-template-columns: 1fr !important;
+                            gap: 2.5rem;
+                        }
+                        .gs-globe-col { order: -1; }
+                    }
+                    @media (max-width: 768px) {
+                        .gs-globe-col { height: 380px !important; }
+                    }
+                    @media (max-width: 480px) {
+                        .gs-globe-col { height: 320px !important; }
+                    }
+                `}</style>
+                <div className="gs-two-col">
                     {/* Left: Exchange feed panel */}
                     <motion.div
                         initial={{ opacity: 0, x: -40 }}
@@ -197,11 +217,12 @@ const GlobeSection = () => {
 
                     {/* Right: 3D Globe */}
                     <motion.div
+                        className="gs-globe-col"
                         initial={{ opacity: 0, scale: 0.9 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                         transition={{ duration: 1.2, ease: 'easeOut', delay: 0.1 }}
-                        style={{ height: '520px', position: 'relative' }}
+                        style={{ height: '520px', position: 'relative', minWidth: 0, width: '100%' }}
                     >
                         {/* Glow behind globe */}
                         <div style={{
