@@ -681,9 +681,22 @@ export default function TopstockXVoiceBot() {
     const [loading, setLoading] = useState(false);
     const [listening, setListening] = useState(false);
     const [speaking, setSpeaking] = useState(false);
+    // Voice output is manual — user must click Start to hear replies. Persisted.
+    const [voiceEnabled, setVoiceEnabled] = useState(() => {
+        try { return localStorage.getItem("finai_voice_enabled") === "true"; } catch { return false; }
+    });
     const bottomRef = useRef(null);
     const recogRef = useRef(null);
     const idRef = useRef(1);
+    const lastBotTextRef = useRef("");
+
+    useEffect(() => {
+        try { localStorage.setItem("finai_voice_enabled", String(voiceEnabled)); } catch {}
+        if (!voiceEnabled && window.speechSynthesis) {
+            window.speechSynthesis.cancel();
+            setSpeaking(false);
+        }
+    }, [voiceEnabled]);
 
     // Update intro message when mode/language/region/demographics/signup change
     useEffect(() => {
@@ -750,8 +763,14 @@ export default function TopstockXVoiceBot() {
     }, [listening]);
 
     /* ── TTS ── */
-    const speak = useCallback((text) => {
-        if (!window.speechSynthesis) return;
+    // Stash text so the manual Play button can replay the last bot reply.
+    const rememberForSpeech = useCallback((text) => {
+        lastBotTextRef.current = text || "";
+    }, []);
+
+    // Low-level speak — used both by auto-speak (when voiceEnabled) and manual Play.
+    const speakNow = useCallback((text) => {
+        if (!window.speechSynthesis || !text) return;
         window.speechSynthesis.cancel();
         const clean = text
             .replace(/<<<CARD:[\s\S]*?>>>/gs, "")
@@ -762,8 +781,7 @@ export default function TopstockXVoiceBot() {
         const u = new SpeechSynthesisUtterance(clean);
         u.rate = 1.05;
         u.pitch = 1.0;
-        
-        // Dynamic Language Mapping for TTS
+
         const langMap = { "English": "en-US", "Arabic": "ar-SA", "Hindi": "hi-IN" };
         const targetLang = langMap[language] || "en-US";
         u.lang = targetLang;
@@ -773,8 +791,25 @@ export default function TopstockXVoiceBot() {
         if (v) u.voice = v;
         u.onstart = () => setSpeaking(true);
         u.onend = () => setSpeaking(false);
+        u.onerror = () => setSpeaking(false);
         window.speechSynthesis.speak(u);
+    }, [language]);
+
+    // Auto-speak wrapper: remembers the text, but only speaks when voice is enabled.
+    const speak = useCallback((text) => {
+        rememberForSpeech(text);
+        if (voiceEnabled) speakNow(text);
+    }, [voiceEnabled, speakNow, rememberForSpeech]);
+
+    const stopSpeaking = useCallback(() => {
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+        setSpeaking(false);
     }, []);
+
+    const playLastReply = useCallback(() => {
+        if (!lastBotTextRef.current) return;
+        speakNow(lastBotTextRef.current);
+    }, [speakNow]);
 
     /* ── Safety filter ── */
     const BANNED_PHRASES = [
@@ -1104,6 +1139,42 @@ export default function TopstockXVoiceBot() {
                                         <option value="Arabic">AR</option>
                                         <option value="Hindi">HI</option>
                                     </select>
+                                    {/* Voice Start / Stop controls */}
+                                    <button
+                                        onClick={() => {
+                                            if (speaking) { stopSpeaking(); return; }
+                                            if (voiceEnabled) {
+                                                // currently on: turn off
+                                                setVoiceEnabled(false);
+                                            } else {
+                                                // turn on AND play the last reply if available
+                                                setVoiceEnabled(true);
+                                                if (lastBotTextRef.current) speakNow(lastBotTextRef.current);
+                                            }
+                                        }}
+                                        title={speaking ? "Stop speaking" : voiceEnabled ? "Turn voice off" : "Turn voice on"}
+                                        style={{
+                                            background: speaking
+                                                ? "linear-gradient(135deg,#ff4d6d,#c0003c)"
+                                                : voiceEnabled
+                                                    ? (mode === "pulse" ? "linear-gradient(135deg,#005AFF,#77A6FF)" : "linear-gradient(135deg,#39B54A,#59E16C)")
+                                                    : "rgba(255,255,255,0.05)",
+                                            color: (voiceEnabled || speaking) ? "#fff" : "#7a9ab8",
+                                            border: (voiceEnabled || speaking) ? "none" : "1px solid #1a3050",
+                                            borderRadius: 4,
+                                            fontSize: 11,
+                                            padding: "2px 8px",
+                                            cursor: "pointer",
+                                            fontFamily: "'Inter', sans-serif",
+                                            fontWeight: 700,
+                                            transition: "all 0.2s",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 4,
+                                        }}
+                                    >
+                                        {speaking ? "■ Stop" : voiceEnabled ? "▶ Voice" : "▶ Start"}
+                                    </button>
                                 </div>
                             </div>
                             {/* Row 2: status */}
