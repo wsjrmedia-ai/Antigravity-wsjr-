@@ -307,8 +307,8 @@ const HeroSection = () => {
                     /* Learn/Earn toggle spacing on phones (keep native 260px width so the internal slider + labels line up) */
                     .earn-toggle-container { margin-bottom: 15px !important; }
 
-                    /* Header adjustments — logo centered, hamburger on the right */
-                    header { padding: 14px 5% !important; min-height: 96px !important; align-items: center !important; }
+                    /* Header adjustments — logo centered, hamburger on the right, tight to the top */
+                    header { padding: 6px 5% !important; min-height: 84px !important; align-items: center !important; }
                     .header-en { display: none !important; } /* Hide EN to free up space */
                     .academy-monogram-wrap {
                         position: absolute !important;
@@ -316,7 +316,7 @@ const HeroSection = () => {
                         left: 50% !important;
                         transform: translate(-50%, -50%) !important;
                     }
-                    .academy-monogram { width: 80px !important; height: 80px !important; }
+                    .academy-monogram { width: 76px !important; height: 76px !important; }
 
                     /* Hamburger shrink for mobile */
                     .hamburger-menu { gap: 4px !important; margin-left: auto !important; }
