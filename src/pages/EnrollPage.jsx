@@ -284,11 +284,19 @@ const EnrollPage = () => {
           .enroll-root { padding: 90px 5% 50px !important; }
           .enroll-grid { gap: 30px !important; }
           .enroll-grid h1 { font-size: clamp(2rem, 8vw, 2.8rem) !important; }
+          .enroll-grid p { font-size: 0.98rem !important; }
           .enroll-grid [style*="grid-template-columns: 1fr 1fr"],
           .enroll-grid [style*="grid-template-columns:1fr 1fr"] {
             grid-template-columns: 1fr !important;
           }
           .enroll-grid .glass-panel { padding: 30px 20px !important; }
+        }
+        @media (max-width: 480px) {
+          .enroll-root { padding: 80px 4% 40px !important; }
+          .enroll-grid .glass-panel { padding: 24px 16px !important; }
+          .enroll-grid h3 { font-size: 22px !important; }
+          .enroll-grid h1 { font-size: clamp(1.8rem, 9vw, 2.3rem) !important; }
+          .form-input { font-size: 15px !important; }
         }
       `}</style>
     </div>

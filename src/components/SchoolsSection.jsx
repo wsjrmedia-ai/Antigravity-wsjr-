@@ -275,12 +275,58 @@ const SchoolCard = ({ school, index, total }) => {
 
 const SchoolsSection = () => {
     return (
-        <section style={{ position: 'relative', display: 'block' }}>
+        <section className="schools-section-root" style={{ position: 'relative', display: 'block' }}>
             {schoolsData.map((school, index) => (
                 <SchoolCard key={school.id} school={school} index={index} total={schoolsData.length} />
             ))}
 
+            <style>{`
+                /* Tablet and below: collapse the two-column folder and let the card breathe */
+                @media (max-width: 992px) {
+                    .school-main-body { flex-direction: column !important; height: auto !important; padding-top: 30px !important; }
+                    .school-left-col { padding: 30px 7% !important; gap: 30px !important; }
+                    .school-right-col { width: 100% !important; min-width: 0 !important; }
+                    .school-right-col > div:first-child { padding: 20px 7% 20px !important; gap: 30px !important; }
+                }
 
+                /* Phones: stop sticky stacking (cards crush on short viewports), restack, shrink type */
+                @media (max-width: 768px) {
+                    .schools-section-root > div {
+                        position: relative !important;
+                        height: auto !important;
+                        min-height: 0 !important;
+                        margin-top: 0 !important;
+                    }
+                    .school-main-body {
+                        height: auto !important;
+                        padding-top: 20px !important;
+                        border-radius: 30px 30px 0 0 !important;
+                    }
+                    .school-tab { width: 200px !important; height: 70px !important; border-radius: 22px 22px 0 0 !important; }
+                    .school-tab span { font-size: 1.6rem !important; }
+                    .school-left-col { padding: 24px 6% !important; }
+                    .school-left-col h4 { font-size: clamp(1.1rem, 4.8vw, 1.4rem) !important; }
+                    .school-left-col p { font-size: clamp(1rem, 4.5vw, 1.3rem) !important; }
+                    .school-left-col h3 { font-size: clamp(2.2rem, 10vw, 3rem) !important; padding-bottom: 20px !important; }
+                    .school-right-col > div:first-child { padding: 10px 6% 20px !important; gap: 24px !important; }
+                    .school-right-col > div:first-child p { font-size: clamp(1rem, 4.5vw, 1.25rem) !important; }
+                    .school-right-col > div:first-child span { font-size: clamp(1rem, 4.5vw, 1.25rem) !important; }
+                    .school-right-col > div:last-child {
+                        min-height: 280px !important;
+                        margin-top: 20px !important;
+                    }
+                    .school-right-col > div:last-child > div:last-child {
+                        font-size: clamp(5rem, 30vw, 9rem) !important;
+                        letter-spacing: -5px !important;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .school-tab { left: 8% !important; width: 160px !important; height: 60px !important; }
+                    .school-tab span { font-size: 1.3rem !important; }
+                    .school-right-col > div:last-child { min-height: 220px !important; }
+                }
+            `}</style>
         </section>
     )
 }

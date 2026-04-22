@@ -94,17 +94,32 @@ const WhoWeArePage = () => {
     }
 
     return (
-        <div ref={pageRef} style={{ background: 'var(--bg-primary)', color: 'white', minHeight: '100vh', position: 'relative', overflowX: 'hidden' }}>
+        <div ref={pageRef} className="wwa-root" style={{ background: 'var(--bg-primary)', color: 'white', minHeight: '100vh', position: 'relative', overflowX: 'hidden' }}>
             <style>{`
                 @media (max-width: 768px) {
-                    .wwa-grid-350 { grid-template-columns: 1fr !important; }
+                    .wwa-grid-350 { grid-template-columns: 1fr !important; gap: 2rem !important; }
                     .wwa-grid-300 { grid-template-columns: 1fr !important; }
                     .wwa-grid-280 { grid-template-columns: 1fr !important; }
                     .wwa-card { padding: 1.5rem !important; }
                     .wwa-hero { padding-top: 6rem !important; }
+                    /* Shared section + card scaling on tablets */
+                    .wwa-root h1 { font-size: clamp(2rem, 8vw, 2.8rem) !important; line-height: 1.15 !important; }
+                    .wwa-root h1 span { font-size: clamp(1.3rem, 6vw, 2rem) !important; }
+                    .wwa-root h2 { font-size: clamp(1.6rem, 6vw, 2rem) !important; }
+                    .wwa-root h3 { font-size: 1.2rem !important; }
+                    .wwa-root p { font-size: 1rem !important; line-height: 1.65 !important; }
+                    .wwa-root section { padding: 3rem 1.25rem !important; }
+                    .wwa-root .glaze-button { padding: 1rem 2rem !important; font-size: 0.9rem !important; }
+                    /* Card-like panels inside flex rows */
+                    .wwa-root section > div[style*="padding: 2.5rem"],
+                    .wwa-root section > div > div[style*="padding: 2.5rem"] { padding: 1.6rem !important; gap: 1rem !important; }
+                    .wwa-root section > div > div[style*="padding: 3rem"] { padding: 1.6rem !important; border-radius: 18px !important; }
                 }
                 @media (max-width: 480px) {
-                    .wwa-section { padding: 3rem 1rem !important; }
+                    .wwa-section { padding: 2.5rem 1rem !important; }
+                    .wwa-root section { padding: 2.5rem 1rem !important; }
+                    .wwa-root h1 { font-size: clamp(1.8rem, 9vw, 2.4rem) !important; }
+                    .wwa-root h2 { font-size: clamp(1.4rem, 7vw, 1.8rem) !important; }
                 }
             `}</style>
             <GalaxyBackground />

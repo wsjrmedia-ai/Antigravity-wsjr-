@@ -418,6 +418,12 @@ const SignupPage = () => {
                         grid-template-columns: 1fr !important;
                     }
                 }
+                @media (max-width: 480px) {
+                    .signup-card { padding: 1.4rem 1rem !important; }
+                    .signup-card [style*="padding: 1.5rem"] { padding: 1rem !important; }
+                    .signup-card input, .signup-card select { padding: 0.9rem 1rem !important; font-size: 0.95rem !important; }
+                    .signup-card button[type="submit"] { padding: 1.05rem !important; font-size: 0.95rem !important; }
+                }
             `}</style>
         </div>
     )
