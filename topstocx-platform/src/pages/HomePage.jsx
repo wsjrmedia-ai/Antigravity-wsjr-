@@ -265,8 +265,9 @@ export default function HomePage() {
           </div>
         </section>
 
-      {/* Ticker tape — borderless and cropped so the TradingView
-          attribution footer ("Markets by TradingView") is hidden. */}
+      {/* Ticker tape — borderless, forced single-row (regular mode so
+          symbol + price appear inline) and cropped so the TradingView
+          attribution footer is hidden. */}
       <div
         className="tt-strip"
         style={{
@@ -283,19 +284,20 @@ export default function HomePage() {
             height: 72px !important;
             margin-top: 0 !important;
             border: 0 !important;
+            width: 100% !important;
           }
           .tt-strip > div,
           .tt-strip > div > div { height: 72px !important; }
           @media (max-width: 600px) {
-            .tt-strip { height: 42px; }
+            .tt-strip { height: 40px; }
             .tt-strip iframe,
             .tt-strip > div,
-            .tt-strip > div > div { height: 66px !important; }
+            .tt-strip > div > div { height: 64px !important; }
           }
         `}</style>
         <TickerTape
           colorTheme="dark"
-          displayMode="adaptive"
+          displayMode="regular"
           symbols={[
             { proName: "FOREXCOM:SPXUSD", title: "S&P 500" },
             { proName: "FOREXCOM:NSXUSD", title: "US 100" },
