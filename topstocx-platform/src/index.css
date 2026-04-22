@@ -460,6 +460,17 @@ body::before {
     bottom: 100px !important;
     height: 70vh !important;
     max-height: 600px !important;
+    overscroll-behavior: contain !important;
+  }
+  .finai-wrap .messages-container {
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  /* Chat header controls — tidy grid on small screens */
+  .finai-wrap .finai-controls select,
+  .finai-wrap .finai-controls button {
+    min-width: 0 !important;
+    font-size: 12px !important;
   }
 
   /* Modal/dialog responsive */
@@ -499,6 +510,19 @@ body::before {
     right: 0.5rem !important;
     left: 0.5rem !important;
     bottom: 100px !important;
+    overscroll-behavior: contain !important;
+  }
+  .finai-wrap .finai-header {
+    padding: 10px 10px !important;
+    gap: 8px !important;
+  }
+  .finai-wrap .finai-controls {
+    gap: 6px !important;
+  }
+  .finai-wrap .finai-controls select,
+  .finai-wrap .finai-controls button {
+    padding: 6px 8px !important;
+    font-size: 11px !important;
   }
 
   /* Smaller headline size */

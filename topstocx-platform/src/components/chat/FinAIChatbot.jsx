@@ -698,6 +698,38 @@ export default function TopstockXVoiceBot() {
         }
     }, [voiceEnabled]);
 
+    // Lock background scroll on mobile when the chat panel is open so the
+    // landing page doesn't scroll behind it while the user scrolls the chat.
+    useEffect(() => {
+        if (!isOpen) return;
+        const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches;
+        if (!isMobile) return;
+
+        const { body, documentElement: html } = document;
+        const prevBodyOverflow = body.style.overflow;
+        const prevBodyPosition = body.style.position;
+        const prevBodyTop = body.style.top;
+        const prevBodyWidth = body.style.width;
+        const prevHtmlOverscroll = html.style.overscrollBehavior;
+        const scrollY = window.scrollY || window.pageYOffset || 0;
+
+        body.style.overflow = "hidden";
+        body.style.position = "fixed";
+        body.style.top = `-${scrollY}px`;
+        body.style.width = "100%";
+        html.style.overscrollBehavior = "contain";
+
+        return () => {
+            body.style.overflow = prevBodyOverflow;
+            body.style.position = prevBodyPosition;
+            body.style.top = prevBodyTop;
+            body.style.width = prevBodyWidth;
+            html.style.overscrollBehavior = prevHtmlOverscroll;
+            // Restore scroll position
+            window.scrollTo(0, scrollY);
+        };
+    }, [isOpen]);
+
     // Update intro message when mode/language/region/demographics/signup change
     useEffect(() => {
         if (msgs.length <= 1) {
@@ -1055,42 +1087,41 @@ export default function TopstockXVoiceBot() {
                     border: "1px solid #1a3050",
                     boxShadow: "0 0 60px #005AFF12, 0 32px 72px rgba(0,0,0,0.9)",
                     overflow: "hidden",
+                    overscrollBehavior: "contain",
                     fontFamily: "'Inter', 'Segoe UI', sans-serif",
                     animation: "finai-pop .3s cubic-bezier(.175,.885,.32,1.275)",
                 }}>
 
-                    {/* HEADER */}
-                    <div style={{
-                        padding: "14px 16px",
+                    {/* HEADER — two clean rows: identity + controls */}
+                    <div className="finai-header" style={{
+                        padding: "12px 14px",
                         background: "linear-gradient(90deg,#0c1a28,#101f30)",
                         borderBottom: "1px solid #172a3e",
                         display: "flex",
-                        alignItems: "center",
+                        flexDirection: "column",
                         gap: 10,
                         flexShrink: 0,
                     }}>
-                        {/* Avatar */}
-                        <div style={{
-                            width: 48, height: 48, borderRadius: "6px",
-                            background: "transparent",
-                            display: "flex", alignItems: "center", justifyContent: "center",
-                            flexShrink: 0,
-                            overflow: 'hidden',
-                            boxShadow: speaking ? (mode === "pulse" ? "0 0 24px #005AFF77" : "0 0 24px #00e5ff77") : (mode === "pulse" ? "0 0 12px #005AFF33" : "0 0 12px #00e5ff33"),
-                            transition: "box-shadow .4s",
-                        }}>
-                            {mode === "pulse" ? <AvatarManu size="medium" /> : <AvatarAtlas size="medium" />}
-                        </div>
-
-                        {/* Name + controls */}
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                            {/* Row 1: name + plan badge + selects */}
-                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 3 }}>
-                                <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                        {/* Row A: avatar · name/status · voicewave */}
+                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                            {/* Avatar */}
+                            <div style={{
+                                width: 44, height: 44, borderRadius: "8px",
+                                background: "transparent",
+                                display: "flex", alignItems: "center", justifyContent: "center",
+                                flexShrink: 0,
+                                overflow: 'hidden',
+                                boxShadow: speaking ? (mode === "pulse" ? "0 0 24px #005AFF77" : "0 0 24px #00e5ff77") : (mode === "pulse" ? "0 0 12px #005AFF33" : "0 0 12px #00e5ff33"),
+                                transition: "box-shadow .4s",
+                            }}>
+                                {mode === "pulse" ? <AvatarManu size="medium" /> : <AvatarAtlas size="medium" />}
+                            </div>
+                            {/* Name + badge + status */}
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 2 }}>
                                     <span style={{ fontFamily: "'Syne', sans-serif", fontSize: 15, fontWeight: 800, color: "#e8f0fe" }}>
                                         {mode === "pulse" ? "Manu" : "Atlas"}
                                     </span>
-                                    {/* Plan badge — opens pricing modal */}
                                     <span
                                         onClick={() => setShowPricing(true)}
                                         title="Manage your plan"
@@ -1114,82 +1145,91 @@ export default function TopstockXVoiceBot() {
                                         {isPro ? (userPlan === "ultimate" ? "★ Ultimate" : "★ PRO") : "⚡ Upgrade"}
                                     </span>
                                 </div>
-                                {/* Mode + language + demographic selects */}
-                                <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "flex-end" }}>
-                                    <select
-                                        value={mode}
-                                        onChange={(e) => setMode(e.target.value)}
-                                        style={{ background: "#0c1824", color: "#e8f0fe", border: `1px solid ${mode === "pulse" ? "#005AFF" : "#00e5ff"}`, borderRadius: 4, fontSize: 11, padding: "2px 4px", outline: "none", cursor: "pointer", fontFamily: "'Inter', sans-serif" }}
-                                    >
-                                        <option value="pulse">Manu</option>
-                                        <option value="atlas">Atlas</option>
-                                    </select>
-                                    <select
-                                        value={language}
-                                        onChange={(e) => {
-                                            setLanguage(e.target.value);
-                                            setManuMsgs([]);
-                                            setAtlasMsgs([]);
-                                            setManuHistory([]);
-                                            setAtlasHistory([]);
-                                        }}
-                                        style={{ background: "#0c1824", color: "#e8f0fe", border: "1px solid #1a3050", borderRadius: 4, fontSize: 11, padding: "2px 4px", outline: "none", cursor: "pointer", fontFamily: "'Inter', sans-serif" }}
-                                    >
-                                        <option value="English">EN</option>
-                                        <option value="Arabic">AR</option>
-                                        <option value="Hindi">HI</option>
-                                    </select>
-                                    {/* Voice Start / Stop controls */}
-                                    <button
-                                        onClick={() => {
-                                            if (speaking) { stopSpeaking(); return; }
-                                            if (voiceEnabled) {
-                                                // currently on: turn off
-                                                setVoiceEnabled(false);
-                                            } else {
-                                                // turn on AND play the last reply if available
-                                                setVoiceEnabled(true);
-                                                if (lastBotTextRef.current) speakNow(lastBotTextRef.current);
-                                            }
-                                        }}
-                                        title={speaking ? "Stop speaking" : voiceEnabled ? "Turn voice off" : "Turn voice on"}
-                                        style={{
-                                            background: speaking
-                                                ? "linear-gradient(135deg,#ff4d6d,#c0003c)"
-                                                : voiceEnabled
-                                                    ? (mode === "pulse" ? "linear-gradient(135deg,#005AFF,#77A6FF)" : "linear-gradient(135deg,#39B54A,#59E16C)")
-                                                    : "rgba(255,255,255,0.05)",
-                                            color: (voiceEnabled || speaking) ? "#fff" : "#7a9ab8",
-                                            border: (voiceEnabled || speaking) ? "none" : "1px solid #1a3050",
-                                            borderRadius: 4,
-                                            fontSize: 11,
-                                            padding: "2px 8px",
-                                            cursor: "pointer",
-                                            fontFamily: "'Inter', sans-serif",
-                                            fontWeight: 700,
-                                            transition: "all 0.2s",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: 4,
-                                        }}
-                                    >
-                                        {speaking ? "■ Stop" : voiceEnabled ? "▶ Voice" : "▶ Start"}
-                                    </button>
+                                <div style={{ fontSize: 10, letterSpacing: 1.2, color: speaking ? "#77A6FF" : listening ? "#005AFF" : isPro ? "#39B54A" : "#2a5a7a", fontFamily: "'Inter', sans-serif", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                                    {speaking ? (UI_LOCALE[language] || UI_LOCALE["English"]).statusSpeaking : listening ? (UI_LOCALE[language] || UI_LOCALE["English"]).statusListening : isPro ? (UI_LOCALE[language] || UI_LOCALE["English"]).statusPro : (UI_LOCALE[language] || UI_LOCALE["English"]).statusLive}
                                 </div>
                             </div>
-                            {/* Row 2: status */}
-                            <div style={{ fontSize: 10, letterSpacing: 1.5, color: speaking ? "#77A6FF" : listening ? "#005AFF" : isPro ? "#39B54A" : "#2a5a7a", fontFamily: "'Inter', sans-serif" }}>
-                                {speaking ? (UI_LOCALE[language] || UI_LOCALE["English"]).statusSpeaking : listening ? (UI_LOCALE[language] || UI_LOCALE["English"]).statusListening : isPro ? (UI_LOCALE[language] || UI_LOCALE["English"]).statusPro : (UI_LOCALE[language] || UI_LOCALE["English"]).statusLive}
+                            <div style={{ flexShrink: 0 }}>
+                                <VoiceWave active={listening || speaking} />
                             </div>
                         </div>
-                        <VoiceWave active={listening || speaking} />
+
+                        {/* Row B: controls — evenly distributed pill bar */}
+                        <div className="finai-controls" style={{
+                            display: "grid",
+                            gridTemplateColumns: "1fr 1fr auto",
+                            gap: 8,
+                            alignItems: "stretch",
+                        }}>
+                            <select
+                                value={mode}
+                                onChange={(e) => setMode(e.target.value)}
+                                style={{ background: "#0c1824", color: "#e8f0fe", border: `1px solid ${mode === "pulse" ? "#005AFF" : "#00e5ff"}`, borderRadius: 6, fontSize: 11, padding: "6px 8px", outline: "none", cursor: "pointer", fontFamily: "'Inter', sans-serif", fontWeight: 600 }}
+                            >
+                                <option value="pulse">Manu</option>
+                                <option value="atlas">Atlas</option>
+                            </select>
+                            <select
+                                value={language}
+                                onChange={(e) => {
+                                    setLanguage(e.target.value);
+                                    setManuMsgs([]);
+                                    setAtlasMsgs([]);
+                                    setManuHistory([]);
+                                    setAtlasHistory([]);
+                                }}
+                                style={{ background: "#0c1824", color: "#e8f0fe", border: "1px solid #1a3050", borderRadius: 6, fontSize: 11, padding: "6px 8px", outline: "none", cursor: "pointer", fontFamily: "'Inter', sans-serif", fontWeight: 600 }}
+                            >
+                                <option value="English">English</option>
+                                <option value="Arabic">العربية</option>
+                                <option value="Hindi">हिन्दी</option>
+                            </select>
+                            <button
+                                onClick={() => {
+                                    if (speaking) { stopSpeaking(); return; }
+                                    if (voiceEnabled) {
+                                        setVoiceEnabled(false);
+                                    } else {
+                                        setVoiceEnabled(true);
+                                        if (lastBotTextRef.current) speakNow(lastBotTextRef.current);
+                                    }
+                                }}
+                                title={speaking ? "Stop speaking" : voiceEnabled ? "Turn voice off" : "Turn voice on"}
+                                style={{
+                                    background: speaking
+                                        ? "linear-gradient(135deg,#ff4d6d,#c0003c)"
+                                        : voiceEnabled
+                                            ? (mode === "pulse" ? "linear-gradient(135deg,#005AFF,#77A6FF)" : "linear-gradient(135deg,#39B54A,#59E16C)")
+                                            : "rgba(255,255,255,0.05)",
+                                    color: (voiceEnabled || speaking) ? "#fff" : "#7a9ab8",
+                                    border: (voiceEnabled || speaking) ? "none" : "1px solid #1a3050",
+                                    borderRadius: 6,
+                                    fontSize: 11,
+                                    padding: "6px 12px",
+                                    cursor: "pointer",
+                                    fontFamily: "'Inter', sans-serif",
+                                    fontWeight: 700,
+                                    transition: "all 0.2s",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    gap: 5,
+                                    whiteSpace: "nowrap",
+                                }}
+                            >
+                                {speaking ? "■ Stop" : voiceEnabled ? "🔊 Voice" : "▶ Start"}
+                            </button>
+                        </div>
                     </div>
 
 
                     {/* MESSAGES */}
-                    <div className="messages-container" style={{ 
-                        flex: 1, 
-                        overflowY: "auto", 
+                    <div className="messages-container" style={{
+                        flex: 1,
+                        overflowY: "auto",
+                        WebkitOverflowScrolling: "touch",
+                        overscrollBehavior: "contain",
+                        touchAction: "pan-y",
                         padding: "14px 12px",
                         direction: language === "Arabic" ? "rtl" : "ltr",
                         textAlign: language === "Arabic" ? "right" : "left"
