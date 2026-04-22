@@ -17,20 +17,22 @@ const MobileMenu = ({ isOpen, onClose }) => {
                         top: 0,
                         right: 0,
                         width: '100vw',
-                        height: '100vh',
+                        height: '100dvh',
                         backgroundColor: 'var(--bg-primary)',
                         zIndex: 9999,
                         display: 'flex',
                         flexDirection: 'column',
-                        padding: '40px 60px'
+                        padding: '40px 60px',
+                        overflowY: 'auto',
+                        WebkitOverflowScrolling: 'touch'
                     }}
                 >
                     {/* Header of Menu */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div className="mobile-menu-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span style={{ fontSize: '1.5rem', fontWeight: 500, color: '#FFF' }}>EN</span>
+                            <span className="mobile-menu-en" style={{ fontSize: '1.5rem', fontWeight: 500, color: '#FFF' }}>EN</span>
                         </div>
-                        <div onClick={onClose} style={{ cursor: 'pointer', padding: '10px' }}>
+                        <div onClick={onClose} className="mobile-menu-close" style={{ cursor: 'pointer', padding: '10px', margin: '-10px' }} aria-label="Close menu">
                             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <line x1="18" y1="6" x2="6" y2="18"></line>
                                 <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -39,12 +41,14 @@ const MobileMenu = ({ isOpen, onClose }) => {
                     </div>
 
                     {/* Menu Links */}
-                    <nav style={{
+                    <nav className="mobile-menu-nav" style={{
                         marginTop: '100px',
                         display: 'flex',
                         flexDirection: 'column',
                         gap: '40px',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        flex: 1,
+                        justifyContent: 'flex-start'
                     }}>
                         {[
                             { name: 'Home', path: '/' },
@@ -58,15 +62,18 @@ const MobileMenu = ({ isOpen, onClose }) => {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.1 + idx * 0.1 }}
                             >
-                                <Link 
-                                    to={link.path} 
+                                <Link
+                                    to={link.path}
                                     onClick={onClose}
+                                    className="mobile-menu-link"
                                     style={{
                                         fontFamily: 'var(--font-hero)',
                                         fontSize: 'clamp(2rem, 5vw, 4rem)',
                                         color: '#FFF',
                                         textDecoration: 'none',
-                                        fontWeight: 500
+                                        fontWeight: 500,
+                                        display: 'inline-block',
+                                        padding: '4px 0'
                                     }}
                                 >
                                     {link.name}
@@ -78,8 +85,26 @@ const MobileMenu = ({ isOpen, onClose }) => {
             )}
         </AnimatePresence>
         <style>{`
+            /* Tablet / small laptop */
+            @media (max-width: 768px) {
+                .mobile-menu-panel { padding: 32px 40px !important; }
+                .mobile-menu-nav { margin-top: 60px !important; gap: 32px !important; }
+                .mobile-menu-link { font-size: clamp(1.8rem, 7vw, 2.6rem) !important; }
+            }
+
+            /* Phones */
             @media (max-width: 480px) {
-                .mobile-menu-panel { padding: 30px 24px !important; }
+                .mobile-menu-panel { padding: 22px 20px !important; }
+                .mobile-menu-nav { margin-top: 40px !important; gap: 24px !important; }
+                .mobile-menu-link { font-size: clamp(1.5rem, 7.5vw, 2rem) !important; }
+                .mobile-menu-en { font-size: 1.2rem !important; }
+                .mobile-menu-close svg { width: 32px !important; height: 32px !important; }
+            }
+
+            /* Short viewports (landscape phones, small screens) — keep content from overflowing */
+            @media (max-height: 600px) {
+                .mobile-menu-nav { margin-top: 30px !important; gap: 18px !important; }
+                .mobile-menu-link { font-size: clamp(1.4rem, 5.5vw, 1.8rem) !important; }
             }
         `}</style>
         </>
