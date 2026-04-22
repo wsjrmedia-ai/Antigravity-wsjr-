@@ -9,7 +9,7 @@ const HeroSection = () => {
     const navigate = useNavigate()
 
     return (
-        <section style={{
+        <section className="hero-section" style={{
             height: '100vh',
             width: '100vw',
             display: 'flex',
@@ -291,8 +291,15 @@ const HeroSection = () => {
                 }
 
                 @media (max-width: 768px) {
+                    /* Let the hero grow past the viewport so all content (incl. bottom links) is reachable */
+                    .hero-section {
+                        height: auto !important;
+                        min-height: 100vh !important;
+                        overflow: visible !important;
+                    }
+
                     /* Main Page Spacing */
-                    .main-content-wrapper { padding: 0 5% !important; margin-top: 30px !important; }
+                    .main-content-wrapper { padding: 0 5% !important; margin-top: 30px !important; padding-bottom: 30px !important; }
 
                     /* Title adjustment */
                     h1 { font-size: clamp(2rem, 10vw, 3rem) !important; margin-bottom: 20px !important; }
