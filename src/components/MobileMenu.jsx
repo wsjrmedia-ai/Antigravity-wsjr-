@@ -1,7 +1,40 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const MobileMenu = ({ isOpen, onClose }) => {
+    // Lock page scroll (native + Lenis) while the menu is open.
+    // Uses the position:fixed + preserved scrollY pattern so iOS Safari
+    // stops scrolling the page behind when the user drags inside the menu.
+    useEffect(() => {
+        if (!isOpen) return;
+        const body = document.body;
+        const html = document.documentElement;
+        const scrollY = window.scrollY || window.pageYOffset || 0;
+        const prev = {
+            bodyPosition: body.style.position,
+            bodyTop: body.style.top,
+            bodyWidth: body.style.width,
+            bodyOverflow: body.style.overflow,
+            htmlOverflow: html.style.overflow,
+        };
+        window.__lenis?.stop?.();
+        body.style.position = 'fixed';
+        body.style.top = `-${scrollY}px`;
+        body.style.width = '100%';
+        body.style.overflow = 'hidden';
+        html.style.overflow = 'hidden';
+        return () => {
+            body.style.position = prev.bodyPosition;
+            body.style.top = prev.bodyTop;
+            body.style.width = prev.bodyWidth;
+            body.style.overflow = prev.bodyOverflow;
+            html.style.overflow = prev.htmlOverflow;
+            window.scrollTo(0, scrollY);
+            window.__lenis?.start?.();
+        };
+    }, [isOpen]);
+
     return (
         <>
         <AnimatePresence>

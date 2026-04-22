@@ -35,6 +35,9 @@ function App() {
       infinite: false,
     })
 
+    // Expose globally so overlays (mobile menu, chatbot) can pause scroll while open
+    window.__lenis = lenis
+
     function raf(time) {
       lenis.raf(time)
       requestAnimationFrame(raf)
@@ -42,7 +45,10 @@ function App() {
 
     requestAnimationFrame(raf)
 
-    return () => lenis.destroy()
+    return () => {
+      lenis.destroy()
+      if (window.__lenis === lenis) delete window.__lenis
+    }
   }, [isTopStocx])
 
   if (isAuthPage) {
