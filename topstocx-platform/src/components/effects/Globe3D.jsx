@@ -1,6 +1,6 @@
 import React, { useRef, useMemo, useState, Suspense } from 'react';
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
-import { Line, Html } from '@react-three/drei';
+import { Line, Html, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { TextureLoader } from 'three';
 
@@ -237,14 +237,13 @@ const EquatorialRing = () => {
 
 // ─── Full globe scene ─────────────────────────────────────────────────────────
 const GlobeScene = ({ onHover, hoveredNode }) => {
-    const groupRef = useRef();
-
-    useFrame(({ clock }) => {
-        if (groupRef.current) groupRef.current.rotation.y = clock.getElapsedTime() * 0.18;
-    });
-
+    /*
+     * Rotation is now driven by <OrbitControls autoRotate> on the camera,
+     * which also supports touch-drag on mobile. We no longer rotate the
+     * group directly with useFrame.
+     */
     return (
-        <group ref={groupRef}>
+        <group>
             <EarthMesh />
             <Atmosphere />
             <EquatorialRing />
@@ -277,7 +276,14 @@ const Globe3D = () => {
 
             <Canvas
                 camera={{ position: [0, 0.5, 4.0], fov: 44 }}
-                style={{ background: 'transparent', position: 'relative', zIndex: 1 }}
+                style={{
+                    background: 'transparent',
+                    position: 'relative',
+                    zIndex: 1,
+                    /* Horizontal drag rotates the globe, vertical still
+                       scrolls the page so users aren't trapped. */
+                    touchAction: 'pan-y',
+                }}
                 gl={{ alpha: true, antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.1 }}
             >
                 {/* Lighting to match real Earth look */}
@@ -288,6 +294,24 @@ const Globe3D = () => {
                 <pointLight position={[-6, -2, -4]} intensity={0.5} color="#1040a0" />
                 {/* Atmosphere tint */}
                 <pointLight position={[0, 4, 2]} intensity={0.3} color="#4080ff" />
+
+                {/* Touch / mouse interactive orbit — auto-spins, drags to rotate.
+                    Zoom and two-finger pan disabled so the page can still scroll
+                    with two fingers on mobile. */}
+                <OrbitControls
+                    enablePan={false}
+                    enableZoom={false}
+                    enableRotate={true}
+                    enableDamping={true}
+                    dampingFactor={0.08}
+                    rotateSpeed={0.6}
+                    autoRotate={true}
+                    autoRotateSpeed={0.8}
+                    minPolarAngle={Math.PI * 0.15}
+                    maxPolarAngle={Math.PI * 0.85}
+                    touches={{ ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN }}
+                    makeDefault
+                />
 
                 <Suspense fallback={
                     <mesh>
