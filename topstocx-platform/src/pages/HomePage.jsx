@@ -265,13 +265,13 @@ export default function HomePage() {
           </div>
         </section>
 
-      {/* Ticker tape — borderless, forced single-row (regular mode so
-          symbol + price appear inline) and cropped so the TradingView
-          attribution footer is hidden. */}
+      {/* Ticker tape — fully transparent, borderless, forced single-row
+          (regular mode) and cropped so the TradingView attribution
+          footer is hidden. */}
       <div
         className="tt-strip"
         style={{
-          background: '#131722',
+          background: 'transparent',
           border: 'none',
           height: 46,
           overflow: 'hidden',
@@ -298,6 +298,7 @@ export default function HomePage() {
         <TickerTape
           colorTheme="dark"
           displayMode="regular"
+          isTransparent={true}
           symbols={[
             { proName: "FOREXCOM:SPXUSD", title: "S&P 500" },
             { proName: "FOREXCOM:NSXUSD", title: "US 100" },
