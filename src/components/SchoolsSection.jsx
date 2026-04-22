@@ -281,50 +281,79 @@ const SchoolsSection = () => {
             ))}
 
             <style>{`
-                /* Tablet and below: collapse the two-column folder and let the card breathe */
+                /*
+                 * Responsive fixes for the sticky school-folder stack.
+                 * Keep sticky positioning + 100vh container so the scroll-scrubbed
+                 * darkening + folder peek animation still plays on every breakpoint.
+                 * Only the INTERNAL two-column layout collapses on tablets & phones.
+                 */
+
+                /* Tablet: collapse the two-column folder into a stacked layout */
                 @media (max-width: 992px) {
-                    .school-main-body { flex-direction: column !important; height: auto !important; padding-top: 30px !important; }
-                    .school-left-col { padding: 30px 7% !important; gap: 30px !important; }
-                    .school-right-col { width: 100% !important; min-width: 0 !important; }
-                    .school-right-col > div:first-child { padding: 20px 7% 20px !important; gap: 30px !important; }
+                    .school-main-body {
+                        flex-direction: column !important;
+                        padding-top: 40px !important;
+                        overflow: hidden !important;
+                    }
+                    .school-left-col {
+                        padding: 30px 6% 20px !important;
+                        gap: 24px !important;
+                        flex: none !important;
+                    }
+                    .school-left-col > div { gap: 24px !important; }
+                    .school-left-col h4 { font-size: clamp(1.1rem, 2.6vw, 1.6rem) !important; }
+                    .school-left-col p { font-size: clamp(1.1rem, 2.6vw, 1.6rem) !important; }
+                    .school-left-col h3 {
+                        font-size: clamp(2rem, 6vw, 3.4rem) !important;
+                        padding-bottom: 20px !important;
+                    }
+                    .school-right-col { width: 100% !important; min-width: 0 !important; flex: 1 !important; }
+                    .school-right-col > div:first-child {
+                        padding: 0 6% 20px !important;
+                        gap: 24px !important;
+                    }
+                    .school-right-col > div:first-child p,
+                    .school-right-col > div:first-child span {
+                        font-size: clamp(1.1rem, 2.6vw, 1.5rem) !important;
+                    }
+                    .school-right-col > div:last-child {
+                        margin-top: 12px !important;
+                        min-height: 180px !important;
+                    }
                 }
 
-                /* Phones: stop sticky stacking (cards crush on short viewports), restack, shrink type */
+                /* Phones: keep sticky animation intact, shrink the tab + acronym */
                 @media (max-width: 768px) {
-                    .schools-section-root > div {
-                        position: relative !important;
-                        height: auto !important;
-                        min-height: 0 !important;
-                        margin-top: 0 !important;
+                    .school-tab { width: 220px !important; height: 80px !important; border-radius: 24px 24px 0 0 !important; }
+                    .school-tab span { font-size: 1.8rem !important; }
+                    .school-left-col { padding: 24px 6% 16px !important; gap: 20px !important; }
+                    .school-left-col > div { gap: 20px !important; }
+                    .school-left-col h4 { font-size: clamp(1rem, 4.2vw, 1.3rem) !important; }
+                    .school-left-col p { font-size: clamp(1rem, 4vw, 1.25rem) !important; }
+                    .school-left-col h3 {
+                        font-size: clamp(2rem, 9vw, 2.8rem) !important;
+                        padding-bottom: 12px !important;
                     }
-                    .school-main-body {
-                        height: auto !important;
-                        padding-top: 20px !important;
-                        border-radius: 30px 30px 0 0 !important;
+                    .school-right-col > div:first-child {
+                        padding: 0 6% 16px !important;
+                        gap: 16px !important;
                     }
-                    .school-tab { width: 200px !important; height: 70px !important; border-radius: 22px 22px 0 0 !important; }
-                    .school-tab span { font-size: 1.6rem !important; }
-                    .school-left-col { padding: 24px 6% !important; }
-                    .school-left-col h4 { font-size: clamp(1.1rem, 4.8vw, 1.4rem) !important; }
-                    .school-left-col p { font-size: clamp(1rem, 4.5vw, 1.3rem) !important; }
-                    .school-left-col h3 { font-size: clamp(2.2rem, 10vw, 3rem) !important; padding-bottom: 20px !important; }
-                    .school-right-col > div:first-child { padding: 10px 6% 20px !important; gap: 24px !important; }
-                    .school-right-col > div:first-child p { font-size: clamp(1rem, 4.5vw, 1.25rem) !important; }
-                    .school-right-col > div:first-child span { font-size: clamp(1rem, 4.5vw, 1.25rem) !important; }
-                    .school-right-col > div:last-child {
-                        min-height: 280px !important;
-                        margin-top: 20px !important;
+                    .school-right-col > div:first-child p,
+                    .school-right-col > div:first-child span {
+                        font-size: clamp(1rem, 4vw, 1.2rem) !important;
                     }
+                    .school-right-col > div:last-child { min-height: 140px !important; }
                     .school-right-col > div:last-child > div:last-child {
-                        font-size: clamp(5rem, 30vw, 9rem) !important;
+                        font-size: clamp(5rem, 28vw, 9rem) !important;
                         letter-spacing: -5px !important;
+                        top: 10% !important;
                     }
                 }
 
                 @media (max-width: 480px) {
-                    .school-tab { left: 8% !important; width: 160px !important; height: 60px !important; }
-                    .school-tab span { font-size: 1.3rem !important; }
-                    .school-right-col > div:last-child { min-height: 220px !important; }
+                    .school-tab { left: 8% !important; width: 170px !important; height: 65px !important; }
+                    .school-tab span { font-size: 1.4rem !important; }
+                    .school-right-col > div:last-child { min-height: 110px !important; }
                 }
             `}</style>
         </section>
