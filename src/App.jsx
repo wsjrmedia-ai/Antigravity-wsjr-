@@ -5,7 +5,7 @@ import Footer from './components/Footer'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import HomePage from './pages/HomePage'
-import SchoolOfFinance from './pages/SchoolOfFinance'
+import SchoolProgramPage from './pages/SchoolProgramPage'
 import SyllabusPage from './pages/SyllabusPage'
 import WhoWeArePage from './pages/WhoWeArePage'
 import TopStocxPage from './pages/TopStocxPage'
@@ -74,7 +74,10 @@ function App() {
       <main style={{ position: 'relative', zIndex: 1 }}>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/school-of-finance" element={<SchoolOfFinance />} />
+          <Route path="/school-of-finance" element={<SchoolProgramPage schoolId="sof" />} />
+          <Route path="/school-of-technology" element={<SchoolProgramPage schoolId="sot" />} />
+          <Route path="/school-of-design" element={<SchoolProgramPage schoolId="sod" />} />
+          <Route path="/school-of-management" element={<SchoolProgramPage schoolId="som" />} />
           <Route path="/school-of-finance/syllabus" element={<SyllabusPage />} />
           <Route path="/who-we-are" element={<WhoWeArePage />} />
           <Route path="/enroll" element={<EnrollPage />} />

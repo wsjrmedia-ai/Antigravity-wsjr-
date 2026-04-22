@@ -123,7 +123,7 @@ const InstitutionalOverview = () => {
                             fontWeight: 600,
                             letterSpacing: '-0.4px'
                         }}>
-                            WallStreet Jr. Academy is a Dubai-based global institution that operates at the intersection of finance, technology, design and management. We believe that the most capable professionals of the next decade will not be narrow specialists; they will be disciplined thinkers who understand how capital, technology and human behaviour interact.
+                            WallStreet Jr. Academy is a Dubai-based global institution that operates at the intersection of finance, technology, design and management. We believe that the most capable professionals of tomorrow will not be narrow specialists; they will be disciplined thinkers who understand how capital, technology and human behaviour interact.
                         </p>
                         <p ref={line3} style={{
                             fontFamily: 'var(--font-hero)',

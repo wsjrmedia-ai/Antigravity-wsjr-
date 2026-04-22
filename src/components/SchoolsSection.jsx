@@ -1,5 +1,7 @@
 import React, { useRef } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
+import { schools } from '../data/schools'
 
 const schoolsData = [
     {
@@ -50,6 +52,8 @@ const schoolsData = [
 
 const SchoolCard = ({ school, index, total }) => {
     const containerRef = useRef(null);
+    const navigate = useNavigate();
+    const programPath = schools[school.id]?.path || '/';
     const { scrollYProgress } = useScroll({
         target: containerRef,
         offset: ["start start", "end start"] // 0 when card hits top, 1 when next card hits top
@@ -206,16 +210,34 @@ const SchoolCard = ({ school, index, total }) => {
                                 {school.ideal}
                             </p>
 
-                            <div style={{ 
-                                cursor: 'pointer', 
-                                display: 'inline-flex', 
-                                alignItems: 'center' 
-                            }}>
-                                <span style={{ 
+                            <div
+                                role="link"
+                                tabIndex={0}
+                                onClick={() => navigate(programPath)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        e.preventDefault();
+                                        navigate(programPath);
+                                    }
+                                }}
+                                style={{
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    transition: 'transform 0.3s ease, opacity 0.3s ease',
+                                    outline: 'none',
+                                }}
+                                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateX(6px)'; }}
+                                onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateX(0)'; }}
+                            >
+                                <span style={{
                                     fontFamily: 'var(--font-hero)',
-                                    fontSize: 'clamp(1.5rem, 2vw, 2.3rem)', 
-                                    color: '#FFF', 
-                                    fontWeight: 500 
+                                    fontSize: 'clamp(1.5rem, 2vw, 2.3rem)',
+                                    color: '#FFF',
+                                    fontWeight: 500,
+                                    borderBottom: '1px solid rgba(255,255,255,0.4)',
+                                    paddingBottom: '4px',
                                 }}>EXPLORE PROGRAM →</span>
                             </div>
                         </div>
