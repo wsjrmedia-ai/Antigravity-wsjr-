@@ -265,18 +265,45 @@ export default function HomePage() {
           </div>
         </section>
 
-      <div style={{ background: '#131722', borderBottom: '1px solid rgba(255,255,255,0.05)', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-          <TickerTape 
-              colorTheme="dark" 
-              displayMode="adaptive"
-              symbols={[
-                { proName: "FOREXCOM:SPXUSD", title: "S&P 500" },
-                { proName: "FOREXCOM:NSXUSD", title: "US 100" },
-                { proName: "FX_IDC:EURUSD", title: "EUR / USD" },
-                { proName: "BITSTAMP:BTCUSD", title: "Bitcoin" },
-                { proName: "BITSTAMP:ETHUSD", title: "Ethereum" }
-              ]}
-          />
+      {/* Ticker tape — borderless and cropped so the TradingView
+          attribution footer ("Markets by TradingView") is hidden. */}
+      <div
+        className="tt-strip"
+        style={{
+          background: '#131722',
+          border: 'none',
+          height: 46,
+          overflow: 'hidden',
+          position: 'relative',
+        }}
+      >
+        <style>{`
+          .tt-strip iframe {
+            display: block !important;
+            height: 72px !important;
+            margin-top: 0 !important;
+            border: 0 !important;
+          }
+          .tt-strip > div,
+          .tt-strip > div > div { height: 72px !important; }
+          @media (max-width: 600px) {
+            .tt-strip { height: 42px; }
+            .tt-strip iframe,
+            .tt-strip > div,
+            .tt-strip > div > div { height: 66px !important; }
+          }
+        `}</style>
+        <TickerTape
+          colorTheme="dark"
+          displayMode="adaptive"
+          symbols={[
+            { proName: "FOREXCOM:SPXUSD", title: "S&P 500" },
+            { proName: "FOREXCOM:NSXUSD", title: "US 100" },
+            { proName: "FX_IDC:EURUSD", title: "EUR / USD" },
+            { proName: "BITSTAMP:BTCUSD", title: "Bitcoin" },
+            { proName: "BITSTAMP:ETHUSD", title: "Ethereum" }
+          ]}
+        />
       </div>
 
       {/* ── Market Summary (brand aurora block) ── */}
