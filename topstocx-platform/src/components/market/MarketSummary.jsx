@@ -5,6 +5,7 @@ import {
   Timeline,
   CompanyProfile
 } from 'react-ts-tradingview-widgets';
+import AnimatedChartLoop from './AnimatedChartLoop';
 
 /**
  * MarketSummary
@@ -93,17 +94,9 @@ export default function MarketSummary() {
           <source src="/platform_demo.mp4" type="video/mp4" />
         </video>
       ) : (
+        /* Looping animated chart — reads as a GIF/video, not interactive */
         <div className="ms-hero-fallback">
-          <AdvancedRealTimeChart
-            theme="dark"
-            symbol="NASDAQ:AAPL"
-            interval="D"
-            autosize
-            hide_legend
-            hide_side_toolbar
-            allow_symbol_change={false}
-            hide_top_toolbar
-          />
+          <AnimatedChartLoop />
         </div>
       )}
       <div aria-hidden className="ms-hero-vignette" />
