@@ -175,11 +175,13 @@ export default function MarketSummary() {
             overflow: hidden;
             position: relative;
             z-index: 1;
-            aspect-ratio: 4 / 5;
+            /* Height halved vs. before (was 4/5 → now 8/5) */
+            aspect-ratio: 8 / 5;
           }
         }
         @media (max-width: 380px) {
-          .ms-mobile-hero .ms-glow-frame-inner { aspect-ratio: 3 / 4; }
+          /* Height halved vs. before (was 3/4 → now 3/2) */
+          .ms-mobile-hero .ms-glow-frame-inner { aspect-ratio: 3 / 2; }
         }
       `}</style>
 
