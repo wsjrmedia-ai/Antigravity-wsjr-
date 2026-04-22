@@ -19,14 +19,16 @@ export default function AuthPage() {
     const toggleMode = () => setIsLogin(!isLogin);
 
     return (
-        <div style={{
+        <div className="auth-page-root" style={{
             minHeight: '100vh',
             display: 'flex',
             background: 'linear-gradient(135deg, #050b14 0%, #0a1526 100%)',
             fontFamily: "'Inter', sans-serif",
             color: '#e8f0fe',
             position: 'relative',
-            overflow: 'hidden'
+            /* only clip horizontally — the signup form needs vertical scroll on phones */
+            overflowX: 'hidden',
+            overflowY: 'auto'
         }}>
             {/* Background Effects */}
             <div style={{
@@ -41,7 +43,7 @@ export default function AuthPage() {
             }} />
 
             {/* Back Button */}
-            <Link to="/" style={{
+            <Link to="/" className="auth-back" style={{
                 position: 'absolute', top: 32, left: 40,
                 display: 'flex', alignItems: 'center', gap: 8,
                 color: '#868993', textDecoration: 'none',
@@ -99,7 +101,7 @@ export default function AuthPage() {
             </div>
 
             {/* Right/Bottom Form Side */}
-            <div style={{
+            <div className="auth-form-wrap" style={{
                 flex: 1,
                 display: 'flex',
                 alignItems: 'center',
@@ -294,25 +296,77 @@ export default function AuthPage() {
                 .auth-input::placeholder {
                     color: #4a5a7a;
                 }
-                
+
                 /* Make date input look clean on dark mode */
                 .date-input::-webkit-calendar-picker-indicator {
                     filter: invert(1);
                     opacity: 0.5;
                     cursor: pointer;
                 }
-                .date-input::-webkit-calendar-picker-indicator:hover {
-                    opacity: 1;
+                .date-input::-webkit-calendar-picker-indicator:hover { opacity: 1; }
+
+                /* Fluid headline */
+                .auth-form-card h2 { font-size: clamp(22px, 4.5vw, 28px) !important; }
+
+                /* Laptop — slightly smaller hero so the form has room */
+                @media (max-width: 1100px) {
+                    .auth-hero { padding: 3rem 2.5rem !important; }
+                    .auth-hero h1 { font-size: 2.4rem !important; }
+                    .auth-hero p  { font-size: 16px !important; }
                 }
-                
-                /* Hide sidebar on small screens */
+
+                /* Tablet — hide the hero side, let the form fill the page */
                 @media (max-width: 900px) {
                     .auth-hero { display: none !important; }
+                    .auth-form-card { max-width: 520px !important; padding: 2.5rem 2rem !important; }
                 }
-                @media (max-width: 480px) {
-                    .auth-form-card { max-width: 100% !important; padding: 2rem 1.5rem !important; border-radius: 16px !important; }
-                    .auth-input, .auth-select { padding: 14px 16px !important; font-size: 16px !important; }
-                    .auth-row-stack { flex-direction: column !important; }
+
+                /* Phone — single column, snug paddings, 16px inputs to stop
+                   iOS from zooming in, back link repositioned, form scrolls
+                   inside the viewport when the registration form is long. */
+                @media (max-width: 600px) {
+                    .auth-page-root {
+                        padding: 64px 0 32px !important;
+                        min-height: 100vh !important;
+                        align-items: flex-start !important;
+                    }
+                    .auth-back {
+                        top: 14px !important;
+                        left: 14px !important;
+                        font-size: 13px !important;
+                    }
+                    .auth-form-wrap {
+                        padding: 1rem !important;
+                        align-items: flex-start !important;
+                    }
+                    .auth-form-card {
+                        max-width: 100% !important;
+                        padding: 1.75rem 1.25rem !important;
+                        border-radius: 16px !important;
+                    }
+                    .auth-form-card h2 { margin-bottom: 6px !important; }
+                    .auth-form-card p  { margin-bottom: 1.5rem !important; font-size: 13px !important; }
+                    .auth-input, .auth-select {
+                        padding: 12px 14px !important;
+                        font-size: 16px !important;
+                        border-radius: 10px !important;
+                    }
+                    .auth-row-stack { flex-direction: column !important; gap: 1rem !important; }
+                    .auth-form-card form { gap: 1rem !important; }
+                    .auth-form-card button[type="submit"] {
+                        padding: 13px !important;
+                        font-size: 14px !important;
+                    }
+                    /* Shrink the KYC drop zone so it doesn't dominate the viewport */
+                    .auth-form-card label[style*="dashed"] {
+                        padding: 1.25rem 0.75rem !important;
+                    }
+                }
+
+                /* Small phone */
+                @media (max-width: 380px) {
+                    .auth-form-card { padding: 1.5rem 1rem !important; }
+                    .auth-form-card h2 { font-size: 20px !important; }
                 }
             `}</style>
         </div>
