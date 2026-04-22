@@ -1,19 +1,40 @@
-import { Suspense, useRef, useMemo } from 'react';
+import { Suspense, useEffect, useRef, useState, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float } from '@react-three/drei';
 import * as THREE from 'three';
 
 /**
- * BotAvatar — procedural Three.js 3D robot matching the Topstocx mascot:
- * round white head, dark visor, cyan eyes + smile, cyan headphones, antenna.
- *   - variant='manu'  -> cyan accents  (brand blue family)
- *   - variant='atlas' -> green accents (brand green family)
+ * BotAvatar — 3D CEO medallion.
+ *
+ * Replaces the old procedural robot with a circular portrait disc of the
+ * CEO, wrapped in a glowing brand-coloured rim, two counter-rotating halo
+ * rings, and four orbiting accent pips. Floats gently and tilts in 3D.
+ *
+ * Keeps the same public API so FinAIChatbot doesn't need to change:
+ *   - variant='manu'   -> cyan / brand-blue accents
+ *   - variant='atlas'  -> green / brand-green accents
+ *
+ * Drop the CEO portrait at:
+ *   /public/ceo/ceo-avatar.jpg       (default)
+ *   /public/ceo/ceo-avatar-manu.jpg  (optional, overrides for manu)
+ *   /public/ceo/ceo-avatar-atlas.jpg (optional, overrides for atlas)
+ *
+ * A tight head-and-shoulders crop (square, centred on the face) reads best
+ * at the chat header's 44px size. The large 150px toggle will show more
+ * breathing room around the crop thanks to the 0.82 disc radius.
  */
+const CEO_DEFAULT_SRC  = '/ceo/ceo_3d_avatar.png';
+const CEO_MANU_SRC     = '/ceo/ceo_3d_avatar.png';
+const CEO_ATLAS_SRC    = '/ceo/ceo_3d_avatar.png';
+
 export default function BotAvatar({ size = 80, variant = 'manu', glow = true, style = {} }) {
-    const isManu = variant === 'manu';
-    const accent = isManu ? '#29B6E8' : '#59E16C';    // cyan / green
-    const accentDeep = isManu ? '#0E7FB0' : '#1F8A3A';
-    const glowRGB = isManu ? '0, 90, 255' : '57, 181, 74';
+    const isManu      = variant === 'manu';
+    const accent      = isManu ? '#29B6E8' : '#59E16C';
+    const accentDeep  = isManu ? '#0E7FB0' : '#1F8A3A';
+    const glowRGB     = isManu ? '0, 90, 255' : '57, 181, 74';
+
+    // Prefer a variant-specific portrait if provided, otherwise the shared one.
+    const primarySrc  = isManu ? CEO_MANU_SRC : CEO_ATLAS_SRC;
 
     return (
         <div
@@ -24,7 +45,7 @@ export default function BotAvatar({ size = 80, variant = 'manu', glow = true, st
                 ...style,
             }}
         >
-            {/* Ambient glow behind the bot */}
+            {/* Soft brand-tinted ambient glow behind the medallion */}
             {glow && (
                 <div
                     aria-hidden
@@ -32,27 +53,32 @@ export default function BotAvatar({ size = 80, variant = 'manu', glow = true, st
                         position: 'absolute',
                         inset: 0,
                         borderRadius: '50%',
-                        background: `radial-gradient(circle at 50% 55%, rgba(${glowRGB}, 0.45) 0%, rgba(${glowRGB}, 0) 65%)`,
-                        filter: 'blur(8px)',
+                        background: `radial-gradient(circle at 50% 50%, rgba(${glowRGB}, 0.55) 0%, rgba(${glowRGB}, 0) 62%)`,
+                        filter: 'blur(10px)',
                         pointerEvents: 'none',
                     }}
                 />
             )}
 
             <Canvas
-                camera={{ position: [0, 0.1, 3.2], fov: 38 }}
+                camera={{ position: [0, 0, 3.1], fov: 36 }}
                 dpr={[1, 2]}
                 gl={{ alpha: true, antialias: true }}
                 style={{ width: '100%', height: '100%', background: 'transparent' }}
             >
                 <Suspense fallback={null}>
-                    <ambientLight intensity={0.55} />
-                    <directionalLight position={[2.5, 3, 2.5]} intensity={1.2} />
+                    <ambientLight intensity={0.75} />
+                    <directionalLight position={[2.5, 3, 2.5]} intensity={1.1} />
                     <directionalLight position={[-2, -1, 1.5]} intensity={0.35} color={accent} />
                     <pointLight position={[0, 0, 2]} intensity={0.6} color={accent} />
 
-                    <Float speed={1.6} rotationIntensity={0.35} floatIntensity={0.7}>
-                        <Robot accent={accent} accentDeep={accentDeep} />
+                    <Float speed={1.4} rotationIntensity={0.22} floatIntensity={0.5}>
+                        <CeoMedallion
+                            primarySrc={primarySrc}
+                            fallbackSrc={CEO_DEFAULT_SRC}
+                            accent={accent}
+                            accentDeep={accentDeep}
+                        />
                     </Float>
                 </Suspense>
             </Canvas>
@@ -60,176 +86,145 @@ export default function BotAvatar({ size = 80, variant = 'manu', glow = true, st
     );
 }
 
-// ── The robot ───────────────────────────────────────────────────────────────
-function Robot({ accent, accentDeep }) {
-    const group = useRef(null);
+// ── Medallion ────────────────────────────────────────────────────────────
+function CeoMedallion({ primarySrc, fallbackSrc, accent, accentDeep }) {
+    const outerRing = useRef(null);
+    const innerRing = useRef(null);
+    const pipsGroup = useRef(null);
+    const texture   = useImageTexture(primarySrc, fallbackSrc);
 
-    // Subtle idle rotation (Float handles bob + random tilt)
+    // Counter-rotating halo rings + slow pip orbit keep the medallion alive
     useFrame((state) => {
-        if (!group.current) return;
         const t = state.clock.getElapsedTime();
-        group.current.rotation.y = Math.sin(t * 0.6) * 0.15;
+        if (outerRing.current) outerRing.current.rotation.z =  t * 0.35;
+        if (innerRing.current) innerRing.current.rotation.z = -t * 0.55;
+        if (pipsGroup.current) pipsGroup.current.rotation.z =  t * 0.25;
     });
 
-    const white = '#ECEFF4';
-    const whiteShade = '#C8CDD6';
-    const visor = '#0E1730';
-    const black = '#070A14';
-
-    // Smile curve points (curved line on visor)
-    const smilePoints = useMemo(() => {
-        const pts = [];
-        const segs = 24;
-        for (let i = 0; i <= segs; i++) {
-            const t = i / segs;
-            const x = (t - 0.5) * 0.26;
-            // parabola opening upward -> U shape (smile)
-            const y = -0.02 + Math.pow((t - 0.5) * 2, 2) * 0.05;
-            pts.push(new THREE.Vector3(x, -y - 0.02, 0.01));
-        }
-        return pts;
-    }, []);
-    const smileGeom = useMemo(() => new THREE.BufferGeometry().setFromPoints(smilePoints), [smilePoints]);
-
     return (
-        <group ref={group} position={[0, -0.05, 0]} scale={1.05}>
-            {/* ── HEAD (rounded white capsule) ───────────────────────────── */}
-            <mesh castShadow>
-                <sphereGeometry args={[0.7, 48, 48]} />
-                <meshStandardMaterial color={white} roughness={0.35} metalness={0.15} />
+        <group>
+            {/* Deep shadow disc behind the medallion for subtle depth */}
+            <mesh position={[0, 0, -0.1]}>
+                <circleGeometry args={[1.04, 64]} />
+                <meshBasicMaterial color="#05070d" transparent opacity={0.9} />
             </mesh>
 
-            {/* Subtle bottom shading under the jaw */}
-            <mesh position={[0, -0.45, 0.15]}>
-                <sphereGeometry args={[0.55, 32, 32]} />
-                <meshStandardMaterial color={whiteShade} roughness={0.6} metalness={0.05} transparent opacity={0.45} />
-            </mesh>
-
-            {/* ── ANTENNA ─────────────────────────────────────────────────── */}
-            <mesh position={[0, 0.75, 0]}>
-                <cylinderGeometry args={[0.025, 0.025, 0.18, 16]} />
-                <meshStandardMaterial color={white} roughness={0.3} metalness={0.2} />
-            </mesh>
-            <mesh position={[0, 0.88, 0]}>
-                <sphereGeometry args={[0.06, 24, 24]} />
-                <meshStandardMaterial color={accent} emissive={accent} emissiveIntensity={0.6} roughness={0.2} />
-            </mesh>
-
-            {/* ── VISOR / FACE PLATE (dark rounded panel) ─────────────────── */}
-            <group position={[0, 0.02, 0.52]}>
-                <mesh>
-                    <sphereGeometry
-                        args={[
-                            0.48, 48, 48,
-                            0, Math.PI * 2,   // full azimuth
-                            Math.PI * 0.32, Math.PI * 0.36, // vertical slice -> wraparound band
-                        ]}
-                    />
-                    <meshStandardMaterial color={visor} roughness={0.25} metalness={0.4} />
-                </mesh>
-            </group>
-
-            {/* Simpler flat visor fallback: rounded rectangle on the front */}
-            <mesh position={[0, 0.02, 0.56]}>
-                <planeGeometry args={[0.78, 0.5]} />
-                <meshStandardMaterial color={visor} roughness={0.3} metalness={0.35} />
-            </mesh>
-
-            {/* ── EYES (cyan glowing dots) ─────────────────────────────────── */}
-            <mesh position={[-0.16, 0.06, 0.585]}>
-                <sphereGeometry args={[0.065, 24, 24]} />
+            {/* Brand-tinted backing disc — the "coin" the portrait sits on */}
+            <mesh position={[0, 0, -0.06]}>
+                <circleGeometry args={[0.84, 64]} />
                 <meshStandardMaterial
-                    color={accent}
-                    emissive={accent}
-                    emissiveIntensity={1.6}
-                    roughness={0.15}
-                />
-            </mesh>
-            <mesh position={[0.16, 0.06, 0.585]}>
-                <sphereGeometry args={[0.065, 24, 24]} />
-                <meshStandardMaterial
-                    color={accent}
-                    emissive={accent}
-                    emissiveIntensity={1.6}
-                    roughness={0.15}
+                    color="#0a1526"
+                    emissive={accentDeep}
+                    emissiveIntensity={0.45}
+                    roughness={0.55}
+                    metalness={0.15}
                 />
             </mesh>
 
-            {/* Tiny eye highlights */}
-            <mesh position={[-0.14, 0.09, 0.645]}>
-                <sphereGeometry args={[0.018, 12, 12]} />
-                <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={0.8} />
-            </mesh>
-            <mesh position={[0.18, 0.09, 0.645]}>
-                <sphereGeometry args={[0.018, 12, 12]} />
-                <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={0.8} />
+            {/* Subtle radial accent ring on the disc face */}
+            <mesh position={[0, 0, -0.04]}>
+                <ringGeometry args={[0.72, 0.84, 64]} />
+                <meshBasicMaterial color={accent} transparent opacity={0.18} />
             </mesh>
 
-            {/* ── SMILE (curved line) ──────────────────────────────────────── */}
-            <group position={[0, -0.14, 0.58]}>
-                <line geometry={smileGeom}>
-                    <lineBasicMaterial color={accent} linewidth={2} />
-                </line>
-                {/* Thicker smile via a tube-ish torus segment */}
-                <mesh rotation={[0, 0, 0]}>
-                    <torusGeometry args={[0.14, 0.022, 16, 32, Math.PI]} />
+            {/* ── Portrait plane (PNG with alpha — bust floats on top of the disc) */}
+            <mesh position={[0, 0, 0.015]}>
+                <planeGeometry args={[1.55, 1.55]} />
+                {texture ? (
                     <meshStandardMaterial
-                        color={accent}
-                        emissive={accent}
-                        emissiveIntensity={1.2}
-                        roughness={0.2}
+                        map={texture}
+                        transparent
+                        alphaTest={0.02}
+                        roughness={0.55}
+                        metalness={0.1}
+                        toneMapped={false}
                     />
-                </mesh>
-            </group>
-
-            {/* ── HEADPHONES ───────────────────────────────────────────────── */}
-            {/* Band over the top */}
-            <mesh rotation={[0, 0, Math.PI / 2]} position={[0, 0.55, 0]}>
-                <torusGeometry args={[0.6, 0.05, 20, 40, Math.PI]} />
-                <meshStandardMaterial color={black} roughness={0.4} metalness={0.3} />
+                ) : (
+                    // Fallback: invisible until the image is ready, backing disc carries the look
+                    <meshBasicMaterial transparent opacity={0} />
+                )}
             </mesh>
 
-            {/* Left ear cup */}
-            <group position={[-0.72, 0.05, 0]}>
-                <mesh>
-                    <sphereGeometry args={[0.24, 32, 32]} />
-                    <meshStandardMaterial color={accent} roughness={0.3} metalness={0.3} />
-                </mesh>
-                <mesh position={[0.08, 0, 0]}>
-                    <cylinderGeometry args={[0.17, 0.17, 0.12, 32]} />
-                    <meshStandardMaterial color={accentDeep} roughness={0.4} metalness={0.4} />
-                </mesh>
-                <mesh position={[0.14, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-                    <cylinderGeometry args={[0.11, 0.11, 0.02, 32]} />
-                    <meshStandardMaterial color={black} roughness={0.5} />
-                </mesh>
-            </group>
-
-            {/* Right ear cup */}
-            <group position={[0.72, 0.05, 0]}>
-                <mesh>
-                    <sphereGeometry args={[0.24, 32, 32]} />
-                    <meshStandardMaterial color={accent} roughness={0.3} metalness={0.3} />
-                </mesh>
-                <mesh position={[-0.08, 0, 0]}>
-                    <cylinderGeometry args={[0.17, 0.17, 0.12, 32]} />
-                    <meshStandardMaterial color={accentDeep} roughness={0.4} metalness={0.4} />
-                </mesh>
-                <mesh position={[-0.14, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-                    <cylinderGeometry args={[0.11, 0.11, 0.02, 32]} />
-                    <meshStandardMaterial color={black} roughness={0.5} />
-                </mesh>
-            </group>
-
-            {/* ── MICROPHONE BOOM (small arm from left ear cup) ────────────── */}
-            <mesh position={[-0.52, -0.18, 0.35]} rotation={[0, 0, -0.4]}>
-                <cylinderGeometry args={[0.022, 0.022, 0.36, 12]} />
-                <meshStandardMaterial color={black} roughness={0.5} />
+            {/* Metallic rim wrapping the portrait */}
+            <mesh>
+                <torusGeometry args={[0.84, 0.045, 24, 96]} />
+                <meshStandardMaterial
+                    color={accent}
+                    emissive={accent}
+                    emissiveIntensity={0.85}
+                    metalness={0.65}
+                    roughness={0.22}
+                />
             </mesh>
-            <mesh position={[-0.35, -0.32, 0.48]}>
-                <sphereGeometry args={[0.05, 20, 20]} />
-                <meshStandardMaterial color={accent} emissive={accent} emissiveIntensity={0.6} roughness={0.3} />
+
+            {/* Outer rotating halo — soft dashed glow */}
+            <mesh ref={outerRing} position={[0, 0, 0.02]}>
+                <torusGeometry args={[0.99, 0.012, 12, 96]} />
+                <meshBasicMaterial color={accent} transparent opacity={0.55} />
             </mesh>
+
+            {/* Inner rotating halo — white filigree */}
+            <mesh ref={innerRing} position={[0, 0, 0.03]}>
+                <torusGeometry args={[0.92, 0.008, 10, 72]} />
+                <meshBasicMaterial color="#ffffff" transparent opacity={0.35} />
+            </mesh>
+
+            {/* Four orbiting pips around the rim */}
+            <group ref={pipsGroup}>
+                {[0, 1, 2, 3].map((i) => (
+                    <group key={i} rotation={[0, 0, (i * Math.PI) / 2]}>
+                        <mesh position={[1.06, 0, 0.04]}>
+                            <sphereGeometry args={[0.04, 18, 18]} />
+                            <meshStandardMaterial
+                                color={accent}
+                                emissive={accent}
+                                emissiveIntensity={1.5}
+                                roughness={0.2}
+                                metalness={0.4}
+                            />
+                        </mesh>
+                    </group>
+                ))}
+            </group>
         </group>
     );
+}
+
+// ── Texture hook with graceful 404 fallback ──────────────────────────────
+function useImageTexture(primarySrc, fallbackSrc) {
+    const [tex, setTex] = useState(null);
+
+    useEffect(() => {
+        let disposed  = false;
+        const loader  = new THREE.TextureLoader();
+        loader.setCrossOrigin('anonymous');
+
+        const apply = (t) => {
+            if (disposed) { t.dispose(); return; }
+            t.colorSpace = THREE.SRGBColorSpace;
+            t.anisotropy = 8;
+            t.minFilter  = THREE.LinearMipmapLinearFilter;
+            t.magFilter  = THREE.LinearFilter;
+            t.needsUpdate = true;
+            setTex(t);
+        };
+
+        loader.load(
+            primarySrc,
+            apply,
+            undefined,
+            () => {
+                // Primary missing → try the shared default
+                if (primarySrc === fallbackSrc) { setTex(null); return; }
+                loader.load(fallbackSrc, apply, undefined, () => setTex(null));
+            },
+        );
+
+        return () => {
+            disposed = true;
+            setTex((t) => { if (t) t.dispose(); return null; });
+        };
+    }, [primarySrc, fallbackSrc]);
+
+    return tex;
 }
