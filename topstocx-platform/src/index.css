@@ -63,9 +63,23 @@
   letter-spacing: -0.015em;
 }
 
-html {
-  scroll-behavior: smooth;
+/* Lenis owns smooth scrolling on desktop via transform-based RAF.
+   Native scroll-behavior fights it, so we only enable the CSS fallback
+   on touch devices where Lenis is disabled. */
+@media (pointer: coarse) {
+  html { scroll-behavior: smooth; }
 }
+
+html, body {
+  overscroll-behavior-y: none;
+}
+
+/* Lenis applies .lenis / .lenis-smooth to <html>. These classes let
+   Lenis control the scroll; the overflow rule is required. */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: clip; }
 
 :root {
   --bg-primary: #000000;
