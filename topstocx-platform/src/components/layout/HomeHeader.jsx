@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import topstocxLogo from '../../assets/topstocx-logo.png';
 import { ChevronDown, Search, Menu, X } from 'lucide-react';
@@ -256,9 +257,10 @@ const HomeHeader = () => {
                 {isMobileMenuOpen ? <X size={28} color="#fff" /> : <Menu size={28} color="#fff" />}
             </div>
 
-            {/* Mobile Drawer — full-viewport below the header, solid
-                background, internally scrollable with contained overscroll
-                so the landing page underneath doesn't move. */}
+            {/* Mobile Drawer — rendered via portal to document.body so it
+                escapes the <header> stacking context and reliably sits on
+                top of the homepage hero, ticker and every other section. */}
+            {typeof document !== 'undefined' && createPortal(
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
@@ -273,13 +275,14 @@ const HomeHeader = () => {
                             left: 0,
                             right: 0,
                             bottom: 0,
-                            background: 'linear-gradient(180deg,#0b1220 0%,#0a111d 100%)',
-                            borderTop: '1px solid rgba(255,255,255,0.04)',
+                            background: '#0a111d',
+                            backgroundImage: 'linear-gradient(180deg,#0b1220 0%,#0a111d 100%)',
+                            borderTop: '1px solid rgba(255,255,255,0.06)',
                             display: 'flex',
                             flexDirection: 'column',
                             gap: '0.25rem',
                             boxShadow: '0 20px 40px rgba(0,0,0,0.6)',
-                            zIndex: 999,
+                            zIndex: 10000,
                             padding: '1.25rem 1.25rem 1.5rem',
                             overflowY: 'auto',
                             overscrollBehavior: 'contain',
@@ -403,7 +406,9 @@ const HomeHeader = () => {
                         </div>
                     </motion.div>
                 )}
-            </AnimatePresence>
+            </AnimatePresence>,
+            document.body
+            )}
         </header>
     );
 };
