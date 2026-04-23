@@ -1,58 +1,74 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
+import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 
 /**
- * BotAvatar — Topstocx 3D portrait icon.
+ * BotAvatar — Topstocx chrome-sphere chatbot icon.
  *
- * Pure procedural 3D bust: stylised head + shoulders + suit silhouette,
- * rendered with a brand-gradient shader. No photo, no texture, no
- * rectangular background, no border — just the sculpted shape of a
- * portrait floating in transparent space.
+ * A friendly polished-metal sphere with a dark glossy visor, glowing cyan
+ * eyes + smile, glowing bezel ring and two side "ear" pods with cyan
+ * accents. Procedural geometry only — no photo, no GLB, no textures.
  *
- * Brand tokens:
- *   --brand-blue        #005AFF
- *   --brand-green       #39B54A
- *   --brand-blue-light  #77A6FF
- *   --brand-green-light #59E16C
+ * Chrome reflections come from an in-memory `RoomEnvironment` ran
+ * through `PMREMGenerator` so no network fetch / HDR file is required.
  *
- * Anatomy (all `mesh` primitives, no assets):
- *   • Head        — ellipsoid sphere, gradient shader
- *   • Hair cap    — partial sphere sliced to sit on the crown
- *   • Neck        — short cylinder
- *   • Shoulders   — two tapered boxes angled outward
- *   • Torso base  — trapezoidal lathe cross-section
- *   • Lapels      — two slim triangles forming a suit V
- *   • Eye glints  — two white spheres with brand-blue pupils
+ * Brand palette:
+ *   --brand-blue        #005AFF   (halo, pupils)
+ *   --brand-cyan-glow   #7fd8ff   (face + bezel + ear cyan)
+ *   chrome body         #eef2f8
+ *   visor glass         #05101a   (near-black navy)
+ *
+ * Anatomy:
+ *   • Chrome body sphere (metalness 1.0, roughness 0.14)
+ *   • Visor disc (flattened ellipsoid, dark glossy)
+ *   • Cyan bezel ring (torus, emissive)
+ *   • Two glowing eye spheres (emissive) — blink every ~5s
+ *   • Smile (half-torus, emissive)
+ *   • Left + right ear pods (chrome puck + cyan glow insert)
  *
  * Motion:
- *   • Gentle turntable sway + breathing scale
- *   • Eases toward mouse cursor on desktop
- *   • Soft pulsing halo behind the silhouette
+ *   • Slow turntable sway + mouse parallax
+ *   • Gentle Y-bob
+ *   • Eye blinks on a 5s cycle
+ *   • CSS halo pulses behind the canvas
  *   • Full prefers-reduced-motion support
  *
- * Props (API preserved):
- *   size    — px hint for halo math
- *   variant — 'manu' (blue bias) | 'atlas' (green bias)
- *   glow    — toggle the CSS halo
- *   style   — merged into the outer wrapper
+ * API preserved: <BotAvatar size variant glow style />
  */
 
 const BRAND = {
-    blue:       '#005AFF',
-    green:      '#39B54A',
-    blueLight:  '#77A6FF',
-    greenLight: '#59E16C',
+    blue:     '#005AFF',
+    cyanGlow: '#7fd8ff',
+    chrome:   '#eef2f8',
+    visor:    '#05101a',
 };
 
+// ── Procedural HDR-style environment — local, zero network ──────────────
+function SceneEnvironment() {
+    const { scene, gl } = useThree();
+    useEffect(() => {
+        const pmrem = new THREE.PMREMGenerator(gl);
+        const env   = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+        const prev  = scene.environment;
+        scene.environment = env;
+        return () => {
+            scene.environment = prev;
+            env.dispose();
+            pmrem.dispose();
+        };
+    }, [scene, gl]);
+    return null;
+}
+
 export default function BotAvatar({ size = 80, variant = 'manu', glow = true, style = {} }) {
-    const isManu  = variant === 'manu';
-    const haloRGB = isManu ? '0, 90, 255' : '57, 181, 74';
+    const isManu   = variant === 'manu';
+    const haloRGB  = isManu ? '0, 90, 255' : '89, 225, 108';
+    const haloRGB2 = '127, 216, 255';
 
     const wrapRef = useRef(null);
     const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
-    // Desktop cursor parallax.
     useEffect(() => {
         const node = wrapRef.current;
         if (!node) return;
@@ -92,15 +108,14 @@ export default function BotAvatar({ size = 80, variant = 'manu', glow = true, st
                         inset: '-8%',
                         borderRadius: '50%',
                         background: `
-                            radial-gradient(circle at 50% 48%,
-                                rgba(${haloRGB}, 0.55) 0%,
-                                rgba(119, 166, 255, 0.28) 38%,
-                                rgba(89, 225, 108, 0.14) 58%,
-                                rgba(0, 0, 0, 0) 72%)
+                            radial-gradient(circle at 50% 50%,
+                                rgba(${haloRGB}, 0.50) 0%,
+                                rgba(${haloRGB2}, 0.28) 38%,
+                                rgba(0, 0, 0, 0) 70%)
                         `,
-                        filter: 'blur(16px)',
+                        filter: 'blur(18px)',
                         pointerEvents: 'none',
-                        animation: 'tsx-bot-pulse 3.8s ease-in-out infinite',
+                        animation: 'tsx-bot-pulse 3.6s ease-in-out infinite',
                     }}
                 />
             )}
@@ -108,7 +123,7 @@ export default function BotAvatar({ size = 80, variant = 'manu', glow = true, st
             <style>{`
                 @keyframes tsx-bot-pulse {
                     0%, 100% { opacity: .70; transform: scale(1);    }
-                    50%      { opacity: 1;   transform: scale(1.05); }
+                    50%      { opacity: 1;   transform: scale(1.06); }
                 }
                 @media (prefers-reduced-motion: reduce) {
                     .tsx-bot-canvas { animation: none !important; }
@@ -117,172 +132,164 @@ export default function BotAvatar({ size = 80, variant = 'manu', glow = true, st
 
             <Canvas
                 className="tsx-bot-canvas"
-                camera={{ position: [0, 0.1, 3.2], fov: 32 }}
+                camera={{ position: [0, 0, 3.6], fov: 30 }}
                 dpr={[1, 2]}
                 gl={{ alpha: true, antialias: true, premultipliedAlpha: true }}
                 style={{ width: '100%', height: '100%', background: 'transparent' }}
             >
                 <Suspense fallback={null}>
-                    <ambientLight intensity={0.75} />
-                    <directionalLight position={[ 2.5,  3.0,  2.5]} intensity={1.1} color={BRAND.blueLight} />
-                    <directionalLight position={[-2.0, -1.0,  1.5]} intensity={0.55} color={BRAND.greenLight} />
-                    <pointLight       position={[ 0.0,  0.4,  2.2]} intensity={0.4}  color={BRAND.blue} />
-                    <Bust tilt={tilt} variant={variant} />
+                    <SceneEnvironment />
+                    <ambientLight intensity={0.35} />
+                    <directionalLight position={[ 3.0,  4.0,  3.0]} intensity={1.05} color="#ffffff" />
+                    <pointLight       position={[-2.5, -1.0,  2.0]} intensity={0.7}  color={BRAND.cyanGlow} />
+                    <pointLight       position={[ 2.0,  2.0,  2.0]} intensity={0.55} color="#d5e4ff" />
+                    <ChromeBot tilt={tilt} />
                 </Suspense>
             </Canvas>
         </div>
     );
 }
 
-// ── Procedural stylised bust ────────────────────────────────────────────
-function Bust({ tilt, variant }) {
-    const group = useRef(null);
-    const core  = useRef(null);
+// ── The bot itself ──────────────────────────────────────────────────────
+function ChromeBot({ tilt }) {
+    const group    = useRef(null);
+    const leftEye  = useRef(null);
+    const rightEye = useRef(null);
 
-    // Brand-gradient shader — used by every skin/clothing piece so the
-    // whole silhouette reads as one unified 3D portrait.
-    const brandMat = useMemo(() => {
-        const bias = variant === 'atlas' ? 0.35 : -0.15;
-        return new THREE.ShaderMaterial({
-            uniforms: {
-                uTime:       { value: 0 },
-                uBias:       { value: bias },
-                uColorA:     { value: new THREE.Color(BRAND.blue)      },
-                uColorB:     { value: new THREE.Color(BRAND.green)     },
-                uColorLight: { value: new THREE.Color(BRAND.blueLight) },
-            },
-            vertexShader: /* glsl */`
-                varying vec3 vNormal;
-                varying vec3 vPos;
-                varying vec3 vView;
-                void main() {
-                    vNormal = normalize(normalMatrix * normal);
-                    vPos    = position;
-                    vec4 mv = modelViewMatrix * vec4(position, 1.0);
-                    vView   = normalize(-mv.xyz);
-                    gl_Position = projectionMatrix * mv;
-                }
-            `,
-            fragmentShader: /* glsl */`
-                uniform float uTime;
-                uniform float uBias;
-                uniform vec3  uColorA;
-                uniform vec3  uColorB;
-                uniform vec3  uColorLight;
-                varying vec3  vNormal;
-                varying vec3  vPos;
-                varying vec3  vView;
-
-                void main() {
-                    // Animated vertical brand gradient with gentle swirl.
-                    float flow  = sin(vPos.y * 2.2 + uTime * 1.2) * 0.5 + 0.5;
-                    float swirl = sin(vPos.x * 1.8 - uTime * 0.7) * 0.5 + 0.5;
-                    float g     = clamp(vPos.y * 0.55 + 0.5 + uBias + flow * 0.16 - swirl * 0.08, 0.0, 1.0);
-                    vec3  base  = mix(uColorA, uColorB, g);
-
-                    // Fresnel silhouette rim in brand-light so the edges
-                    // glow rather than look hard-cut.
-                    float fres = pow(1.0 - max(dot(vNormal, vView), 0.0), 2.2);
-                    vec3  rim  = uColorLight * fres * 1.45;
-
-                    // Subtle breathing pulse on overall brightness.
-                    float pulse = 0.84 + 0.16 * sin(uTime * 1.9);
-
-                    gl_FragColor = vec4(base * pulse + rim, 1.0);
-                }
-            `,
-        });
-    }, [variant]);
-
-    // Torso lathe — trapezoidal cross-section swept around Y.
-    const torsoGeo = useMemo(() => {
-        const pts = [
-            new THREE.Vector2(0.22, -1.20),
-            new THREE.Vector2(0.70, -0.90),
-            new THREE.Vector2(0.65, -0.45),
-            new THREE.Vector2(0.42, -0.20),
-            new THREE.Vector2(0.00, -0.20),
-        ];
-        return new THREE.LatheGeometry(pts, 48);
-    }, []);
-
-    // Hair cap — hemisphere sliced to sit just on the crown.
-    const hairGeo = useMemo(
-        () => new THREE.SphereGeometry(0.465, 40, 32, 0, Math.PI * 2, 0, Math.PI * 0.55),
+    // Smile = half-torus rotated so the arc opens upward (U-shape).
+    const smileGeo = useMemo(
+        () => new THREE.TorusGeometry(0.15, 0.024, 12, 56, Math.PI),
         []
     );
 
     useFrame((state) => {
         const t = state.clock.getElapsedTime();
-        brandMat.uniforms.uTime.value = t;
 
         if (group.current) {
-            const turn    = Math.sin(t * 0.45) * 0.16;
-            const targetY = turn + tilt.x * 0.32;
+            const turn    = Math.sin(t * 0.5) * 0.22;
+            const targetY = turn + tilt.x * 0.35;
             const targetX = tilt.y * -0.18;
             group.current.rotation.y += (targetY - group.current.rotation.y) * 0.08;
             group.current.rotation.x += (targetX - group.current.rotation.x) * 0.08;
-            group.current.position.y = Math.sin(t * 1.2) * 0.02;
+            group.current.position.y = Math.sin(t * 1.3) * 0.03;
         }
-        if (core.current) {
-            const s = 1 + Math.sin(t * 1.6) * 0.015;
-            core.current.scale.setScalar(s);
-        }
+
+        // Blink: closed for a brief slice once every ~5 seconds.
+        const phase = (t % 5) / 5;
+        const blink = phase > 0.95 ? 0.08 : 1;
+        if (leftEye.current)  leftEye.current.scale.y  += (blink - leftEye.current.scale.y)  * 0.35;
+        if (rightEye.current) rightEye.current.scale.y += (blink - rightEye.current.scale.y) * 0.35;
     });
 
     return (
-        <group ref={group} position={[0, -0.1, 0]}>
-            <group ref={core}>
-                {/* Head — ellipsoid (scaled sphere) */}
-                <mesh material={brandMat} position={[0, 0.78, 0]} scale={[0.44, 0.52, 0.44]}>
-                    <sphereGeometry args={[1, 48, 48]} />
-                </mesh>
+        <group ref={group}>
+            {/* Chrome body */}
+            <mesh>
+                <sphereGeometry args={[1.0, 96, 96]} />
+                <meshStandardMaterial
+                    color={BRAND.chrome}
+                    metalness={1.0}
+                    roughness={0.14}
+                    envMapIntensity={1.2}
+                />
+            </mesh>
 
-                {/* Hair cap */}
-                <mesh material={brandMat} position={[0, 0.86, -0.02]} rotation={[-0.08, 0, 0]}>
-                    <primitive object={hairGeo} attach="geometry" />
-                </mesh>
+            {/* Visor — flattened glossy dome facing camera */}
+            <mesh position={[0, 0, 0.72]} scale={[0.72, 0.72, 0.14]}>
+                <sphereGeometry args={[1, 48, 48]} />
+                <meshStandardMaterial
+                    color={BRAND.visor}
+                    metalness={0.55}
+                    roughness={0.08}
+                    envMapIntensity={0.9}
+                />
+            </mesh>
 
-                {/* Neck */}
-                <mesh material={brandMat} position={[0, 0.30, 0]}>
-                    <cylinderGeometry args={[0.18, 0.22, 0.26, 28]} />
-                </mesh>
+            {/* Bezel ring — glowing cyan frame around the visor */}
+            <mesh position={[0, 0, 0.80]}>
+                <torusGeometry args={[0.72, 0.028, 24, 120]} />
+                <meshStandardMaterial
+                    color={BRAND.cyanGlow}
+                    emissive={BRAND.cyanGlow}
+                    emissiveIntensity={2.4}
+                    metalness={0.2}
+                    roughness={0.3}
+                    toneMapped={false}
+                />
+            </mesh>
 
-                {/* Torso (lathe — suit silhouette) */}
-                <mesh material={brandMat} position={[0, 0.20, 0]}>
-                    <primitive object={torsoGeo} attach="geometry" />
-                </mesh>
+            {/* Eyes — glowing cyan spheres */}
+            <mesh ref={leftEye} position={[-0.23, 0.08, 0.88]}>
+                <sphereGeometry args={[0.105, 32, 32]} />
+                <meshStandardMaterial
+                    color={BRAND.cyanGlow}
+                    emissive={BRAND.cyanGlow}
+                    emissiveIntensity={2.6}
+                    toneMapped={false}
+                />
+            </mesh>
+            <mesh ref={rightEye} position={[0.23, 0.08, 0.88]}>
+                <sphereGeometry args={[0.105, 32, 32]} />
+                <meshStandardMaterial
+                    color={BRAND.cyanGlow}
+                    emissive={BRAND.cyanGlow}
+                    emissiveIntensity={2.6}
+                    toneMapped={false}
+                />
+            </mesh>
 
-                {/* Left lapel */}
-                <mesh material={brandMat} position={[-0.13, -0.10, 0.30]} rotation={[0, 0.25, 0.55]}>
-                    <boxGeometry args={[0.04, 0.55, 0.06]} />
-                </mesh>
-                {/* Right lapel */}
-                <mesh material={brandMat} position={[0.13, -0.10, 0.30]} rotation={[0, -0.25, -0.55]}>
-                    <boxGeometry args={[0.04, 0.55, 0.06]} />
-                </mesh>
+            {/* Smile — half-torus opening upward (U shape) */}
+            <mesh position={[0, -0.22, 0.88]} rotation={[0, 0, Math.PI]}>
+                <primitive object={smileGeo} attach="geometry" />
+                <meshStandardMaterial
+                    color={BRAND.cyanGlow}
+                    emissive={BRAND.cyanGlow}
+                    emissiveIntensity={2.2}
+                    toneMapped={false}
+                />
+            </mesh>
 
-                {/* Collar shirt triangle (slight inset) */}
-                <mesh material={brandMat} position={[0, -0.05, 0.33]} rotation={[0.15, 0, 0]}>
-                    <coneGeometry args={[0.12, 0.26, 3]} />
+            {/* Left ear pod — chrome puck with cyan glow insert */}
+            <group position={[-1.02, 0, 0]}>
+                <mesh>
+                    <sphereGeometry args={[0.24, 40, 40]} />
+                    <meshStandardMaterial
+                        color={BRAND.chrome}
+                        metalness={1.0}
+                        roughness={0.14}
+                        envMapIntensity={1.2}
+                    />
                 </mesh>
+                <mesh position={[-0.12, 0, 0]} scale={[0.18, 0.7, 0.7]}>
+                    <sphereGeometry args={[0.22, 28, 28]} />
+                    <meshStandardMaterial
+                        color={BRAND.cyanGlow}
+                        emissive={BRAND.cyanGlow}
+                        emissiveIntensity={2.4}
+                        toneMapped={false}
+                    />
+                </mesh>
+            </group>
 
-                {/* Eye glints — soft white spheres with brand-blue pupils */}
-                <mesh position={[-0.13, 0.82, 0.36]}>
-                    <sphereGeometry args={[0.045, 18, 18]} />
-                    <meshBasicMaterial color="#f6faff" />
+            {/* Right ear pod — mirror of the left */}
+            <group position={[1.02, 0, 0]}>
+                <mesh>
+                    <sphereGeometry args={[0.24, 40, 40]} />
+                    <meshStandardMaterial
+                        color={BRAND.chrome}
+                        metalness={1.0}
+                        roughness={0.14}
+                        envMapIntensity={1.2}
+                    />
                 </mesh>
-                <mesh position={[ 0.13, 0.82, 0.36]}>
-                    <sphereGeometry args={[0.045, 18, 18]} />
-                    <meshBasicMaterial color="#f6faff" />
-                </mesh>
-                <mesh position={[-0.13, 0.82, 0.395]}>
-                    <sphereGeometry args={[0.018, 14, 14]} />
-                    <meshBasicMaterial color={BRAND.blue} />
-                </mesh>
-                <mesh position={[ 0.13, 0.82, 0.395]}>
-                    <sphereGeometry args={[0.018, 14, 14]} />
-                    <meshBasicMaterial color={BRAND.blue} />
+                <mesh position={[0.12, 0, 0]} scale={[0.18, 0.7, 0.7]}>
+                    <sphereGeometry args={[0.22, 28, 28]} />
+                    <meshStandardMaterial
+                        color={BRAND.cyanGlow}
+                        emissive={BRAND.cyanGlow}
+                        emissiveIntensity={2.4}
+                        toneMapped={false}
+                    />
                 </mesh>
             </group>
         </group>
