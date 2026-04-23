@@ -57,7 +57,7 @@ const LearnEarnToggle = () => {
                     position: 'relative',
                     zIndex: 999,
                     width: '260px',
-                    cursor: 'pointer',
+                    touchAction: 'manipulation',
                 }}
             >
                 {/* The Neon Blur Glow */}
@@ -122,20 +122,19 @@ const LearnEarnToggle = () => {
 
                         {/* LEARN side */}
                         <motion.button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleToggle('learn');
-                            }}
+                            type="button"
+                            onClick={() => handleToggle('learn')}
                             aria-pressed={isLearn}
                             aria-label="Switch to Learn platform"
                             animate={
                                 !isLearn
                                     ? {
-                                          // subtle pulse on the inactive side to signal it's clickable
-                                          scale: [1, 1.04, 1],
-                                          opacity: [0.85, 1, 0.85],
+                                          // opacity-only pulse — no transform — so the tap
+                                          // target stays exactly still on mobile (transform
+                                          // pulses can get interpreted as drag on iOS).
+                                          opacity: [0.78, 1, 0.78],
                                       }
-                                    : { scale: 1, opacity: 1 }
+                                    : { opacity: 1 }
                             }
                             transition={{
                                 duration: 2.2,
@@ -159,6 +158,10 @@ const LearnEarnToggle = () => {
                                 transition: 'color 0.3s',
                                 textTransform: 'uppercase',
                                 letterSpacing: '1px',
+                                touchAction: 'manipulation',
+                                WebkitTapHighlightColor: 'rgba(0, 90, 255, 0.3)',
+                                userSelect: 'none',
+                                WebkitUserSelect: 'none',
                             }}
                         >
                             <GraduationCap size={18} />
@@ -167,8 +170,8 @@ const LearnEarnToggle = () => {
 
                         {/* EARN side */}
                         <button
-                            onClick={(e) => {
-                                e.stopPropagation();
+                            type="button"
+                            onClick={() => {
                                 // Already on EARN — no-op, but keep cursor:pointer so it reads as a toggle
                             }}
                             aria-pressed={!isLearn}
@@ -187,6 +190,10 @@ const LearnEarnToggle = () => {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 gap: '8px',
+                                touchAction: 'manipulation',
+                                WebkitTapHighlightColor: 'rgba(0, 90, 255, 0.3)',
+                                userSelect: 'none',
+                                WebkitUserSelect: 'none',
                                 transition: 'color 0.3s',
                                 textTransform: 'uppercase',
                                 letterSpacing: '1px',
