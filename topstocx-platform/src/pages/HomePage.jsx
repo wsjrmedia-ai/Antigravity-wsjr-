@@ -2,7 +2,7 @@ import { useState, Suspense, lazy, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useAnimationFrame, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
 import {
-  Search, ArrowRight, ChevronRight, ChevronLeft,
+  ArrowRight, ChevronRight, ChevronLeft,
   BarChart3, Users, Globe, Newspaper
 } from 'lucide-react';
 import { useMarketData } from '../context/MarketDataContext';
@@ -180,8 +180,6 @@ function NewsCarousel() {
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function HomePage() {
-  const [search, setSearch] = useState('');
-
   return (
     <div style={{ color: '#fff', overflowX: 'hidden', background: '#03050e', position: 'relative' }}>
       <HomeHeader />
@@ -212,18 +210,6 @@ export default function HomePage() {
               TopStocX:<br />
               <span style={{ background: 'var(--primary-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>your edge at the summit.</span>
             </motion.h1>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.35 }}
-              className="hp-search-bar"
-              style={{ display: 'flex', alignItems: 'center', background: '#161b22', border: '1px solid #30363d', borderRadius: 10, overflow: 'hidden', maxWidth: 540, margin: '0 auto 3rem' }}
-            >
-              <div style={{ padding: '0 14px', display: 'flex', alignItems: 'center' }}><Search size={18} color="#555" /></div>
-              <input value={search} onChange={e => setSearch(e.target.value)}
-                placeholder="Search symbols — AAPL, BTC, EUR/USD…"
-                style={{ flex: 1, padding: '14px 14px 14px 0', background: 'none', border: 'none', outline: 'none', color: '#e8f0fe', fontSize: 15, fontFamily: 'inherit' }}
-              />
-            </motion.div>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
               className="hp-cta-buttons flex-stack-mobile"
               style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}
