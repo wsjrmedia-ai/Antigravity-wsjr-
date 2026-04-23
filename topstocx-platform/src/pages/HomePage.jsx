@@ -17,6 +17,7 @@ const MarketSummary      = lazy(() => import('../components/market/MarketSummary
 const GlobalInflationMap = lazy(() => import('../components/GlobalInflationMap'));
 const DNAFlowBackground  = lazy(() => import('../components/effects/DNAFlowBackground'));
 const AuroraBackground   = lazy(() => import('../components/effects/AuroraBackground'));
+const HeroBackground     = lazy(() => import('../components/effects/HeroBackground'));
 
 const Fallback = ({ h = 200 }) => <div style={{ minHeight: h }} />;
 
@@ -192,19 +193,14 @@ export default function HomePage() {
         justifyContent: 'center', alignItems: 'center',
         textAlign: 'center', padding: '110px 2rem 4rem',
         overflow: 'hidden',
-        background: `
-          radial-gradient(ellipse 60% 50% at 20% 25%, rgba(0,90,255,0.28) 0%, transparent 60%),
-          radial-gradient(ellipse 55% 45% at 80% 75%, rgba(57,181,74,0.22) 0%, transparent 60%),
-          radial-gradient(ellipse 40% 35% at 50% 50%, rgba(119,166,255,0.08) 0%, transparent 70%),
-          #03050e
-        `,
+        background: '#03050e',
         position: 'relative', zIndex: 2
       }}>
-        <div aria-hidden="true" style={{
-          position: 'absolute', inset: 0,
-          background: 'linear-gradient(180deg, transparent 0%, rgba(3,5,14,0.55) 70%, #03050e 100%)',
-          pointerEvents: 'none', zIndex: 1,
-        }} />
+        {/* Brand-compliant animated hero backdrop (blue→green palette,
+            Cygre watermark, perspective grid, summit chart lines). */}
+        <Suspense fallback={<div style={{ position: 'absolute', inset: 0, background: '#03050e' }} />}>
+          <HeroBackground />
+        </Suspense>
         <div style={{ position: 'relative', zIndex: 2, maxWidth: 900, width: '100%' }}>
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
