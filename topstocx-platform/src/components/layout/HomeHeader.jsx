@@ -23,7 +23,7 @@ const HomeHeader = () => {
 
     const navLinks = [
         { name: 'Products', hasDropdown: true },
-        { name: 'Markets', href: '/markets' },
+        { name: 'Indicators', href: '/markets' },
         { name: 'Trade Ideas', href: '/trade-ideas' },
         { name: 'Copy Trade', href: '/copy-trade' },
     ];
