@@ -3,35 +3,38 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 /**
- * BotAvatar — Topstocx 3D animated chatbot icon.
+ * BotAvatar — Topstocx 3D portrait icon.
  *
- * Pure procedural 3D. No GLB, no textures. Built from geometry + shaders
- * so it renders identically on every device and ships as ~0 bytes of
- * asset payload.
+ * Pure procedural 3D bust: stylised head + shoulders + suit silhouette,
+ * rendered with a brand-gradient shader. No photo, no texture, no
+ * rectangular background, no border — just the sculpted shape of a
+ * portrait floating in transparent space.
  *
  * Brand tokens:
  *   --brand-blue        #005AFF
  *   --brand-green       #39B54A
  *   --brand-blue-light  #77A6FF
  *   --brand-green-light #59E16C
- *   base                #03050e
  *
- * Elements:
- *   • Core sphere with custom shader: brand blue↔green gradient, animated
- *     flow, fresnel rim light, breathing scale.
- *   • Two soft "eye" glints so it reads as a friendly bot.
- *   • Three orbital rings rotating on independent axes at different speeds.
- *   • 48 brand-coloured particles orbiting the core.
- *   • Outer CSS halo that pulses on the brand gradient.
+ * Anatomy (all `mesh` primitives, no assets):
+ *   • Head        — ellipsoid sphere, gradient shader
+ *   • Hair cap    — partial sphere sliced to sit on the crown
+ *   • Neck        — short cylinder
+ *   • Shoulders   — two tapered boxes angled outward
+ *   • Torso base  — trapezoidal lathe cross-section
+ *   • Lapels      — two slim triangles forming a suit V
+ *   • Eye glints  — two white spheres with brand-blue pupils
  *
- * Variants:
- *   • manu  — blue-dominant gradient (default)
- *   • atlas — green-dominant gradient
+ * Motion:
+ *   • Gentle turntable sway + breathing scale
+ *   • Eases toward mouse cursor on desktop
+ *   • Soft pulsing halo behind the silhouette
+ *   • Full prefers-reduced-motion support
  *
- * Props (unchanged API so FinAIChatbot keeps working):
- *   size    — px hint (the parent sizes it, this is just for halo math)
- *   variant — 'manu' | 'atlas'
- *   glow    — toggles the CSS halo
+ * Props (API preserved):
+ *   size    — px hint for halo math
+ *   variant — 'manu' (blue bias) | 'atlas' (green bias)
+ *   glow    — toggle the CSS halo
  *   style   — merged into the outer wrapper
  */
 
@@ -49,7 +52,7 @@ export default function BotAvatar({ size = 80, variant = 'manu', glow = true, st
     const wrapRef = useRef(null);
     const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
-    // Desktop mouse parallax — the orb softly tracks the cursor.
+    // Desktop cursor parallax.
     useEffect(() => {
         const node = wrapRef.current;
         if (!node) return;
@@ -86,18 +89,18 @@ export default function BotAvatar({ size = 80, variant = 'manu', glow = true, st
                     aria-hidden
                     style={{
                         position: 'absolute',
-                        inset: '-10%',
+                        inset: '-8%',
                         borderRadius: '50%',
                         background: `
-                            radial-gradient(circle at 50% 50%,
+                            radial-gradient(circle at 50% 48%,
                                 rgba(${haloRGB}, 0.55) 0%,
-                                rgba(119, 166, 255, 0.28) 35%,
-                                rgba(89, 225, 108, 0.18) 55%,
+                                rgba(119, 166, 255, 0.28) 38%,
+                                rgba(89, 225, 108, 0.14) 58%,
                                 rgba(0, 0, 0, 0) 72%)
                         `,
-                        filter: 'blur(14px)',
+                        filter: 'blur(16px)',
                         pointerEvents: 'none',
-                        animation: 'tsx-bot-pulse 3.6s ease-in-out infinite',
+                        animation: 'tsx-bot-pulse 3.8s ease-in-out infinite',
                     }}
                 />
             )}
@@ -105,7 +108,7 @@ export default function BotAvatar({ size = 80, variant = 'manu', glow = true, st
             <style>{`
                 @keyframes tsx-bot-pulse {
                     0%, 100% { opacity: .70; transform: scale(1);    }
-                    50%      { opacity: 1;   transform: scale(1.06); }
+                    50%      { opacity: 1;   transform: scale(1.05); }
                 }
                 @media (prefers-reduced-motion: reduce) {
                     .tsx-bot-canvas { animation: none !important; }
@@ -114,42 +117,39 @@ export default function BotAvatar({ size = 80, variant = 'manu', glow = true, st
 
             <Canvas
                 className="tsx-bot-canvas"
-                camera={{ position: [0, 0, 3.2], fov: 35 }}
+                camera={{ position: [0, 0.1, 3.2], fov: 32 }}
                 dpr={[1, 2]}
                 gl={{ alpha: true, antialias: true, premultipliedAlpha: true }}
                 style={{ width: '100%', height: '100%', background: 'transparent' }}
             >
                 <Suspense fallback={null}>
-                    <ambientLight intensity={0.85} />
-                    <pointLight position={[ 2.2,  2.0, 2.8]} intensity={1.2} color={BRAND.blueLight} />
-                    <pointLight position={[-2.2, -1.4, 2.2]} intensity={0.8} color={BRAND.greenLight} />
-                    <BrandOrb tilt={tilt} variant={variant} />
+                    <ambientLight intensity={0.75} />
+                    <directionalLight position={[ 2.5,  3.0,  2.5]} intensity={1.1} color={BRAND.blueLight} />
+                    <directionalLight position={[-2.0, -1.0,  1.5]} intensity={0.55} color={BRAND.greenLight} />
+                    <pointLight       position={[ 0.0,  0.4,  2.2]} intensity={0.4}  color={BRAND.blue} />
+                    <Bust tilt={tilt} variant={variant} />
                 </Suspense>
             </Canvas>
         </div>
     );
 }
 
-// ── Procedural brand orb ─────────────────────────────────────────────────
-function BrandOrb({ tilt, variant }) {
-    const group   = useRef(null);
-    const core    = useRef(null);
-    const eyes    = useRef(null);
-    const ringA   = useRef(null);
-    const ringB   = useRef(null);
-    const ringC   = useRef(null);
-    const dust    = useRef(null);
+// ── Procedural stylised bust ────────────────────────────────────────────
+function Bust({ tilt, variant }) {
+    const group = useRef(null);
+    const core  = useRef(null);
 
-    // Shader material — animated blue↔green gradient with fresnel rim.
-    const coreMat = useMemo(() => {
-        const bias = variant === 'atlas' ? 0.35 : -0.15; // green-ish vs blue-ish
+    // Brand-gradient shader — used by every skin/clothing piece so the
+    // whole silhouette reads as one unified 3D portrait.
+    const brandMat = useMemo(() => {
+        const bias = variant === 'atlas' ? 0.35 : -0.15;
         return new THREE.ShaderMaterial({
             uniforms: {
-                uTime:      { value: 0 },
-                uBias:      { value: bias },
-                uColorA:    { value: new THREE.Color(BRAND.blue)       },
-                uColorB:    { value: new THREE.Color(BRAND.green)      },
-                uColorLight:{ value: new THREE.Color(BRAND.blueLight)  },
+                uTime:       { value: 0 },
+                uBias:       { value: bias },
+                uColorA:     { value: new THREE.Color(BRAND.blue)      },
+                uColorB:     { value: new THREE.Color(BRAND.green)     },
+                uColorLight: { value: new THREE.Color(BRAND.blueLight) },
             },
             vertexShader: /* glsl */`
                 varying vec3 vNormal;
@@ -173,151 +173,118 @@ function BrandOrb({ tilt, variant }) {
                 varying vec3  vPos;
                 varying vec3  vView;
 
-                // Smooth brand gradient that flows across the surface.
                 void main() {
-                    float flow    = sin(vPos.y * 2.4 + uTime * 1.4) * 0.5 + 0.5;
-                    float swirl   = sin(vPos.x * 2.0 - uTime * 0.9) * 0.5 + 0.5;
-                    float g       = clamp(vPos.y * 0.45 + 0.5 + uBias + flow * 0.18 - swirl * 0.1, 0.0, 1.0);
-                    vec3  base    = mix(uColorA, uColorB, g);
+                    // Animated vertical brand gradient with gentle swirl.
+                    float flow  = sin(vPos.y * 2.2 + uTime * 1.2) * 0.5 + 0.5;
+                    float swirl = sin(vPos.x * 1.8 - uTime * 0.7) * 0.5 + 0.5;
+                    float g     = clamp(vPos.y * 0.55 + 0.5 + uBias + flow * 0.16 - swirl * 0.08, 0.0, 1.0);
+                    vec3  base  = mix(uColorA, uColorB, g);
 
-                    // Fresnel rim — brand-light halo around the silhouette.
-                    float fres = pow(1.0 - max(dot(vNormal, vView), 0.0), 2.4);
-                    vec3  rim  = uColorLight * fres * 1.5;
+                    // Fresnel silhouette rim in brand-light so the edges
+                    // glow rather than look hard-cut.
+                    float fres = pow(1.0 - max(dot(vNormal, vView), 0.0), 2.2);
+                    vec3  rim  = uColorLight * fres * 1.45;
 
-                    // Gentle inner pulse.
-                    float pulse = 0.82 + 0.18 * sin(uTime * 2.1);
+                    // Subtle breathing pulse on overall brightness.
+                    float pulse = 0.84 + 0.16 * sin(uTime * 1.9);
 
-                    vec3 col = base * pulse + rim;
-                    gl_FragColor = vec4(col, 1.0);
+                    gl_FragColor = vec4(base * pulse + rim, 1.0);
                 }
             `,
         });
     }, [variant]);
 
-    // Orbiting particle cloud — 48 points in a thick shell around the core.
-    const dustGeo = useMemo(() => {
-        const count     = 48;
-        const positions = new Float32Array(count * 3);
-        const colors    = new Float32Array(count * 3);
-        const cBlue     = new THREE.Color(BRAND.blueLight);
-        const cGreen    = new THREE.Color(BRAND.greenLight);
-        for (let i = 0; i < count; i++) {
-            const th  = Math.random() * Math.PI * 2;
-            const ph  = Math.acos(2 * Math.random() - 1);
-            const r   = 1.25 + Math.random() * 0.45;
-            positions[i * 3]     = r * Math.sin(ph) * Math.cos(th);
-            positions[i * 3 + 1] = r * Math.sin(ph) * Math.sin(th);
-            positions[i * 3 + 2] = r * Math.cos(ph);
-            const mix = Math.random();
-            const c   = cBlue.clone().lerp(cGreen, mix);
-            colors[i * 3]     = c.r;
-            colors[i * 3 + 1] = c.g;
-            colors[i * 3 + 2] = c.b;
-        }
-        const g = new THREE.BufferGeometry();
-        g.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        g.setAttribute('color',    new THREE.BufferAttribute(colors,    3));
-        return g;
+    // Torso lathe — trapezoidal cross-section swept around Y.
+    const torsoGeo = useMemo(() => {
+        const pts = [
+            new THREE.Vector2(0.22, -1.20),
+            new THREE.Vector2(0.70, -0.90),
+            new THREE.Vector2(0.65, -0.45),
+            new THREE.Vector2(0.42, -0.20),
+            new THREE.Vector2(0.00, -0.20),
+        ];
+        return new THREE.LatheGeometry(pts, 48);
     }, []);
+
+    // Hair cap — hemisphere sliced to sit just on the crown.
+    const hairGeo = useMemo(
+        () => new THREE.SphereGeometry(0.465, 40, 32, 0, Math.PI * 2, 0, Math.PI * 0.55),
+        []
+    );
 
     useFrame((state) => {
         const t = state.clock.getElapsedTime();
-        coreMat.uniforms.uTime.value = t;
+        brandMat.uniforms.uTime.value = t;
 
-        // Whole rig — ease toward mouse tilt + slow turntable.
         if (group.current) {
-            const targetY = t * 0.28 + tilt.x * 0.38;
-            const targetX = tilt.y * -0.22;
+            const turn    = Math.sin(t * 0.45) * 0.16;
+            const targetY = turn + tilt.x * 0.32;
+            const targetX = tilt.y * -0.18;
             group.current.rotation.y += (targetY - group.current.rotation.y) * 0.08;
             group.current.rotation.x += (targetX - group.current.rotation.x) * 0.08;
+            group.current.position.y = Math.sin(t * 1.2) * 0.02;
         }
-
-        // Core — breathing scale.
         if (core.current) {
-            const s = 1 + Math.sin(t * 2.1) * 0.04;
+            const s = 1 + Math.sin(t * 1.6) * 0.015;
             core.current.scale.setScalar(s);
-        }
-
-        // Eyes — keep pinned to camera-facing front, blink every ~5s.
-        if (eyes.current) {
-            const blink = Math.max(0.1, Math.abs(Math.sin(t * 0.6)) > 0.995 ? 0.15 : 1);
-            eyes.current.scale.y += (blink - eyes.current.scale.y) * 0.25;
-        }
-
-        // Rings — each on its own axis / speed.
-        if (ringA.current) {
-            ringA.current.rotation.x =  t * 0.75;
-            ringA.current.rotation.y =  t * 0.42;
-        }
-        if (ringB.current) {
-            ringB.current.rotation.x = -t * 0.55;
-            ringB.current.rotation.z =  t * 0.68;
-        }
-        if (ringC.current) {
-            ringC.current.rotation.y =  t * 0.30;
-            ringC.current.rotation.z = -t * 0.48;
-        }
-
-        // Particle cloud — slow drift.
-        if (dust.current) {
-            dust.current.rotation.y = t * 0.14;
-            dust.current.rotation.x = Math.sin(t * 0.2) * 0.3;
         }
     });
 
     return (
-        <group ref={group}>
-            {/* Core sphere (brand gradient + fresnel) */}
-            <mesh ref={core} material={coreMat}>
-                <sphereGeometry args={[0.78, 64, 64]} />
-            </mesh>
+        <group ref={group} position={[0, -0.1, 0]}>
+            <group ref={core}>
+                {/* Head — ellipsoid (scaled sphere) */}
+                <mesh material={brandMat} position={[0, 0.78, 0]} scale={[0.44, 0.52, 0.44]}>
+                    <sphereGeometry args={[1, 48, 48]} />
+                </mesh>
 
-            {/* Eye glints — two soft white dots on the front face */}
-            <group ref={eyes} position={[0, 0.08, 0.78]}>
-                <mesh position={[-0.2, 0.04, 0]}>
-                    <sphereGeometry args={[0.07, 20, 20]} />
+                {/* Hair cap */}
+                <mesh material={brandMat} position={[0, 0.86, -0.02]} rotation={[-0.08, 0, 0]}>
+                    <primitive object={hairGeo} attach="geometry" />
+                </mesh>
+
+                {/* Neck */}
+                <mesh material={brandMat} position={[0, 0.30, 0]}>
+                    <cylinderGeometry args={[0.18, 0.22, 0.26, 28]} />
+                </mesh>
+
+                {/* Torso (lathe — suit silhouette) */}
+                <mesh material={brandMat} position={[0, 0.20, 0]}>
+                    <primitive object={torsoGeo} attach="geometry" />
+                </mesh>
+
+                {/* Left lapel */}
+                <mesh material={brandMat} position={[-0.13, -0.10, 0.30]} rotation={[0, 0.25, 0.55]}>
+                    <boxGeometry args={[0.04, 0.55, 0.06]} />
+                </mesh>
+                {/* Right lapel */}
+                <mesh material={brandMat} position={[0.13, -0.10, 0.30]} rotation={[0, -0.25, -0.55]}>
+                    <boxGeometry args={[0.04, 0.55, 0.06]} />
+                </mesh>
+
+                {/* Collar shirt triangle (slight inset) */}
+                <mesh material={brandMat} position={[0, -0.05, 0.33]} rotation={[0.15, 0, 0]}>
+                    <coneGeometry args={[0.12, 0.26, 3]} />
+                </mesh>
+
+                {/* Eye glints — soft white spheres with brand-blue pupils */}
+                <mesh position={[-0.13, 0.82, 0.36]}>
+                    <sphereGeometry args={[0.045, 18, 18]} />
                     <meshBasicMaterial color="#f6faff" />
                 </mesh>
-                <mesh position={[0.2, 0.04, 0]}>
-                    <sphereGeometry args={[0.07, 20, 20]} />
+                <mesh position={[ 0.13, 0.82, 0.36]}>
+                    <sphereGeometry args={[0.045, 18, 18]} />
                     <meshBasicMaterial color="#f6faff" />
                 </mesh>
-                {/* Eye pupils — tiny brand-blue centers */}
-                <mesh position={[-0.2, 0.04, 0.055]}>
-                    <sphereGeometry args={[0.028, 16, 16]} />
+                <mesh position={[-0.13, 0.82, 0.395]}>
+                    <sphereGeometry args={[0.018, 14, 14]} />
                     <meshBasicMaterial color={BRAND.blue} />
                 </mesh>
-                <mesh position={[0.2, 0.04, 0.055]}>
-                    <sphereGeometry args={[0.028, 16, 16]} />
+                <mesh position={[ 0.13, 0.82, 0.395]}>
+                    <sphereGeometry args={[0.018, 14, 14]} />
                     <meshBasicMaterial color={BRAND.blue} />
                 </mesh>
             </group>
-
-            {/* Orbital rings — brand colours, varying thickness + opacity */}
-            <mesh ref={ringA}>
-                <torusGeometry args={[1.08, 0.014, 16, 128]} />
-                <meshBasicMaterial color={BRAND.blueLight}  transparent opacity={0.75} />
-            </mesh>
-            <mesh ref={ringB}>
-                <torusGeometry args={[1.22, 0.010, 16, 128]} />
-                <meshBasicMaterial color={BRAND.greenLight} transparent opacity={0.65} />
-            </mesh>
-            <mesh ref={ringC}>
-                <torusGeometry args={[1.36, 0.007, 16, 128]} />
-                <meshBasicMaterial color={BRAND.blue}       transparent opacity={0.55} />
-            </mesh>
-
-            {/* Particle cloud (48 brand-coloured pips) */}
-            <points ref={dust} geometry={dustGeo}>
-                <pointsMaterial
-                    size={0.045}
-                    vertexColors
-                    transparent
-                    opacity={0.92}
-                    sizeAttenuation
-                    depthWrite={false}
-                />
-            </points>
         </group>
     );
 }
