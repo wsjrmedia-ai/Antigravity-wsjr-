@@ -12,20 +12,48 @@ const AdvancedChart = () => {
         return String(period);
     };
 
-    // Sometimes Leverate provides non-TV standard symbols, we pass it down
-    // TV handles standard forex (EURUSD) and cryptos gracefully.
+    // Map canonical symbols (as stored in LeverateContext / set by Watchlist)
+    // to exchange-qualified TradingView symbols.
+    const SYMBOL_MAP = {
+        // Stocks
+        AAPL: 'NASDAQ:AAPL',
+        TSLA: 'NASDAQ:TSLA',
+        NVDA: 'NASDAQ:NVDA',
+        MSFT: 'NASDAQ:MSFT',
+        AMZN: 'NASDAQ:AMZN',
+        GOOGL: 'NASDAQ:GOOGL',
+        META: 'NASDAQ:META',
+        AMD: 'NASDAQ:AMD',
+        // Crypto
+        BTCUSD: 'BINANCE:BTCUSDT',
+        BTCUSDT: 'BINANCE:BTCUSDT',
+        ETHUSD: 'BINANCE:ETHUSDT',
+        ETHUSDT: 'BINANCE:ETHUSDT',
+        SOLUSDT: 'BINANCE:SOLUSDT',
+        BNBUSDT: 'BINANCE:BNBUSDT',
+        XRPUSDT: 'BINANCE:XRPUSDT',
+        ADAUSDT: 'BINANCE:ADAUSDT',
+        DOGEUSDT: 'BINANCE:DOGEUSDT',
+        // Forex
+        EURUSD: 'FX:EURUSD',
+        GBPUSD: 'FX:GBPUSD',
+        USDJPY: 'FX:USDJPY',
+        AUDUSD: 'FX:AUDUSD',
+        USDCHF: 'FX:USDCHF',
+        USDCAD: 'FX:USDCAD',
+    };
+
     const tvSymbol = useMemo(() => {
-        // Simple heuristic: if it's BTCUSDT, route to BINANCE:BTCUSDT for reliability, else raw.
-        if (selectedSymbol === 'BTCUSD' || selectedSymbol === 'BTCUSDT') return 'BINANCE:BTCUSDT';
-        if (selectedSymbol === 'ETHUSD' || selectedSymbol === 'ETHUSDT') return 'BINANCE:ETHUSDT';
-        if (selectedSymbol === 'EURUSD') return 'FX:EURUSD';
-        if (selectedSymbol === 'GBPUSD') return 'FX:GBPUSD';
-        return selectedSymbol || 'NASDAQ:AAPL';
+        if (!selectedSymbol) return 'FX:EURUSD';
+        // Already prefixed with exchange? pass through.
+        if (selectedSymbol.includes(':')) return selectedSymbol;
+        return SYMBOL_MAP[selectedSymbol] || selectedSymbol;
     }, [selectedSymbol]);
 
     return (
         <div style={{ position: 'relative', width: '100%', height: '100%', background: '#131722' }}>
             <AdvancedRealTimeChart
+                key={`${tvSymbol}-${selectedPeriod}`}
                 theme="dark"
                 symbol={tvSymbol}
                 interval={formatPeriod(selectedPeriod)}

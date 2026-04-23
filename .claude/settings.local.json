@@ -2,7 +2,21 @@
   "permissions": {
     "allow": [
       "WebFetch(domain:developers.figma.com)",
-      "Bash(claude plugin:*)"
+      "Bash(claude plugin:*)",
+      "Bash(npm run *)",
+      "Bash(npx eslint *)",
+      "Bash(npx vite *)",
+      "Read(//tmp/**)",
+      "Bash(cygpath -w /tmp/awesome-claude-skills/README.md)",
+      "Read(//c/Users/user/AppData/Local/Temp/awesome-claude-skills/**)",
+      "Bash(mkdir -p ~/.skill-cache ~/.claude/skills)",
+      "Read(//c/Users/user/.claude/skills/**)",
+      "Bash(bash /tmp/install_skills.sh)",
+      "Bash(git ls-remote *)",
+      "Bash(rm -rf ~/.skill-cache/openclaw__skills)",
+      "Bash(git clone *)",
+      "Bash(awk -F/ '{print NF}')",
+      "Bash(bash /tmp/lift_skills.sh)"
     ]
   }
 }

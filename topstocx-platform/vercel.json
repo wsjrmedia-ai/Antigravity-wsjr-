@@ -4,6 +4,10 @@
     {
       "source": "/api/leverate/:path*",
       "destination": "/api/leverate.js?path=:path*"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
     }
   ]
 }

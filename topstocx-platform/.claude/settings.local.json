@@ -16,7 +16,12 @@
       "Bash(git push *)",
       "Bash(curl -sI \"https://fonts.cdnfonts.com/css/cygre\")",
       "Bash(curl -sI \"https://fonts.cdnfonts.com/css/cygre-2\")",
-      "Bash(curl -sI \"https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap\")"
+      "Bash(curl -sI \"https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap\")",
+      "Bash(unzip -l cygre_default.zip)",
+      "Bash(mkdir -p public/fonts)",
+      "Bash(unzip -o -j /c/Users/user/Downloads/cygre_default.zip 'Cygre-Regular.ttf' 'Cygre-Medium.ttf' 'Cygre-SemiBold.ttf' 'Cygre-Bold.ttf' 'Cygre-ExtraBold.ttf' 'Cygre-Black.ttf' 'Cygre-Light.ttf' 'Cygre-Book.ttf')",
+      "Bash(npm install *)",
+      "Bash(npm list *)"
     ]
   }
 }
