@@ -8,11 +8,10 @@ import { usePlan } from '../../context/PlanContext';
 import LearnEarnToggle from './LearnEarnToggle';
 
 const PRODUCTS_SUBMENU = [
-    { title: 'Supercharts',           desc: 'Market data for everyone',   to: '/chart' },
-    { title: 'Indicators & Strategies', desc: 'Powerful technical tools', to: '/indicators' },
-    { title: 'Education',             desc: 'Master the markets',         href: 'https://wsjrschool.com/' },
-    { title: 'Copy Trade',            desc: 'Follow top performers',      to: '/copy-trade' },
-    { title: 'Investments',           desc: 'WallStreet JR Investments',  href: 'https://www.wallstreetjrinvestments.com/' },
+    { title: 'Supercharts',  desc: 'Market data for everyone',  to: '/chart' },
+    { title: 'Education',    desc: 'Master the markets',        href: 'https://wsjrschool.com/' },
+    { title: 'Copy Trade',   desc: 'Follow top performers',     to: '/copy-trade' },
+    { title: 'Investments',  desc: 'WallStreet JR Investments', href: 'https://www.wallstreetjrinvestments.com/' },
 ];
 
 const HomeHeader = () => {
@@ -152,7 +151,6 @@ const HomeHeader = () => {
                                         >
                                             {[
                                                 { title: 'Supercharts', desc: 'Market data for everyone', to: '/chart' },
-                                                { title: 'Indicators & Strategies', desc: 'Powerful technical tools', to: '/indicators' },
                                                 { title: 'Education', desc: 'Master the markets', href: 'https://wsjrschool.com/' },
                                                 { title: 'Copy Trade', desc: 'Follow top performers', to: '/copy-trade' },
                                                 { title: 'Investments', desc: 'WallStreet JR Investments', href: 'https://www.wallstreetjrinvestments.com/' },
