@@ -1,51 +1,55 @@
-import { Suspense, useEffect, useRef, useState, useMemo } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useGLTF, useAnimations, Center, Bounds } from '@react-three/drei';
 import * as THREE from 'three';
 
 /**
- * BotAvatar — 3D CEO character avatar.
+ * BotAvatar — Topstocx 3D animated chatbot icon.
  *
- * Loads a real 3D mesh (GLB/GLTF) of the CEO from /public/ceo/ceo.glb,
- * plays any embedded animations (idle, talk, etc.), and falls back to a
- * soft-masked portrait PNG if the model isn't present.
+ * Pure procedural 3D. No GLB, no textures. Built from geometry + shaders
+ * so it renders identically on every device and ships as ~0 bytes of
+ * asset payload.
  *
- * HOW TO GENERATE /public/ceo/ceo.glb FROM PHOTOS:
- *   1. Meshy.ai      — upload a head-and-shoulders photo, "Image to 3D",
- *                      export as GLB.  (Free tier available.)
- *   2. Tripo AI      — same flow, image to 3D, GLB export.
- *   3. RODIN (Hyper3D) — photo to 3D mesh, high-fidelity GLB.
- *   4. Ready Player Me — create a stylised avatar that resembles him,
- *                        export GLB. Great for animated rigs.
- *   5. Character Creator 4 + Headshot — studio-grade photo-to-3D.
+ * Brand tokens:
+ *   --brand-blue        #005AFF
+ *   --brand-green       #39B54A
+ *   --brand-blue-light  #77A6FF
+ *   --brand-green-light #59E16C
+ *   base                #03050e
  *
- * The file MUST be at:  /public/ceo/ceo.glb
+ * Elements:
+ *   • Core sphere with custom shader: brand blue↔green gradient, animated
+ *     flow, fresnel rim light, breathing scale.
+ *   • Two soft "eye" glints so it reads as a friendly bot.
+ *   • Three orbital rings rotating on independent axes at different speeds.
+ *   • 48 brand-coloured particles orbiting the core.
+ *   • Outer CSS halo that pulses on the brand gradient.
  *
- * If it has baked animations they'll play on loop automatically. If not,
- * we apply procedural idle motion (turntable + breathing + parallax).
+ * Variants:
+ *   • manu  — blue-dominant gradient (default)
+ *   • atlas — green-dominant gradient
+ *
+ * Props (unchanged API so FinAIChatbot keeps working):
+ *   size    — px hint (the parent sizes it, this is just for halo math)
+ *   variant — 'manu' | 'atlas'
+ *   glow    — toggles the CSS halo
+ *   style   — merged into the outer wrapper
  */
-const CEO_MODEL_SRC   = '/ceo/ceo.glb';
-const CEO_PORTRAIT_SRC = '/ceo/ceo_3d_avatar.png';   // fallback when GLB is missing
+
+const BRAND = {
+    blue:       '#005AFF',
+    green:      '#39B54A',
+    blueLight:  '#77A6FF',
+    greenLight: '#59E16C',
+};
 
 export default function BotAvatar({ size = 80, variant = 'manu', glow = true, style = {} }) {
     const isManu  = variant === 'manu';
-    const accent  = isManu ? '#29B6E8' : '#59E16C';
     const haloRGB = isManu ? '0, 90, 255' : '57, 181, 74';
 
     const wrapRef = useRef(null);
     const [tilt, setTilt] = useState({ x: 0, y: 0 });
-    const [hasModel, setHasModel] = useState(null); // null = unknown, true = GLB, false = fallback
 
-    // Probe whether the GLB exists so we can pick the correct renderer.
-    useEffect(() => {
-        let dead = false;
-        fetch(CEO_MODEL_SRC, { method: 'HEAD' })
-            .then((r) => { if (!dead) setHasModel(r.ok); })
-            .catch(() => { if (!dead) setHasModel(false); });
-        return () => { dead = true; };
-    }, []);
-
-    // Desktop mouse parallax
+    // Desktop mouse parallax — the orb softly tracks the cursor.
     useEffect(() => {
         const node = wrapRef.current;
         if (!node) return;
@@ -82,217 +86,238 @@ export default function BotAvatar({ size = 80, variant = 'manu', glow = true, st
                     aria-hidden
                     style={{
                         position: 'absolute',
-                        inset: '-8%',
+                        inset: '-10%',
                         borderRadius: '50%',
-                        background: `radial-gradient(circle at 50% 52%, rgba(${haloRGB}, 0.55) 0%, rgba(${haloRGB}, 0.25) 35%, rgba(${haloRGB}, 0) 70%)`,
+                        background: `
+                            radial-gradient(circle at 50% 50%,
+                                rgba(${haloRGB}, 0.55) 0%,
+                                rgba(119, 166, 255, 0.28) 35%,
+                                rgba(89, 225, 108, 0.18) 55%,
+                                rgba(0, 0, 0, 0) 72%)
+                        `,
                         filter: 'blur(14px)',
                         pointerEvents: 'none',
-                        animation: 'ceoav-pulse 3.6s ease-in-out infinite',
+                        animation: 'tsx-bot-pulse 3.6s ease-in-out infinite',
                     }}
                 />
             )}
 
             <style>{`
-                @keyframes ceoav-pulse {
-                    0%, 100% { opacity: .70; transform: scale(1); }
-                    50%      { opacity: 1;   transform: scale(1.05); }
+                @keyframes tsx-bot-pulse {
+                    0%, 100% { opacity: .70; transform: scale(1);    }
+                    50%      { opacity: 1;   transform: scale(1.06); }
+                }
+                @media (prefers-reduced-motion: reduce) {
+                    .tsx-bot-canvas { animation: none !important; }
                 }
             `}</style>
 
             <Canvas
-                camera={{ position: [0, 0.1, 3.2], fov: 35 }}
+                className="tsx-bot-canvas"
+                camera={{ position: [0, 0, 3.2], fov: 35 }}
                 dpr={[1, 2]}
                 gl={{ alpha: true, antialias: true, premultipliedAlpha: true }}
                 style={{ width: '100%', height: '100%', background: 'transparent' }}
-                shadows
             >
                 <Suspense fallback={null}>
-                    <ambientLight intensity={0.9} />
-                    <hemisphereLight args={['#ffffff', '#1a2a3a', 0.5]} />
-                    <directionalLight
-                        position={[2.5, 3, 2.5]}
-                        intensity={1.2}
-                        castShadow
-                        shadow-mapSize={[1024, 1024]}
-                    />
-                    <directionalLight position={[-2, -1, 1.5]} intensity={0.45} color={accent} />
-                    <pointLight position={[0, 0.4, 2]} intensity={0.4} color={accent} />
-
-                    {hasModel === true && <CeoModel src={CEO_MODEL_SRC} tilt={tilt} />}
-                    {hasModel === false && <CeoFallbackPortrait src={CEO_PORTRAIT_SRC} tilt={tilt} />}
-                    {/* hasModel === null → still probing; render nothing for one frame */}
+                    <ambientLight intensity={0.85} />
+                    <pointLight position={[ 2.2,  2.0, 2.8]} intensity={1.2} color={BRAND.blueLight} />
+                    <pointLight position={[-2.2, -1.4, 2.2]} intensity={0.8} color={BRAND.greenLight} />
+                    <BrandOrb tilt={tilt} variant={variant} />
                 </Suspense>
             </Canvas>
         </div>
     );
 }
 
-// ── Real 3D model path ────────────────────────────────────────────────────
-function CeoModel({ src, tilt }) {
-    const group = useRef(null);
-    const { scene, animations } = useGLTF(src);
-    const { actions, names } = useAnimations(animations, group);
+// ── Procedural brand orb ─────────────────────────────────────────────────
+function BrandOrb({ tilt, variant }) {
+    const group   = useRef(null);
+    const core    = useRef(null);
+    const eyes    = useRef(null);
+    const ringA   = useRef(null);
+    const ringB   = useRef(null);
+    const ringC   = useRef(null);
+    const dust    = useRef(null);
 
-    // Play the first clip on loop if the GLB has any (idle / talk / etc.)
-    useEffect(() => {
-        if (!names || names.length === 0) return;
-        const first = actions[names[0]];
-        if (first) {
-            first.reset().fadeIn(0.3).play();
-            first.setLoop(THREE.LoopRepeat, Infinity);
-        }
-        return () => { if (first) first.fadeOut(0.2); };
-    }, [actions, names]);
-
-    // Clone once so multiple mounts don't share the same scene graph.
-    const cloned = useMemo(() => scene.clone(true), [scene]);
-
-    // Make sure every mesh casts/receives shadow and uses PBR-friendly settings
-    useEffect(() => {
-        cloned.traverse((o) => {
-            if (o.isMesh) {
-                o.castShadow    = true;
-                o.receiveShadow = true;
-                if (o.material) {
-                    o.material.envMapIntensity = 1.0;
-                    o.material.needsUpdate = true;
-                }
-            }
-        });
-    }, [cloned]);
-
-    // Procedural idle motion (only visible if the GLB has no baked animation)
-    useFrame((state) => {
-        if (!group.current) return;
-        const t = state.clock.getElapsedTime();
-
-        const turn = Math.sin(t * 0.55) * 0.18;         // turntable
-        const bob  = Math.sin(t * 1.3) * 0.03;
-        const breathe = 1 + Math.sin(t * 1.5) * 0.015;
-
-        // Ease toward mouse tilt
-        const targetY = turn + tilt.x * 0.35;
-        const targetX = tilt.y * -0.18;
-        group.current.rotation.y += (targetY - group.current.rotation.y) * 0.08;
-        group.current.rotation.x += (targetX - group.current.rotation.x) * 0.08;
-        group.current.position.y = bob;
-        group.current.scale.setScalar(breathe);
-    });
-
-    return (
-        <group ref={group}>
-            {/* Bounds auto-fits any sized model into the viewport.
-                Center re-origins the rig so rotation pivots on the chest/head. */}
-            <Bounds fit clip observe margin={1.15}>
-                <Center disableY={false}>
-                    <primitive object={cloned} />
-                </Center>
-            </Bounds>
-        </group>
-    );
-}
-
-// ── Fallback: the masked PNG we had before, for when the GLB is missing ──
-function CeoFallbackPortrait({ src, tilt }) {
-    const group = useRef(null);
-    const texture = useImageTexture(src);
-
-    const material = useMemo(() => {
-        if (!texture) return null;
+    // Shader material — animated blue↔green gradient with fresnel rim.
+    const coreMat = useMemo(() => {
+        const bias = variant === 'atlas' ? 0.35 : -0.15; // green-ish vs blue-ish
         return new THREE.ShaderMaterial({
             uniforms: {
-                map:        { value: texture },
-                uFadeInner: { value: 0.30 },
-                uFadeOuter: { value: 0.495 },
+                uTime:      { value: 0 },
+                uBias:      { value: bias },
+                uColorA:    { value: new THREE.Color(BRAND.blue)       },
+                uColorB:    { value: new THREE.Color(BRAND.green)      },
+                uColorLight:{ value: new THREE.Color(BRAND.blueLight)  },
             },
-            transparent: true,
-            depthWrite:  false,
             vertexShader: /* glsl */`
-                varying vec2 vUv;
+                varying vec3 vNormal;
+                varying vec3 vPos;
+                varying vec3 vView;
                 void main() {
-                    vUv = uv;
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    vNormal = normalize(normalMatrix * normal);
+                    vPos    = position;
+                    vec4 mv = modelViewMatrix * vec4(position, 1.0);
+                    vView   = normalize(-mv.xyz);
+                    gl_Position = projectionMatrix * mv;
                 }
             `,
             fragmentShader: /* glsl */`
-                uniform sampler2D map;
-                uniform float uFadeInner;
-                uniform float uFadeOuter;
-                varying vec2 vUv;
+                uniform float uTime;
+                uniform float uBias;
+                uniform vec3  uColorA;
+                uniform vec3  uColorB;
+                uniform vec3  uColorLight;
+                varying vec3  vNormal;
+                varying vec3  vPos;
+                varying vec3  vView;
+
+                // Smooth brand gradient that flows across the surface.
                 void main() {
-                    vec4 tex = texture2D(map, vUv);
-                    vec2 p = vUv - 0.5;
-                    p.x *= 1.05;
-                    float r = length(p);
-                    float mask = 1.0 - smoothstep(uFadeInner, uFadeOuter, r);
-                    gl_FragColor = vec4(tex.rgb, tex.a * mask);
-                    if (gl_FragColor.a < 0.01) discard;
+                    float flow    = sin(vPos.y * 2.4 + uTime * 1.4) * 0.5 + 0.5;
+                    float swirl   = sin(vPos.x * 2.0 - uTime * 0.9) * 0.5 + 0.5;
+                    float g       = clamp(vPos.y * 0.45 + 0.5 + uBias + flow * 0.18 - swirl * 0.1, 0.0, 1.0);
+                    vec3  base    = mix(uColorA, uColorB, g);
+
+                    // Fresnel rim — brand-light halo around the silhouette.
+                    float fres = pow(1.0 - max(dot(vNormal, vView), 0.0), 2.4);
+                    vec3  rim  = uColorLight * fres * 1.5;
+
+                    // Gentle inner pulse.
+                    float pulse = 0.82 + 0.18 * sin(uTime * 2.1);
+
+                    vec3 col = base * pulse + rim;
+                    gl_FragColor = vec4(col, 1.0);
                 }
             `,
         });
-    }, [texture]);
+    }, [variant]);
 
-    const { width, height } = useMemo(() => {
-        if (!texture || !texture.image) return { width: 2.1, height: 2.1 };
-        const a = texture.image.width / texture.image.height;
-        const h = 2.3;
-        return { width: h * a, height: h };
-    }, [texture]);
+    // Orbiting particle cloud — 48 points in a thick shell around the core.
+    const dustGeo = useMemo(() => {
+        const count     = 48;
+        const positions = new Float32Array(count * 3);
+        const colors    = new Float32Array(count * 3);
+        const cBlue     = new THREE.Color(BRAND.blueLight);
+        const cGreen    = new THREE.Color(BRAND.greenLight);
+        for (let i = 0; i < count; i++) {
+            const th  = Math.random() * Math.PI * 2;
+            const ph  = Math.acos(2 * Math.random() - 1);
+            const r   = 1.25 + Math.random() * 0.45;
+            positions[i * 3]     = r * Math.sin(ph) * Math.cos(th);
+            positions[i * 3 + 1] = r * Math.sin(ph) * Math.sin(th);
+            positions[i * 3 + 2] = r * Math.cos(ph);
+            const mix = Math.random();
+            const c   = cBlue.clone().lerp(cGreen, mix);
+            colors[i * 3]     = c.r;
+            colors[i * 3 + 1] = c.g;
+            colors[i * 3 + 2] = c.b;
+        }
+        const g = new THREE.BufferGeometry();
+        g.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        g.setAttribute('color',    new THREE.BufferAttribute(colors,    3));
+        return g;
+    }, []);
 
     useFrame((state) => {
-        if (!group.current) return;
         const t = state.clock.getElapsedTime();
-        const turn = Math.sin(t * 0.6) * 0.16;
-        const roll = Math.sin(t * 0.45 + 1.1) * 0.04;
-        const breathe = 1 + Math.sin(t * 1.6) * 0.02;
-        const bob = Math.sin(t * 1.3) * 0.04;
-        const targetY = turn + tilt.x * 0.28;
-        const targetX = tilt.y * -0.18;
-        group.current.rotation.y += (targetY - group.current.rotation.y) * 0.08;
-        group.current.rotation.x += (targetX - group.current.rotation.x) * 0.08;
-        group.current.rotation.z = roll;
-        group.current.scale.setScalar(breathe);
-        group.current.position.y = bob;
-    });
+        coreMat.uniforms.uTime.value = t;
 
-    if (!material) return null;
+        // Whole rig — ease toward mouse tilt + slow turntable.
+        if (group.current) {
+            const targetY = t * 0.28 + tilt.x * 0.38;
+            const targetX = tilt.y * -0.22;
+            group.current.rotation.y += (targetY - group.current.rotation.y) * 0.08;
+            group.current.rotation.x += (targetX - group.current.rotation.x) * 0.08;
+        }
+
+        // Core — breathing scale.
+        if (core.current) {
+            const s = 1 + Math.sin(t * 2.1) * 0.04;
+            core.current.scale.setScalar(s);
+        }
+
+        // Eyes — keep pinned to camera-facing front, blink every ~5s.
+        if (eyes.current) {
+            const blink = Math.max(0.1, Math.abs(Math.sin(t * 0.6)) > 0.995 ? 0.15 : 1);
+            eyes.current.scale.y += (blink - eyes.current.scale.y) * 0.25;
+        }
+
+        // Rings — each on its own axis / speed.
+        if (ringA.current) {
+            ringA.current.rotation.x =  t * 0.75;
+            ringA.current.rotation.y =  t * 0.42;
+        }
+        if (ringB.current) {
+            ringB.current.rotation.x = -t * 0.55;
+            ringB.current.rotation.z =  t * 0.68;
+        }
+        if (ringC.current) {
+            ringC.current.rotation.y =  t * 0.30;
+            ringC.current.rotation.z = -t * 0.48;
+        }
+
+        // Particle cloud — slow drift.
+        if (dust.current) {
+            dust.current.rotation.y = t * 0.14;
+            dust.current.rotation.x = Math.sin(t * 0.2) * 0.3;
+        }
+    });
 
     return (
         <group ref={group}>
-            <mesh material={material}>
-                <planeGeometry args={[width, height, 1, 1]} />
+            {/* Core sphere (brand gradient + fresnel) */}
+            <mesh ref={core} material={coreMat}>
+                <sphereGeometry args={[0.78, 64, 64]} />
             </mesh>
+
+            {/* Eye glints — two soft white dots on the front face */}
+            <group ref={eyes} position={[0, 0.08, 0.78]}>
+                <mesh position={[-0.2, 0.04, 0]}>
+                    <sphereGeometry args={[0.07, 20, 20]} />
+                    <meshBasicMaterial color="#f6faff" />
+                </mesh>
+                <mesh position={[0.2, 0.04, 0]}>
+                    <sphereGeometry args={[0.07, 20, 20]} />
+                    <meshBasicMaterial color="#f6faff" />
+                </mesh>
+                {/* Eye pupils — tiny brand-blue centers */}
+                <mesh position={[-0.2, 0.04, 0.055]}>
+                    <sphereGeometry args={[0.028, 16, 16]} />
+                    <meshBasicMaterial color={BRAND.blue} />
+                </mesh>
+                <mesh position={[0.2, 0.04, 0.055]}>
+                    <sphereGeometry args={[0.028, 16, 16]} />
+                    <meshBasicMaterial color={BRAND.blue} />
+                </mesh>
+            </group>
+
+            {/* Orbital rings — brand colours, varying thickness + opacity */}
+            <mesh ref={ringA}>
+                <torusGeometry args={[1.08, 0.014, 16, 128]} />
+                <meshBasicMaterial color={BRAND.blueLight}  transparent opacity={0.75} />
+            </mesh>
+            <mesh ref={ringB}>
+                <torusGeometry args={[1.22, 0.010, 16, 128]} />
+                <meshBasicMaterial color={BRAND.greenLight} transparent opacity={0.65} />
+            </mesh>
+            <mesh ref={ringC}>
+                <torusGeometry args={[1.36, 0.007, 16, 128]} />
+                <meshBasicMaterial color={BRAND.blue}       transparent opacity={0.55} />
+            </mesh>
+
+            {/* Particle cloud (48 brand-coloured pips) */}
+            <points ref={dust} geometry={dustGeo}>
+                <pointsMaterial
+                    size={0.045}
+                    vertexColors
+                    transparent
+                    opacity={0.92}
+                    sizeAttenuation
+                    depthWrite={false}
+                />
+            </points>
         </group>
     );
 }
-
-function useImageTexture(src) {
-    const [tex, setTex] = useState(null);
-    useEffect(() => {
-        let disposed = false;
-        const loader = new THREE.TextureLoader();
-        loader.setCrossOrigin('anonymous');
-        loader.load(
-            src,
-            (t) => {
-                if (disposed) { t.dispose(); return; }
-                t.colorSpace  = THREE.SRGBColorSpace;
-                t.anisotropy  = 8;
-                t.minFilter   = THREE.LinearMipmapLinearFilter;
-                t.magFilter   = THREE.LinearFilter;
-                t.needsUpdate = true;
-                setTex(t);
-            },
-            undefined,
-            () => setTex(null),
-        );
-        return () => {
-            disposed = true;
-            setTex((t) => { if (t) t.dispose(); return null; });
-        };
-    }, [src]);
-    return tex;
-}
-
-// Preload the GLB so the first chat open isn't janky.
-useGLTF.preload(CEO_MODEL_SRC);

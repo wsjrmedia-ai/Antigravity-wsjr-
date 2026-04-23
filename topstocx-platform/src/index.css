@@ -553,3 +553,252 @@ body::before {
     scroll-behavior: auto !important;
   }
 }
+
+/* ============================================================
+   RESPONSIVE HARDENING LAYER
+   Catches remaining inline-style offenders across pages +
+   components so every view works down to a 360px viewport.
+   ============================================================ */
+
+/* Global — never let anything force horizontal scroll */
+html, body, #root {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* Media — hard cap on any stray oversized asset */
+img, video, iframe, canvas, svg, picture, embed, object {
+  max-width: 100%;
+  height: auto;
+}
+iframe { border: 0; }
+
+/* Any inline grid that tries for 4+ columns collapses gracefully */
+@media (max-width: 1024px) {
+  [style*="repeat(5, 1fr)"],
+  [style*="repeat(6, 1fr)"],
+  [style*="repeat(7, 1fr)"],
+  [style*="repeat(8, 1fr)"] {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+@media (max-width: 768px) {
+  [style*="repeat(3, 1fr)"],
+  [style*="repeat(4, 1fr)"],
+  [style*="repeat(5, 1fr)"],
+  [style*="repeat(6, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem !important;
+  }
+}
+@media (max-width: 480px) {
+  [style*="repeat(2, 1fr)"],
+  [style*="repeat(3, 1fr)"],
+  [style*="repeat(4, 1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Inline padding that's too big on phones */
+@media (max-width: 768px) {
+  [style*="padding: 4rem"],
+  [style*="padding: 5rem"],
+  [style*="padding: 6rem"],
+  [style*="padding: 8rem"] {
+    padding: 2rem 1.25rem !important;
+  }
+  [style*="padding: '4rem"],
+  [style*="padding: '5rem"],
+  [style*="padding: '6rem"],
+  [style*="padding: '8rem"] {
+    padding: 2rem 1.25rem !important;
+  }
+}
+
+/* Hero section on HomePage — tighten padding on small viewports */
+@media (max-width: 768px) {
+  .hp-hero { padding: 90px 1rem 2.5rem !important; }
+}
+@media (max-width: 480px) {
+  .hp-hero { padding: 80px 0.75rem 2rem !important; min-height: auto !important; }
+}
+
+/* Gigantic inline fontSize → fluid clamp (covers both the DOM form
+   `font-size: 72px` and React's dev-tools style-object form) */
+@media (max-width: 900px) {
+  [style*="font-size: 72"], [style*="fontSize: 72"],
+  [style*="font-size:72"],  [style*="fontSize: '72"],
+  [style*="font-size: 80"], [style*="fontSize: 80"],
+  [style*="font-size:80"],  [style*="fontSize: '80"],
+  [style*="font-size: 96"], [style*="fontSize: 96"],
+  [style*="font-size:96"],  [style*="fontSize: '96"] {
+    font-size: clamp(32px, 7vw, 56px) !important;
+    line-height: 1.1 !important;
+  }
+  [style*="font-size: 60"], [style*="fontSize: 60"],
+  [style*="font-size:60"],  [style*="fontSize: '60"] {
+    font-size: clamp(28px, 6vw, 44px) !important;
+    line-height: 1.15 !important;
+  }
+  [style*="font-size: 40"], [style*="fontSize: 40"],
+  [style*="font-size:40"],  [style*="fontSize: '40"] {
+    font-size: clamp(22px, 4.5vw, 32px) !important;
+  }
+}
+
+/* HomePage footer grid */
+@media (max-width: 900px) {
+  .hp-footer-grid,
+  footer [style*="repeat(4, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 2rem !important;
+  }
+}
+@media (max-width: 480px) {
+  .hp-footer-grid,
+  footer [style*="repeat(4, 1fr)"],
+  footer [style*="repeat(2, 1fr)"] {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+}
+
+/* NewsCarousel — cards shouldn't be wider than the viewport */
+@media (max-width: 480px) {
+  .hp-news-card,
+  [class*="news-card"] {
+    min-width: calc(100vw - 2rem) !important;
+    max-width: calc(100vw - 2rem) !important;
+  }
+}
+
+/* TradingView / generic embed containers with big fixed heights */
+@media (max-width: 900px) {
+  [style*="height: 700"],
+  [style*="height: '700"],
+  [style*="height: 600"],
+  [style*="height: '600"] {
+    height: clamp(320px, 70vh, 520px) !important;
+  }
+}
+
+/* Textareas that are oversized on phones */
+@media (max-width: 480px) {
+  textarea[style*="minHeight: 80"],
+  textarea[style*="minHeight: '80"] {
+    min-height: 60px !important;
+  }
+}
+
+/* Flex rows that carry wide children — let them wrap */
+@media (max-width: 768px) {
+  [style*="flexDirection: 'row'"]:not([style*="flexWrap"]) {
+    flex-wrap: wrap !important;
+  }
+}
+
+/* ----------------------------------------------------------
+   Topstocx trading platform (/topstocx) — the Workspace +
+   Sidebar + BottomPanel rig is desktop-first with hardcoded
+   pixel widths. Make it usable on tablets and phones.
+   ---------------------------------------------------------- */
+
+/* Sidebar rail — at phone widths collapse to a thin icon bar */
+@media (max-width: 768px) {
+  .topstocx-sidebar,
+  [class*="topstocx"] [style*="width: '56px'"],
+  [class*="topstocx"] [style*="width: 56"] {
+    width: 48px !important;
+  }
+}
+@media (max-width: 480px) {
+  .topstocx-sidebar { width: 44px !important; }
+}
+
+/* Watchlist column (380px fixed) — shrink, then stack under chart */
+@media (max-width: 1024px) {
+  [style*="width: '380px'"],
+  [style*="width: 380"] {
+    width: 300px !important;
+  }
+}
+@media (max-width: 768px) {
+  .topstocx-workspace {
+    flex-direction: column !important;
+  }
+  .topstocx-watchlist,
+  [style*="width: '380px'"],
+  [style*="width: '300px'"][data-topstocx-pane] {
+    width: 100% !important;
+    max-height: 40vh;
+    overflow-y: auto;
+  }
+}
+
+/* BottomPanel (260px) — smaller on phones + tablets */
+@media (max-width: 1024px) {
+  .topstocx-bottompanel,
+  [style*="height: '260px'"] {
+    height: 200px !important;
+  }
+}
+@media (max-width: 480px) {
+  .topstocx-bottompanel,
+  [style*="height: '260px'"] {
+    height: 160px !important;
+  }
+}
+
+/* Lightweight-charts containers */
+.tv-chart-container,
+[class*="chart-container"] {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* Horizontal overflow guard for any table/chart row */
+.scroll-x-mobile {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+@media (max-width: 768px) {
+  table { display: block; overflow-x: auto; white-space: nowrap; }
+}
+
+/* Carousels with position:absolute arrows — keep them inside the viewport */
+@media (max-width: 600px) {
+  [class*="carousel"] [style*="left: '2rem'"],
+  [class*="carousel"] [style*="left: 2rem"] { left: 0.5rem !important; }
+  [class*="carousel"] [style*="right: '2rem'"],
+  [class*="carousel"] [style*="right: 2rem"] { right: 0.5rem !important; }
+}
+
+/* Sticky sidebars shouldn't cling past the header on mobile */
+@media (max-width: 768px) {
+  [style*="position: 'sticky'"][style*="top: '100px'"],
+  [style*="position:sticky"][style*="top: 100"] {
+    position: static !important;
+    top: auto !important;
+  }
+}
+
+/* Auth / form pages — keep inputs tap-friendly */
+@media (max-width: 480px) {
+  input, select, textarea, button {
+    font-size: 16px; /* iOS zoom guard */
+  }
+}
+
+/* Safe-area respect for notched phones */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* Ensure the hero grid background never overflows its section */
+.hp-hero { position: relative; overflow: hidden; }
+.hero-bg { contain: layout paint; }
