@@ -202,38 +202,16 @@ export default function HomePage() {
           <HeroBackground />
         </Suspense>
         <div style={{ position: 'relative', zIndex: 2, maxWidth: 900, width: '100%' }}>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 8,
-                padding: '6px 16px', borderRadius: 20,
-                border: '1px solid rgba(0, 90, 255,0.3)',
-                background: 'rgba(0, 90, 255,0.08)',
-                fontSize: 13, color: '#005AFF', fontWeight: 600, marginBottom: '1.5rem',
-              }}
-            >
-              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#005AFF',
-                boxShadow: '0 0 8px #005AFF', display: 'inline-block' }} />
-              Real-time data.
-            </motion.div>
             <LearnEarnToggle />
             <motion.h1
               className="font-primary"
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              style={{ fontSize: 'clamp(42px, 7vw, 88px)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-2px', marginBottom: '1.5rem' }}
+              style={{ fontSize: 'clamp(42px, 7vw, 88px)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-2px', marginBottom: '2.5rem' }}
             >
               TopStocX:<br />
               <span style={{ background: 'var(--primary-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>your edge at the summit.</span>
             </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.25 }}
-              style={{ fontSize: 18, color: '#8b949e', maxWidth: 600, margin: '0 auto 2.5rem', lineHeight: 1.7 }}
-            >
-              Timeless thinking. Real-time data. For those who do not compromise being at the top.
-            </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.35 }}
