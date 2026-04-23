@@ -23,7 +23,7 @@ const LearnEarnToggle = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 gap: 10,
-                margin: '-3rem auto 1.75rem auto', // pulled further up per feedback
+                margin: '-0.5rem auto 1.5rem auto', // pulled up + tighter bottom
             }}
         >
             {/* Helper hint — disambiguates that this is a switch */}
