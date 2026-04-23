@@ -1,9 +1,12 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react';
 import { AdvancedRealTimeChart } from 'react-ts-tradingview-widgets';
+import { Maximize2, Minimize2 } from 'lucide-react';
 import { useLeverate } from '../../context/LeverateContext';
 
 const AdvancedChart = () => {
     const { selectedSymbol, selectedPeriod } = useLeverate();
+    const wrapperRef = useRef(null);
+    const [isFullscreen, setIsFullscreen] = useState(false);
 
     // Map Leverate periods to TradingView format
     const formatPeriod = (period) => {
@@ -50,8 +53,46 @@ const AdvancedChart = () => {
         return SYMBOL_MAP[selectedSymbol] || selectedSymbol;
     }, [selectedSymbol]);
 
+    // Track native fullscreen state (user can also exit with Esc)
+    useEffect(() => {
+        const onChange = () => {
+            setIsFullscreen(Boolean(document.fullscreenElement));
+        };
+        document.addEventListener('fullscreenchange', onChange);
+        document.addEventListener('webkitfullscreenchange', onChange);
+        return () => {
+            document.removeEventListener('fullscreenchange', onChange);
+            document.removeEventListener('webkitfullscreenchange', onChange);
+        };
+    }, []);
+
+    const toggleFullscreen = useCallback(async () => {
+        const el = wrapperRef.current;
+        if (!el) return;
+
+        try {
+            if (!document.fullscreenElement) {
+                if (el.requestFullscreen) await el.requestFullscreen();
+                else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+            } else {
+                if (document.exitFullscreen) await document.exitFullscreen();
+                else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
+            }
+        } catch (err) {
+            console.warn('[AdvancedChart] fullscreen toggle failed:', err);
+        }
+    }, []);
+
     return (
-        <div style={{ position: 'relative', width: '100%', height: '100%', background: '#131722' }}>
+        <div
+            ref={wrapperRef}
+            style={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                background: '#131722',
+            }}
+        >
             <AdvancedRealTimeChart
                 key={`${tvSymbol}-${selectedPeriod}`}
                 theme="dark"
@@ -68,6 +109,43 @@ const AdvancedChart = () => {
                 width="100%"
                 height="100%"
             />
+
+            {/* Fullscreen toggle overlay */}
+            <button
+                type="button"
+                onClick={toggleFullscreen}
+                aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+                title={isFullscreen ? 'Exit fullscreen (Esc)' : 'Fullscreen chart'}
+                style={{
+                    position: 'absolute',
+                    top: 10,
+                    right: 12,
+                    zIndex: 20,
+                    width: 34,
+                    height: 34,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'rgba(19, 23, 34, 0.75)',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    borderRadius: 6,
+                    color: '#e6e9ef',
+                    cursor: 'pointer',
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
+                    transition: 'background 0.15s ease, border-color 0.15s ease',
+                }}
+                onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(0, 90, 255, 0.25)';
+                    e.currentTarget.style.borderColor = 'rgba(0, 90, 255, 0.55)';
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(19, 23, 34, 0.75)';
+                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)';
+                }}
+            >
+                {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+            </button>
         </div>
     );
 };
