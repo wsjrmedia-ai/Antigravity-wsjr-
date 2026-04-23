@@ -408,7 +408,7 @@ export default function HomePage() {
                 padding: '0.9rem 2.5rem', background: 'var(--primary-gradient)', color: '#fff',
                 borderRadius: 8, textDecoration: 'none', fontSize: 16, fontWeight: 800, transition: 'all 0.2s',
               }}>
-                Sign in — it's free
+                Sign in
               </Link>
               <Link to="/chart" style={{
                 padding: '0.9rem 2.5rem', border: '1px solid #30363d', color: '#e8f0fe',
