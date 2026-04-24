@@ -44,7 +44,7 @@ const schoolsData = [
         title: 'School of Business\n& Management',
         acronym: 'SOM',
         subtitle: 'Leading Businesses Through Strategy,\nSystems & Execution',
-        desc: 'Understand how businesses actually operate. Turn strategy into execution by mastering modern operations, performance metrics, and AI-supported decision-making.',
+        desc: 'Turn strategy into execution. Master modern operations, performance metrics, and AI-supported decision-making to lead high-performing businesses.',
         ideal: 'Ideal for:\nBusiness operations analysts, strategy\nassociates, and performance managers.',
         image: '/images/figma/school-management.jpg'
     }
