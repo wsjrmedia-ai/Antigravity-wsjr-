@@ -6,6 +6,14 @@
       "destination": "/api/leverate.js?path=:path*"
     },
     {
+      "source": "/api/ai/:path*",
+      "destination": "https://antigravity-wsjr.vercel.app/api/ai/:path*"
+    },
+    {
+      "source": "/api/chat",
+      "destination": "https://antigravity-wsjr.vercel.app/api/chat"
+    },
+    {
       "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
