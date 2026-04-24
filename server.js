@@ -234,6 +234,103 @@ async function callPerplexity({ systemPrompt, messages, tier = 'free', userConte
 }
 
 // ─────────────────────────────────────────────────────────────
+// STREAMING PERPLEXITY CALL
+//
+// Same inputs as callPerplexity; calls `onDelta(chunkText)` for every
+// content delta Perplexity emits, and returns a summary object with
+// the full text + citations + model after the stream ends.
+//
+// Why we own this in-process instead of letting the browser hit
+// Perplexity directly: the API key stays server-side, tier-based
+// rate limiting still applies, and we get one choke point to swap
+// providers later without touching the frontend.
+// ─────────────────────────────────────────────────────────────
+async function streamPerplexity({ systemPrompt, messages, tier = 'free', userContext = '', onDelta }) {
+  const model     = PERPLEXITY_MODELS[tier] || PERPLEXITY_MODELS.free;
+  const maxTokens = TIER_LIMITS[tier]?.maxTokens || 400;
+
+  const enrichedMessages = messages.map((m, i) => {
+    if (i === messages.length - 1 && m.role === 'user' && userContext) {
+      return { ...m, content: userContext + m.content };
+    }
+    return m;
+  });
+
+  const payload = {
+    model,
+    max_tokens: maxTokens,
+    temperature: 0.2,
+    stream: true,
+    messages: [
+      { role: 'system', content: systemPrompt },
+      ...enrichedMessages,
+    ],
+    return_citations: tier !== 'free',
+    search_domain_filter: [
+      'finance.yahoo.com','bloomberg.com','reuters.com',
+      'investing.com','tradingview.com','cnbc.com',
+      'marketwatch.com','ft.com',
+    ],
+    search_recency_filter: 'day',
+  };
+
+  const response = await axios.post(
+    `${PERPLEXITY_BASE}/chat/completions`,
+    payload,
+    {
+      headers: {
+        'Authorization': `Bearer ${PERPLEXITY_API_KEY}`,
+        'Content-Type': 'application/json',
+        'Accept': 'text/event-stream',
+      },
+      responseType: 'stream',
+      timeout: 60000,
+    }
+  );
+
+  let fullText = '';
+  let citations = [];
+  let finalModel = model;
+  let usage = null;
+  let buffer = '';
+
+  // SSE frames are separated by a blank line. Each frame contains one
+  // or more `data: ...` lines. We buffer chunks and split on `\n\n`.
+  for await (const chunk of response.data) {
+    buffer += chunk.toString('utf-8');
+    let idx;
+    while ((idx = buffer.indexOf('\n\n')) !== -1) {
+      const frame = buffer.slice(0, idx);
+      buffer = buffer.slice(idx + 2);
+
+      for (const line of frame.split('\n')) {
+        if (!line.startsWith('data:')) continue;
+        const data = line.slice(5).trim();
+        if (!data) continue;
+        if (data === '[DONE]') return { text: fullText, citations, model: finalModel, usage };
+
+        let json;
+        try { json = JSON.parse(data); } catch { continue; }
+
+        // Perplexity's streamed frames carry the same top-level shape
+        // as non-streamed: choices[0].delta.content, plus a citations
+        // array and usage on the final frame.
+        const delta = json.choices?.[0]?.delta?.content;
+        if (delta) {
+          fullText += delta;
+          try { onDelta?.(delta); } catch {}
+        }
+        if (json.citations) citations = json.citations;
+        if (json.model)     finalModel = json.model;
+        if (json.usage)     usage = json.usage;
+      }
+    }
+  }
+
+  return { text: fullText, citations, model: finalModel, usage };
+}
+
+// ─────────────────────────────────────────────────────────────
 // MIDDLEWARE: Verify JWT
 // ─────────────────────────────────────────────────────────────
 function authMiddleware(req, res, next) {
@@ -450,6 +547,72 @@ app.post('/api/ai/analyze', optionalAuth, tierMiddleware, async (req, res) => {
   const systemPrompt = AI_INTENT_PROMPTS[intent](context);
   const userMessage  = query || 'Proceed.';
 
+  // Stream mode: client asks for it via Accept header OR `?stream=1`.
+  // We never stream parse_search — the whole value is the final JSON.
+  const wantsStream =
+    intent !== 'parse_search' &&
+    (req.query.stream === '1' ||
+     (req.headers.accept || '').includes('text/event-stream'));
+
+  if (wantsStream) {
+    res.writeHead(200, {
+      'Content-Type':  'text/event-stream',
+      'Cache-Control': 'no-cache, no-transform',
+      'Connection':    'keep-alive',
+      'X-Accel-Buffering': 'no',   // disable proxy buffering (nginx)
+    });
+
+    // Heartbeat every 15s so idle intermediaries don't close the
+    // connection mid-stream. Clients ignore comment-only frames.
+    const heartbeat = setInterval(() => {
+      try { res.write(`: ping\n\n`); } catch {}
+    }, 15000);
+
+    // Write helper — one SSE event per call.
+    const sse = (event, data) => {
+      try {
+        res.write(`event: ${event}\n`);
+        res.write(`data: ${JSON.stringify(data)}\n\n`);
+      } catch {}
+    };
+
+    // If the client disconnects, bail early so we don't keep billing
+    // Perplexity for tokens no one will read.
+    let clientGone = false;
+    req.on('close', () => { clientGone = true; });
+
+    try {
+      sse('meta', { intent, tier });
+
+      const result = await streamPerplexity({
+        systemPrompt,
+        messages: [{ role: 'user', content: userMessage }],
+        tier,
+        userContext: '',
+        onDelta: (delta) => {
+          if (clientGone) return;
+          sse('delta', { text: delta });
+        },
+      });
+
+      sse('done', {
+        text:      result.text,
+        citations: result.citations,
+        model:     result.model,
+        usage:     result.usage,
+        remaining: req.remaining,
+      });
+    } catch (err) {
+      console.error('[/api/ai/analyze stream]', intent, err?.response?.data || err.message);
+      sse('error', { error: 'AI service error' });
+    } finally {
+      clearInterval(heartbeat);
+      res.end();
+    }
+    return;
+  }
+
+  // Non-streaming path (JSON response) — unchanged contract.
   try {
     const result = await callPerplexity({
       systemPrompt,

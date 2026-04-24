@@ -15,7 +15,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Newspaper, RefreshCw, AlertCircle, ExternalLink } from 'lucide-react';
 import { useAI } from '../../context/AIContext';
-import { marketBrief } from '../../services/topstocxAI';
+import { streamMarketBrief } from '../../services/topstocxAI';
 
 export default function MarketBriefCard() {
   const { getAIContext } = useAI();
@@ -32,20 +32,29 @@ export default function MarketBriefCard() {
 
     setLoading(true);
     setError(null);
+    setData({ text: '', citations: [] });
 
     try {
       const ctx = getAIContext();
-      const res = await marketBrief(
+      const final = await streamMarketBrief(
         {
           // Brief doesn't need a specific symbol — it's market-wide.
           // We pass tier + timeOfDay so the prompt can be tuned.
           tier: ctx.tier,
           timeOfDay: ctx.timeOfDay,
         },
-        { signal: ctrl.signal }
+        {
+          signal: ctrl.signal,
+          onDelta: (chunk) => {
+            setData(prev => ({
+              ...(prev || {}),
+              text: (prev?.text || '') + chunk,
+            }));
+          },
+        }
       );
       if (ctrl.signal.aborted) return;
-      setData(res);
+      setData(final);
     } catch (e) {
       if (e.name === 'AbortError') return;
       setError(e.message || 'Brief unavailable.');
@@ -131,7 +140,7 @@ export default function MarketBriefCard() {
         </button>
       </header>
 
-      {loading && !data && (
+      {loading && !data?.text && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
           {[90, 78, 85].map((w, i) => (
             <div

@@ -17,7 +17,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, X, RefreshCw, AlertCircle, ExternalLink } from 'lucide-react';
 import { useAI } from '../../context/AIContext';
-import { explainChart } from '../../services/topstocxAI';
+import { streamExplainChart } from '../../services/topstocxAI';
 
 export default function ExplainChartPanel() {
   const { getAIContext } = useAI();
@@ -27,8 +27,9 @@ export default function ExplainChartPanel() {
   const [error, setError] = useState(null);
   const abortRef = useRef(null);
 
-  // Re-run analysis. Cancels any in-flight request first so a user
-  // who taps twice doesn't see stale results overwrite fresh ones.
+  // Re-run analysis. Streams tokens as they arrive so the panel fills
+  // in word-by-word instead of sitting on a spinner. Cancels any
+  // in-flight request first.
   const run = useCallback(async () => {
     abortRef.current?.abort();
     const ctrl = new AbortController();
@@ -36,17 +37,32 @@ export default function ExplainChartPanel() {
 
     setLoading(true);
     setError(null);
+    // Reset text so each run starts empty — otherwise the old answer
+    // would stay visible while the new one streamed over it.
+    setData({ text: '', citations: [], model: null });
 
     try {
       const ctx = getAIContext();
-      // If we literally don't have a price yet (WS still connecting),
-      // bail early — sending "price: null" to the AI produces fluff.
       if (!ctx.price) {
         throw new Error('Waiting for live price feed. Try again in a second.');
       }
-      const res = await explainChart(ctx, { signal: ctrl.signal });
+
+      const final = await streamExplainChart(ctx, {
+        signal: ctrl.signal,
+        onDelta: (chunk) => {
+          // Append each token as it arrives. Functional setState so
+          // rapid deltas don't race on stale state.
+          setData(prev => ({
+            ...(prev || {}),
+            text: (prev?.text || '') + chunk,
+          }));
+        },
+      });
+
       if (ctrl.signal.aborted) return;
-      setData(res);
+      // Final event carries citations + model, which only arrive at
+      // the end of the stream.
+      setData(final);
     } catch (e) {
       if (e.name === 'AbortError') return;
       setError(e.message || 'Something went wrong.');
@@ -176,7 +192,9 @@ export default function ExplainChartPanel() {
             </header>
 
             <div style={{ padding: '14px' }}>
-              {loading && !data && <SkeletonLines />}
+              {/* Show skeleton only until the first token lands. After that,
+                  the text itself is the progress indicator. */}
+              {loading && !data?.text && <SkeletonLines />}
 
               {error && (
                 <div

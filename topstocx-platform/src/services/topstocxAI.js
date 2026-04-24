@@ -94,6 +94,119 @@ export async function analyzeWithAI({ intent, context = {}, query = '', signal }
   return data;
 }
 
+/**
+ * Stream the AI response token-by-token via SSE.
+ *
+ * Same inputs as analyzeWithAI, plus two callbacks:
+ *   onDelta(textChunk)  — fires for every partial content chunk
+ *   onDone({text, citations, model, usage, remaining}) — fires once
+ *                                                        at the end
+ *
+ * Returns a Promise that resolves with the same payload onDone gets.
+ * Throws on network or server errors (onError gets called too, if
+ * you prefer the callback shape).
+ *
+ * Why a hand-rolled fetch + ReadableStream reader instead of the
+ * EventSource API? EventSource can't set Authorization headers and
+ * can't POST — both are deal-breakers for us.
+ */
+export async function streamAIAnalysis({
+  intent,
+  context = {},
+  query = '',
+  signal,
+  onDelta,
+  onDone,
+  onError,
+}) {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  const sessionId =
+    typeof window !== 'undefined'
+      ? (window.__tsx_session_id ||= `s_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`)
+      : 'server';
+
+  const res = await fetch(`${API_BASE}/api/ai/analyze`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'text/event-stream',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      'x-session-id': sessionId,
+    },
+    body: JSON.stringify({ intent, context, query }),
+    signal,
+  });
+
+  if (!res.ok || !res.body) {
+    let body;
+    try { body = await res.json(); } catch { body = { error: `HTTP ${res.status}` }; }
+    const err = new Error(body.error || `AI stream failed: ${res.status}`);
+    err.status = res.status;
+    err.body   = body;
+    try { onError?.(err); } catch {}
+    throw err;
+  }
+
+  const reader  = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  let finalPayload = null;
+
+  // SSE parser — Perplexity/our server emit `event: <name>\ndata: <json>\n\n`.
+  const handleFrame = (frame) => {
+    const lines = frame.split('\n');
+    let event = 'message';
+    let dataStr = '';
+    for (const line of lines) {
+      if (line.startsWith('event:')) event = line.slice(6).trim();
+      else if (line.startsWith('data:')) dataStr += line.slice(5).trim();
+      // Lines starting with ':' are comments (heartbeats) — ignore.
+    }
+    if (!dataStr) return;
+    let data;
+    try { data = JSON.parse(dataStr); } catch { return; }
+
+    if (event === 'delta' && data.text) {
+      try { onDelta?.(data.text); } catch {}
+    } else if (event === 'done') {
+      finalPayload = data;
+      try { onDone?.(data); } catch {}
+    } else if (event === 'error') {
+      const err = new Error(data.error || 'Stream error');
+      try { onError?.(err); } catch {}
+      throw err;
+    }
+  };
+
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      let idx;
+      while ((idx = buffer.indexOf('\n\n')) !== -1) {
+        const frame = buffer.slice(0, idx);
+        buffer = buffer.slice(idx + 2);
+        handleFrame(frame);
+      }
+    }
+    // Flush any trailing frame that didn't get a double-newline.
+    if (buffer.trim()) handleFrame(buffer);
+  } catch (e) {
+    if (e.name === 'AbortError') throw e;
+    try { onError?.(e); } catch {}
+    throw e;
+  }
+
+  // If we streamed but never got a `done` event (network dropped),
+  // fail loudly rather than silently return null — matches our
+  // "no lying UI" rule.
+  if (!finalPayload) {
+    throw new Error('Stream ended without a final payload.');
+  }
+  return finalPayload;
+}
+
 /** Convenience wrappers so components don't repeat intent strings. */
 export const explainChart = (ctx, opts = {}) =>
   analyzeWithAI({ intent: 'explain_chart', context: ctx, ...opts });
@@ -114,3 +227,16 @@ export const parseSearch = (query, availableSymbols, opts = {}) =>
     query,
     ...opts,
   });
+
+/** Streaming wrappers — same shape as the non-streaming ones. */
+export const streamExplainChart = (ctx, opts = {}) =>
+  streamAIAnalysis({ intent: 'explain_chart', context: ctx, ...opts });
+
+export const streamMarketBrief = (ctx, opts = {}) =>
+  streamAIAnalysis({ intent: 'market_brief', context: ctx, ...opts });
+
+export const streamTradeIdea = (ctx, opts = {}) =>
+  streamAIAnalysis({ intent: 'trade_idea', context: ctx, ...opts });
+
+export const streamRiskCheck = (ctx, opts = {}) =>
+  streamAIAnalysis({ intent: 'risk_check', context: ctx, ...opts });

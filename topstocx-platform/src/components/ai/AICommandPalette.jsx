@@ -25,7 +25,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, X, CornerDownLeft, Command as CommandIcon, ExternalLink, AlertCircle } from 'lucide-react';
 import { useAI } from '../../context/AIContext';
 import { useLeverate } from '../../context/LeverateContext';
-import { analyzeWithAI } from '../../services/topstocxAI';
+import { analyzeWithAI, streamAIAnalysis } from '../../services/topstocxAI';
 
 // Recognised symbols — kept in sync with the watchlist. If the user
 // types "switch to TSLA" we match against this set.
@@ -174,7 +174,9 @@ export default function AICommandPalette() {
 
     setLoading(true);
     setError(null);
-    setResult(null);
+    // Pre-populate so the answer area flips from skeleton to live text
+    // at the moment the first token arrives — no blank frame in between.
+    setResult({ intent: r.intent, text: '', citations: [] });
 
     try {
       const ctx = getAIContext();
@@ -183,13 +185,20 @@ export default function AICommandPalette() {
         context: { ...ctx, watchlist: KNOWN_SYMBOLS, positions },
         query: r.query || q,
         signal: ctrl.signal,
+        onDelta: (chunk) => {
+          setResult(prev => ({
+            ...(prev || { intent: r.intent }),
+            text: (prev?.text || '') + chunk,
+          }));
+        },
       };
-      const res = await analyzeWithAI(body);
+      const final = await streamAIAnalysis(body);
       if (ctrl.signal.aborted) return;
-      setResult({ intent: r.intent, ...res });
+      setResult({ intent: r.intent, ...final });
     } catch (e) {
       if (e.name === 'AbortError') return;
       setError(e.message || 'Something went wrong.');
+      setResult(null);
     } finally {
       if (!ctrl.signal.aborted) setLoading(false);
     }
@@ -402,7 +411,7 @@ export default function AICommandPalette() {
                   </>
                 )}
 
-                {loading && (
+                {loading && !result?.text && (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                     {[92, 78, 88, 70].map((w, i) => (
                       <div
@@ -436,7 +445,7 @@ export default function AICommandPalette() {
                   </div>
                 )}
 
-                {result && !loading && !error && (
+                {result?.text && !error && (
                   <div>
                     <div style={{
                       display: 'inline-block',

@@ -20,7 +20,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Target, AlertTriangle, Sparkles, RefreshCw, TrendingUp, TrendingDown, Shield, ExternalLink } from 'lucide-react';
 import { useAI } from '../../context/AIContext';
-import { tradeIdea } from '../../services/topstocxAI';
+import { streamTradeIdea } from '../../services/topstocxAI';
 
 export default function TradeIdeaTab() {
   const { getAIContext } = useAI();
@@ -41,15 +41,26 @@ export default function TradeIdeaTab() {
 
     setLoading(true);
     setError(null);
+    // Reset so previous idea doesn't flash while the new one streams.
+    setData({ text: '', citations: [] });
 
     try {
       const ctx = getAIContext();
       if (!ctx.price) {
         throw new Error('Waiting for live price. Try again shortly.');
       }
-      const res = await tradeIdea(ctx, { signal: ctrl.signal });
+
+      const final = await streamTradeIdea(ctx, {
+        signal: ctrl.signal,
+        onDelta: (chunk) => {
+          setData(prev => ({
+            ...(prev || {}),
+            text: (prev?.text || '') + chunk,
+          }));
+        },
+      });
       if (ctrl.signal.aborted) return;
-      setData(res);
+      setData(final);
       setGeneratedFor(ctx.symbol);
     } catch (e) {
       if (e.name === 'AbortError') return;
@@ -115,7 +126,7 @@ export default function TradeIdeaTab() {
         </div>
       )}
 
-      {!data && !error && !loading && (
+      {!data?.text && !error && !loading && (
         <div style={styles.empty}>
           <Target size={18} style={{ opacity: 0.5 }} />
           <div style={{ marginTop: 10, fontSize: 13, color: '#9aa3b6' }}>
@@ -128,7 +139,7 @@ export default function TradeIdeaTab() {
         </div>
       )}
 
-      {loading && !data && (
+      {loading && !data?.text && (
         <div style={styles.skeletonGrid}>
           {[0, 1, 2, 3].map(i => (
             <div key={i} style={styles.skeletonCard} />
@@ -136,7 +147,7 @@ export default function TradeIdeaTab() {
         </div>
       )}
 
-      {parsed && (
+      {parsed && data?.text && (
         <motion.div
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
