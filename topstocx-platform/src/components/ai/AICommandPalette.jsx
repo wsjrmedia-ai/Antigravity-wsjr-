@@ -22,10 +22,11 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, X, CornerDownLeft, Command as CommandIcon, ExternalLink, AlertCircle } from 'lucide-react';
+import { Sparkles, X, CornerDownLeft, Command as CommandIcon, ExternalLink, AlertCircle, Mic, MicOff } from 'lucide-react';
 import { useAI } from '../../context/AIContext';
 import { useLeverate } from '../../context/LeverateContext';
 import { analyzeWithAI, streamAIAnalysis } from '../../services/topstocxAI';
+import { useVoiceInput } from '../../hooks/useVoiceInput';
 
 // Recognised symbols — kept in sync with the watchlist. If the user
 // types "switch to TSLA" we match against this set.
@@ -112,6 +113,26 @@ export default function AICommandPalette() {
   const [routed, setRouted] = useState(null);    // preview of what we'll run
   const inputRef = useRef(null);
   const abortRef = useRef(null);
+
+  // Voice input. When the user finishes a phrase we drop it into the
+  // input and auto-submit — the "speak your question" intent is clear
+  // enough that a second tap to confirm would just feel clunky.
+  const voice = useVoiceInput({
+    onFinal: (text) => {
+      setValue(text);
+      // Auto-submit. submit() reads from `value` via a ref-free closure,
+      // so we pass the text explicitly to avoid a stale-state race.
+      submitRef.current?.(text);
+    },
+  });
+  // Mirror transcript into the visible input while the user speaks.
+  useEffect(() => {
+    if (voice.listening && voice.transcript) setValue(voice.transcript);
+  }, [voice.listening, voice.transcript]);
+
+  // We need submit() to be callable from the voice onFinal callback
+  // before submit() itself is declared below. Stash it in a ref.
+  const submitRef = useRef(null);
 
   // Global keyboard shortcut. We listen on window, not a specific
   // element, so it works no matter which subtree has focus.
@@ -203,6 +224,10 @@ export default function AICommandPalette() {
       if (!ctrl.signal.aborted) setLoading(false);
     }
   }, [value, getAIContext, setSelectedSymbol, positions]);
+
+  // Keep the ref in sync so voice callbacks can fire submit even when
+  // they captured an older closure.
+  useEffect(() => { submitRef.current = submit; }, [submit]);
 
   const onKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -325,7 +350,7 @@ export default function AICommandPalette() {
                   value={value}
                   onChange={(e) => setValue(e.target.value)}
                   onKeyDown={onKeyDown}
-                  placeholder="Ask anything — /brief · /idea · /risk · /switch BTC"
+                  placeholder={voice.listening ? 'Listening…' : 'Ask anything — /brief · /idea · /risk · /switch BTC'}
                   style={{
                     flex: 1,
                     background: 'transparent',
@@ -336,6 +361,41 @@ export default function AICommandPalette() {
                     padding: 0,
                   }}
                 />
+                {voice.supported && (
+                  <button
+                    type="button"
+                    onClick={() => voice.listening ? voice.stop() : voice.start()}
+                    aria-label={voice.listening ? 'Stop listening' : 'Speak your question'}
+                    title={voice.listening ? 'Tap to stop' : 'Speak your question'}
+                    style={{
+                      position: 'relative',
+                      background: voice.listening ? 'rgba(255, 80, 80, 0.15)' : 'transparent',
+                      border: `1px solid ${voice.listening ? 'rgba(255, 80, 80, 0.4)' : 'rgba(255,255,255,0.08)'}`,
+                      color: voice.listening ? '#ff8a96' : '#8a93a6',
+                      cursor: 'pointer',
+                      padding: 6,
+                      borderRadius: 6,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      transition: 'background 0.15s ease, color 0.15s ease',
+                    }}
+                  >
+                    {voice.listening ? <MicOff size={14} /> : <Mic size={14} />}
+                    {voice.listening && (
+                      <span
+                        style={{
+                          position: 'absolute',
+                          inset: -2,
+                          borderRadius: 8,
+                          border: '1.5px solid rgba(255, 80, 80, 0.5)',
+                          animation: 'pulse-mic 1.2s ease-out infinite',
+                          pointerEvents: 'none',
+                        }}
+                      />
+                    )}
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
@@ -526,6 +586,10 @@ export default function AICommandPalette() {
                 @keyframes shimmer {
                   0% { background-position: 200% 0; }
                   100% { background-position: -200% 0; }
+                }
+                @keyframes pulse-mic {
+                  0%   { transform: scale(1);   opacity: 0.8; }
+                  100% { transform: scale(1.5); opacity: 0; }
                 }
               `}</style>
             </motion.div>
