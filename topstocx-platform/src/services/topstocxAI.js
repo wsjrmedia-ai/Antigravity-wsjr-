@@ -82,8 +82,8 @@ export async function analyzeWithAI({ intent, context = {}, query = '', signal }
   if (!res.ok) {
     // Surface the real error — do NOT fall back to fake text.
     let body;
-    try { body = await res.json(); } catch { body = { error: `HTTP ${res.status}` }; }
-    const err = new Error(body.error || `AI request failed: ${res.status}`);
+    try { body = await res.json(); } catch { body = { error: friendlyHttpMessage(res.status) }; }
+    const err = new Error(body.error || friendlyHttpMessage(res.status));
     err.status = res.status;
     err.body   = body;
     throw err;
@@ -92,6 +92,19 @@ export async function analyzeWithAI({ intent, context = {}, query = '', signal }
   const data = await res.json();
   putCache(key, data);
   return data;
+}
+
+// Turn raw HTTP statuses into something a trader can act on.
+// The most common failure in dev is a 404/502 from a dead backend —
+// we say that in English instead of just "HTTP 404".
+function friendlyHttpMessage(status) {
+  if (status === 404) return 'AI service unreachable. Is the backend running? (npm run server)';
+  if (status === 502 || status === 503 || status === 504) {
+    return 'AI service is temporarily down. Try again in a moment.';
+  }
+  if (status === 401 || status === 403) return 'Not authorized to use AI here.';
+  if (status === 429) return 'Rate limit hit. Wait a minute and retry.';
+  return `AI request failed (HTTP ${status}).`;
 }
 
 /**
@@ -139,8 +152,8 @@ export async function streamAIAnalysis({
 
   if (!res.ok || !res.body) {
     let body;
-    try { body = await res.json(); } catch { body = { error: `HTTP ${res.status}` }; }
-    const err = new Error(body.error || `AI stream failed: ${res.status}`);
+    try { body = await res.json(); } catch { body = { error: friendlyHttpMessage(res.status) }; }
+    const err = new Error(body.error || friendlyHttpMessage(res.status));
     err.status = res.status;
     err.body   = body;
     try { onError?.(err); } catch {}

@@ -6,6 +6,14 @@
 // ============================================================
 // npm install express cors dotenv jsonwebtoken bcryptjs redis stripe axios
 
+// Load env from both the root .env (for server-side keys) and the
+// topstocx-platform/.env (where the VITE_*-prefixed keys live, so the
+// backend can read the same Perplexity key the frontend already has).
+// Order matters: root .env wins when both define the same var.
+import 'dotenv/config';
+import dotenv from 'dotenv';
+dotenv.config({ path: './topstocx-platform/.env', override: false });
+
 import express from 'express';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
@@ -48,7 +56,13 @@ const redis = {
 redis.connect();
 
 // Perplexity config
-const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY;
+// Fall back to the VITE_-prefixed key so a single source of truth in
+// topstocx-platform/.env is enough to run both processes.
+const PERPLEXITY_API_KEY =
+  process.env.PERPLEXITY_API_KEY || process.env.VITE_PERPLEXITY_API_KEY;
+if (!PERPLEXITY_API_KEY) {
+  console.warn('[server] PERPLEXITY_API_KEY not set — /api/ai/analyze will fail.');
+}
 const PERPLEXITY_BASE    = 'https://api.perplexity.ai';
 
 const PERPLEXITY_MODELS = {

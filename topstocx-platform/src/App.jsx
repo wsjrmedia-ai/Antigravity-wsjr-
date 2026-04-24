@@ -43,6 +43,25 @@ function ScrollUnlocker() {
   return null;
 }
 
+/**
+ * Hide the legacy FinAIChatbot on routes that already ship the newer
+ * ⌘K AI command palette (Workspace/chart, trade ideas, copy trade,
+ * markets). Two floating AI buttons on the same screen is confusing;
+ * the palette is our canonical surface for the trading verticals.
+ *
+ * We keep FinAIChatbot on the marketing HomePage — it's aimed at
+ * visitors who haven't entered the platform yet.
+ */
+const CHATBOT_HIDDEN_PATHS = [
+  '/chart', '/trade-ideas', '/copy-trade', '/markets', '/community',
+];
+
+function ConditionalFinAIChatbot() {
+  const { pathname } = useLocation();
+  if (CHATBOT_HIDDEN_PATHS.some((p) => pathname.startsWith(p))) return null;
+  return <FinAIChatbot />;
+}
+
 function App() {
   return (
     <PlanProvider>
@@ -62,7 +81,7 @@ function App() {
                   <Route path="/markets"     element={<MarketsPage />} />
                   <Route path="/community"   element={<TradeIdeasPage />} />
                 </Routes>
-                <FinAIChatbot />
+                <ConditionalFinAIChatbot />
                 <PricingModal />
               </SmoothScrollProvider>
             </BrowserRouter>
