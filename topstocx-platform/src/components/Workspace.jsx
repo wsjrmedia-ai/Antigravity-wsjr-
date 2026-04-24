@@ -5,6 +5,7 @@ import AdvancedChart from './chart/AdvancedChart';
 import BottomPanel from './panels/BottomPanel';
 import WatchlistWidget from './widgets/WatchlistWidget';
 import MarketBriefCard from './widgets/MarketBriefCard';
+import AICommandPalette from './ai/AICommandPalette';
 
 const Workspace = () => {
     const [watchlistOpen, setWatchlistOpen] = useState(false);
@@ -85,6 +86,11 @@ const Workspace = () => {
                     alignItems: 'stretch', justifyContent: 'stretch'
                 }} />
             )}
+
+            {/* Global AI command palette — ⌘K anywhere, or the floating
+                "Ask AI" FAB. Scoped to /chart so we don't collide with
+                the homepage's FinAIChatbot. */}
+            <AICommandPalette />
         </div>
     );
 };

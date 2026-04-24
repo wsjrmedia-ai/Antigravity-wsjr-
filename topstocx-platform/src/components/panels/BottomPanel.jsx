@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
-import { TrendingUp, History, Bell, ClipboardList, ChevronUp, ChevronDown } from 'lucide-react';
+import { TrendingUp, History, Bell, ClipboardList, ChevronUp, ChevronDown, Sparkles } from 'lucide-react';
 import { useLeverate } from '../../context/LeverateContext';
+import TradeIdeaTab from './TradeIdeaTab';
+import RiskCheckChip from './RiskCheckChip';
 
 const BottomPanel = ({ className, onToggleExpand, expanded }) => {
     const { positions } = useLeverate();
     const [activeTab, setActiveTab] = useState('Positions');
     const tabs = [
         { id: 'Positions', icon: <TrendingUp size={14} /> },
-        { id: 'Orders', icon: <ClipboardList size={14} /> },
-        { id: 'History', icon: <History size={14} /> },
-        { id: 'Alerts', icon: <Bell size={14} /> },
+        { id: 'AI Idea',   icon: <Sparkles size={14} />, accent: true },
+        { id: 'Orders',    icon: <ClipboardList size={14} /> },
+        { id: 'History',   icon: <History size={14} /> },
+        { id: 'Alerts',    icon: <Bell size={14} /> },
     ];
 
     return (
@@ -36,32 +39,46 @@ const BottomPanel = ({ className, onToggleExpand, expanded }) => {
                 backgroundColor: 'rgba(255,255,255,0.01)',
                 flexShrink: 0
             }}>
-                {tabs.map(tab => (
-                    <div key={tab.id}
-                        onClick={() => { setActiveTab(tab.id); if (onToggleExpand && !expanded) onToggleExpand(); }}
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                            padding: '0 20px',
-                            fontSize: '12px',
-                            fontWeight: '700',
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.5px',
-                            cursor: 'pointer',
-                            color: activeTab === tab.id ? 'var(--brand-blue)' : 'var(--text-muted)',
-                            borderBottom: activeTab === tab.id ? '2px solid var(--brand-blue)' : 'none',
-                            transition: 'all 0.2s',
-                            opacity: activeTab === tab.id ? 1 : 0.7
-                        }}
-                        onMouseEnter={e => !(activeTab === tab.id) && (e.currentTarget.style.color = 'var(--text-primary)')}
-                        onMouseLeave={e => !(activeTab === tab.id) && (e.currentTarget.style.color = 'var(--text-muted)')}
-                    >
-                        {tab.icon}
-                        {tab.id}
-                    </div>
-                ))}
+                {tabs.map(tab => {
+                    const isActive = activeTab === tab.id;
+                    // The "AI Idea" tab gets a subtle accent-tinted inactive
+                    // state so it reads as "new capability, go try it" even
+                    // when another tab is selected.
+                    const baseColor = isActive
+                        ? 'var(--brand-blue)'
+                        : (tab.accent ? '#8bb4ff' : 'var(--text-muted)');
+                    return (
+                        <div key={tab.id}
+                            onClick={() => { setActiveTab(tab.id); if (onToggleExpand && !expanded) onToggleExpand(); }}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                padding: '0 20px',
+                                fontSize: '12px',
+                                fontWeight: '700',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.5px',
+                                cursor: 'pointer',
+                                color: baseColor,
+                                borderBottom: isActive ? '2px solid var(--brand-blue)' : 'none',
+                                transition: 'all 0.2s',
+                                opacity: isActive ? 1 : 0.8
+                            }}
+                            onMouseEnter={e => !isActive && (e.currentTarget.style.color = 'var(--text-primary)')}
+                            onMouseLeave={e => !isActive && (e.currentTarget.style.color = baseColor)}
+                        >
+                            {tab.icon}
+                            {tab.id}
+                        </div>
+                    );
+                })}
                 <div style={{ flex: 1 }} />
+                {/* Risk chip sits on the right of the tab row — only appears
+                    when user has positions, lights up if concentration looks off. */}
+                <div style={{ display: 'flex', alignItems: 'center', padding: '0 8px' }}>
+                    <RiskCheckChip />
+                </div>
                 {onToggleExpand && (
                     <div className="ws-mobile-toggle" onClick={onToggleExpand}
                         style={{ alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: '0 8px' }}>
@@ -72,6 +89,9 @@ const BottomPanel = ({ className, onToggleExpand, expanded }) => {
 
             {/* Content Area */}
             <div className="custom-scrollbar" style={{ flex: 1, overflowY: 'auto' }}>
+                {activeTab === 'AI Idea' ? (
+                    <TradeIdeaTab />
+                ) : (
                 <table className="bp-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
                     <thead style={{ position: 'sticky', top: 0, backgroundColor: 'var(--bg-secondary)', zIndex: 1, boxShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>
                         <tr style={{ color: 'var(--text-muted)', textAlign: 'left', borderBottom: '1px solid var(--border-color)' }}>
@@ -115,6 +135,7 @@ const BottomPanel = ({ className, onToggleExpand, expanded }) => {
                         ))}
                     </tbody>
                 </table>
+                )}
             </div>
         </div>
     );
