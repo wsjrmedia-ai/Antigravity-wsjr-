@@ -10,7 +10,6 @@ import LearnEarnToggle from './LearnEarnToggle';
 const PRODUCTS_SUBMENU = [
     { title: 'Supercharts',  desc: 'Market data for everyone',  to: '/chart' },
     { title: 'Education',    desc: 'Master the markets',        href: 'https://wsjrschool.com/' },
-    { title: 'Copy Trade',   desc: 'Follow top performers',     to: '/copy-trade' },
     { title: 'Investments',  desc: 'WallStreet JR Investments', href: 'https://www.wallstreetjrinvestments.com/' },
 ];
 
@@ -152,7 +151,6 @@ const HomeHeader = () => {
                                             {[
                                                 { title: 'Supercharts', desc: 'Market data for everyone', to: '/chart' },
                                                 { title: 'Education', desc: 'Master the markets', href: 'https://wsjrschool.com/' },
-                                                { title: 'Copy Trade', desc: 'Follow top performers', to: '/copy-trade' },
                                                 { title: 'Investments', desc: 'WallStreet JR Investments', href: 'https://www.wallstreetjrinvestments.com/' },
                                             ].map((item, idx) => {
                                                 const Component = item.href ? "a" : Link;
