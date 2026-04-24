@@ -20,6 +20,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import Stripe from 'stripe';
 import axios from 'axios';
+import Anthropic from '@anthropic-ai/sdk';
 import { createClient } from 'redis';
 import macroHandler from './topstocx-platform/api/macro.js';
 import {
@@ -80,6 +81,52 @@ const TIER_LIMITS = {
 const STRIPE_PLANS = {
   pro:      process.env.STRIPE_PRO_PRICE_ID,
   ultimate: process.env.STRIPE_ULTIMATE_PRICE_ID,
+};
+
+// ─────────────────────────────────────────────────────────────
+// ANTHROPIC (CLAUDE) — powers the Supercharts AI palette.
+//
+// Why Claude for Supercharts: pure-reasoning intents (explain_chart,
+// risk_check) are noticeably sharper; web-grounded intents
+// (market_brief, why_moved, trade_idea) use Claude's server-side
+// web_search tool so we keep one provider, one streaming contract,
+// one key.
+//
+// Perplexity is kept for FinAIChatbot (homepage) where its always-on
+// grounding + citations are the unique value for casual visitors.
+// ─────────────────────────────────────────────────────────────
+const ANTHROPIC_API_KEY =
+  process.env.ANTHROPIC_API_KEY || process.env.VITE_ANTHROPIC_API_KEY;
+const ANTHROPIC_KEY_LOOKS_REAL =
+  !!ANTHROPIC_API_KEY && !ANTHROPIC_API_KEY.startsWith('your_');
+if (!ANTHROPIC_KEY_LOOKS_REAL) {
+  console.warn(
+    '[server] ANTHROPIC_API_KEY not set — Supercharts AI will fall back to Perplexity.'
+  );
+}
+const anthropic = ANTHROPIC_KEY_LOOKS_REAL
+  ? new Anthropic({ apiKey: ANTHROPIC_API_KEY })
+  : null;
+
+const CLAUDE_MODELS = {
+  sonnet: process.env.CLAUDE_SONNET_MODEL || 'claude-sonnet-4-5',
+  haiku:  process.env.CLAUDE_HAIKU_MODEL  || 'claude-haiku-4-5',
+};
+
+// Per-intent routing. Edit this map to rebalance providers without
+// touching the request handler. `web: true` enables Claude's
+// web_search_20250305 tool so the model grounds its answer in
+// today's news.
+const PROVIDER_MAP = {
+  // Pure reasoning — Claude Sonnet, no web.
+  explain_chart: { provider: 'claude', model: 'sonnet', web: false },
+  risk_check:    { provider: 'claude', model: 'sonnet', web: false },
+  // Cheap + fast JSON extraction — Claude Haiku, no web.
+  parse_search:  { provider: 'claude', model: 'haiku',  web: false },
+  // News-grounded — Claude Sonnet with web_search tool.
+  market_brief:  { provider: 'claude', model: 'sonnet', web: true  },
+  why_moved:     { provider: 'claude', model: 'sonnet', web: true  },
+  trade_idea:    { provider: 'claude', model: 'sonnet', web: true  },
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -345,6 +392,132 @@ async function streamPerplexity({ systemPrompt, messages, tier = 'free', userCon
 }
 
 // ─────────────────────────────────────────────────────────────
+// ANTHROPIC (CLAUDE) CALLS
+//
+// Mirror the Perplexity helpers above so /api/ai/analyze can dispatch
+// without knowing which provider it's talking to. Both return the
+// same shape: { text, citations, model, usage }.
+//
+// `web: true` flips on Claude's server-side web_search tool. The SDK
+// transparently executes tool calls, waits for the result, and
+// resumes generation — we only see the final text + citations from
+// our streaming loop.
+// ─────────────────────────────────────────────────────────────
+function buildAnthropicTools(web) {
+  if (!web) return undefined;
+  return [
+    {
+      type: 'web_search_20250305',
+      name: 'web_search',
+      // Cap to keep billing predictable. 3 searches is enough for
+      // "what drove this move" / "today's brief" — more is noise.
+      max_uses: 3,
+    },
+  ];
+}
+
+// Flatten Claude's citation objects down to the plain URL array the
+// rest of the app expects. Dedupe preserving first-seen order so the
+// UI shows the most relevant source first.
+function collectCitationUrl(citation, seen, out) {
+  if (!citation) return;
+  const url = citation.url || citation.source || null;
+  if (!url || seen.has(url)) return;
+  seen.add(url);
+  out.push(url);
+}
+
+async function callAnthropic({ systemPrompt, messages, tier = 'free', modelKey = 'sonnet', web = false }) {
+  if (!anthropic) throw new Error('Anthropic not configured');
+  const model = CLAUDE_MODELS[modelKey] || CLAUDE_MODELS.sonnet;
+  const maxTokens = TIER_LIMITS[tier]?.maxTokens || 400;
+
+  const res = await anthropic.messages.create({
+    model,
+    max_tokens: maxTokens,
+    system: systemPrompt,
+    messages,
+    tools: buildAnthropicTools(web),
+  });
+
+  let text = '';
+  const citations = [];
+  const seen = new Set();
+  for (const block of res.content || []) {
+    if (block.type === 'text') {
+      text += block.text || '';
+      for (const c of block.citations || []) collectCitationUrl(c, seen, citations);
+    }
+  }
+
+  return { text, citations, model: res.model, usage: res.usage };
+}
+
+async function streamAnthropic({ systemPrompt, messages, tier = 'free', modelKey = 'sonnet', web = false, onDelta }) {
+  if (!anthropic) throw new Error('Anthropic not configured');
+  const model = CLAUDE_MODELS[modelKey] || CLAUDE_MODELS.sonnet;
+  const maxTokens = TIER_LIMITS[tier]?.maxTokens || 400;
+
+  const stream = anthropic.messages.stream({
+    model,
+    max_tokens: maxTokens,
+    system: systemPrompt,
+    messages,
+    tools: buildAnthropicTools(web),
+  });
+
+  let fullText = '';
+  const citations = [];
+  const seen = new Set();
+
+  for await (const event of stream) {
+    if (event.type !== 'content_block_delta') continue;
+    const d = event.delta;
+    if (!d) continue;
+    if (d.type === 'text_delta' && d.text) {
+      fullText += d.text;
+      try { onDelta?.(d.text); } catch {}
+    } else if (d.type === 'citations_delta' && d.citation) {
+      collectCitationUrl(d.citation, seen, citations);
+    }
+  }
+
+  const finalMessage = await stream.finalMessage();
+  return {
+    text: fullText,
+    citations,
+    model: finalMessage.model,
+    usage: finalMessage.usage,
+  };
+}
+
+// ─────────────────────────────────────────────────────────────
+// Provider dispatch — one call site for both streaming and
+// non-streaming paths. Falls back to Perplexity if Claude is
+// mapped but the API key isn't configured yet, so the app stays
+// functional while the user wires in a real key.
+// ─────────────────────────────────────────────────────────────
+function routeForIntent(intent) {
+  return PROVIDER_MAP[intent] || { provider: 'perplexity', model: null, web: true };
+}
+
+async function callProvider({ intent, systemPrompt, messages, tier, userContext = '' }) {
+  const route = routeForIntent(intent);
+  if (route.provider === 'claude' && anthropic) {
+    return callAnthropic({ systemPrompt, messages, tier, modelKey: route.model, web: route.web });
+  }
+  return callPerplexity({ systemPrompt, messages, tier, userContext });
+}
+
+async function streamProvider({ intent, systemPrompt, messages, tier, userContext = '', onDelta }) {
+  const route = routeForIntent(intent);
+  if (route.provider === 'claude' && anthropic) {
+    return streamAnthropic({ systemPrompt, messages, tier, modelKey: route.model, web: route.web, onDelta });
+  }
+  return streamPerplexity({ systemPrompt, messages, tier, userContext, onDelta });
+}
+
+// ─────────────────────────────────────────────────────────────
 // MIDDLEWARE: Verify JWT
 // ─────────────────────────────────────────────────────────────
 function authMiddleware(req, res, next) {
@@ -605,9 +778,11 @@ app.post('/api/ai/analyze', optionalAuth, tierMiddleware, async (req, res) => {
     req.on('close', () => { clientGone = true; });
 
     try {
-      sse('meta', { intent, tier });
+      const route = routeForIntent(intent);
+      sse('meta', { intent, tier, provider: route.provider, web: route.web });
 
-      const result = await streamPerplexity({
+      const result = await streamProvider({
+        intent,
         systemPrompt,
         messages: [{ role: 'user', content: userMessage }],
         tier,
@@ -637,7 +812,8 @@ app.post('/api/ai/analyze', optionalAuth, tierMiddleware, async (req, res) => {
 
   // Non-streaming path (JSON response) — unchanged contract.
   try {
-    const result = await callPerplexity({
+    const result = await callProvider({
+      intent,
       systemPrompt,
       messages: [{ role: 'user', content: userMessage }],
       tier,
