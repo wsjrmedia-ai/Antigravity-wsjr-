@@ -15,7 +15,7 @@
  * providers = data, services = network.
  */
 
-import { createContext, useContext, useMemo, useCallback } from 'react';
+import { createContext, useContext, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useLeverate } from './LeverateContext';
 import { useMarketData } from './MarketDataContext';
 import { usePlan } from './PlanContext';
@@ -117,6 +117,24 @@ export function AIContextProvider({ children }) {
   const { userPlan } = usePlan();
 
   /**
+   * High-frequency data (prices, quotes) lives in a ref so getAIContext
+   * can read *live* values without invalidating its memo on every tick.
+   *
+   * CRITICAL: including cryptoPrices in useCallback deps causes an
+   * infinite-fetch storm — Binance WS ticks ~10x/sec, each tick creates
+   * a new getAIContext, which cascades through every consumer's
+   * useEffect([getAIContext]) and fires a fresh /api/ai/analyze POST.
+   * We measured 100+ requests/second in prod logs before this fix.
+   *
+   * The ref is updated on every render but the callback identity is
+   * only driven by low-frequency state (symbol, timeframe, tier, etc.).
+   */
+  const liveRef = useRef({ cryptoPrices, stocks, forex, indices, positions, balance });
+  useEffect(() => {
+    liveRef.current = { cryptoPrices, stocks, forex, indices, positions, balance };
+  });
+
+  /**
    * Snapshot the world the AI should reason about.
    *
    * Why a function and not a memoized object? Because prices tick
@@ -128,7 +146,13 @@ export function AIContextProvider({ children }) {
   const getAIContext = useCallback(
     (overrides = {}) => {
       const symbol = overrides.symbol || selectedSymbol;
-      const quote = resolveQuote(symbol, { cryptoPrices, stocks, forex, indices });
+      const live = liveRef.current;
+      const quote = resolveQuote(symbol, {
+        cryptoPrices: live.cryptoPrices,
+        stocks:       live.stocks,
+        forex:        live.forex,
+        indices:      live.indices,
+      });
 
       return {
         symbol,
@@ -144,8 +168,8 @@ export function AIContextProvider({ children }) {
 
         // Portfolio context — drives risk_check and position-aware
         // trade ideas. Empty if the user hasn't connected a broker yet.
-        positions: positions || [],
-        balance: balance || null,
+        positions: live.positions || [],
+        balance: live.balance || null,
 
         // Session hint. Not authoritative — the AI can still pull the
         // real clock via Perplexity's web search when it matters.
@@ -156,7 +180,8 @@ export function AIContextProvider({ children }) {
         tier: userPlan,
       };
     },
-    [selectedSymbol, selectedPeriod, cryptoPrices, stocks, forex, indices, positions, balance, userPlan]
+    // ONLY low-frequency deps. Price/quote data is read live from liveRef.
+    [selectedSymbol, selectedPeriod, userPlan]
   );
 
   /**

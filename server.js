@@ -72,8 +72,14 @@ const PERPLEXITY_MODELS = {
   ultimate: 'sonar-pro',
 };
 
+// Per-session daily quota. Anon sessions identified by x-session-id
+// header; logged-in users by userId. The "free" tier covers both the
+// marketing chatbot AND the trading platform's auto-loading widgets
+// (MarketBrief, ExplainChart, Trade ideas) — which fire on their own,
+// so 5/day is far too tight. 100/day is comfortable for a full session
+// without being abusable.
 const TIER_LIMITS = {
-  free:     { daily: 5,        maxTokens: 400  },
+  free:     { daily: 100,      maxTokens: 400  },
   pro:      { daily: Infinity, maxTokens: 2000 },
   ultimate: { daily: Infinity, maxTokens: 4000 },
 };
@@ -557,7 +563,7 @@ async function tierMiddleware(req, res, next) {
       return res.status(429).json({
         error:      'Daily limit reached',
         code:       'UPGRADE_REQUIRED',
-        message:    "You've used your 5 free messages for today. Upgrade to Pro for unlimited access!",
+        message:    `You've used your ${limits.daily} free AI calls for today. Upgrade to Pro for unlimited access!`,
         remaining:  0,
         upgradeUrl: '/pricing',
       });
