@@ -502,6 +502,15 @@ Analyze for:
 Return 2-3 bullets max. Each ≤ 15 words. Direct warnings, no fluff.
 If the book looks clean, say so in one line.`,
 
+  why_moved: ({ symbol, price, changePct, window: win }) => `
+You are Atlas. ${symbol} moved ${changePct >= 0 ? '+' : ''}${changePct ?? '?'}% in the last ${win || 'hour'}.
+Current price: $${price ?? 'unknown'}.
+
+Explain WHY in ONE sentence. Grounded in today's news. Cite one source.
+No hedging. No "it could be due to". State the specific catalyst.
+
+If no clear catalyst exists, say "No clear catalyst — likely flow/positioning." and stop.`,
+
   parse_search: ({ query, availableSymbols = [] }) => `
 You are a query parser. Turn the user's natural-language watchlist query into JSON.
 

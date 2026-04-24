@@ -11,6 +11,7 @@ import { PlanProvider } from './context/PlanContext';
 import { MarketDataProvider } from './context/MarketDataContext';
 import { LeverateProvider } from './context/LeverateContext';
 import { AIContextProvider } from './context/AIContext';
+import { AlertsProvider } from './context/AlertsContext';
 import PricingModal from './components/layout/PricingModal';
 import SmoothScrollProvider from './providers/SmoothScrollProvider';
 
@@ -48,6 +49,7 @@ function App() {
       <MarketDataProvider>
         <LeverateProvider>
           <AIContextProvider>
+            <AlertsProvider>
             <BrowserRouter>
               <SmoothScrollProvider>
                 <ScrollUnlocker />
@@ -64,6 +66,7 @@ function App() {
                 <PricingModal />
               </SmoothScrollProvider>
             </BrowserRouter>
+            </AlertsProvider>
           </AIContextProvider>
         </LeverateProvider>
       </MarketDataProvider>

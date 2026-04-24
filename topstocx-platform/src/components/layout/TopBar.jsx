@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Activity, Lightbulb, Bell, LayoutList } from 'lucide-react';
+import { Search, Activity, Lightbulb, LayoutList } from 'lucide-react';
 import { useLeverate } from '../../context/LeverateContext';
+import AlertsCenter from '../ai/AlertsCenter';
 
 const TopBar = ({ onToggleWatchlist, watchlistOpen }) => {
     const { balance, connected, selectedSymbol, selectedPeriod, setSelectedPeriod } = useLeverate();
@@ -122,7 +123,7 @@ const TopBar = ({ onToggleWatchlist, watchlistOpen }) => {
                 </div>
 
                 <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                    <Bell size={18} color="var(--text-muted)" style={{ cursor: 'pointer' }} />
+                    <AlertsCenter />
                     <div style={{
                         width: '32px',
                         height: '32px',

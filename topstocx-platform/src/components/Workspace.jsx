@@ -6,6 +6,7 @@ import BottomPanel from './panels/BottomPanel';
 import WatchlistWidget from './widgets/WatchlistWidget';
 import MarketBriefCard from './widgets/MarketBriefCard';
 import AICommandPalette from './ai/AICommandPalette';
+import LiveTickerTape from './market/LiveTickerTape';
 
 const Workspace = () => {
     const [watchlistOpen, setWatchlistOpen] = useState(false);
@@ -22,6 +23,7 @@ const Workspace = () => {
             overflow: 'hidden'
         }} className="animate-fade-in">
             <TopBar onToggleWatchlist={() => setWatchlistOpen(v => !v)} watchlistOpen={watchlistOpen} />
+            <LiveTickerTape />
 
             <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
                 {/* Main Action Area (Chart + Positions) */}

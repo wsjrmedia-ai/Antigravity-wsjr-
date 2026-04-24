@@ -240,3 +240,17 @@ export const streamTradeIdea = (ctx, opts = {}) =>
 
 export const streamRiskCheck = (ctx, opts = {}) =>
   streamAIAnalysis({ intent: 'risk_check', context: ctx, ...opts });
+
+/**
+ * Why did this tick? One-sentence, news-grounded explanation of a
+ * specific move. Used by the proactive-alerts center and the ticker
+ * tape sparkle annotations.
+ *
+ * ctx: { symbol, price, changePct, window } — window is human-readable
+ * like "10m" or "hour".
+ */
+export const whyMoved = (ctx, opts = {}) =>
+  analyzeWithAI({ intent: 'why_moved', context: ctx, ...opts });
+
+export const streamWhyMoved = (ctx, opts = {}) =>
+  streamAIAnalysis({ intent: 'why_moved', context: ctx, ...opts });
