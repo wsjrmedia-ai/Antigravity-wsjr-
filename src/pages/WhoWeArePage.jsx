@@ -367,26 +367,111 @@ const WhoWeArePage = () => {
           gold={gold}
         />
 
-        <div
-          className="wwa-leadership-grid"
+        {/* Founder showcase (photo + bio) */}
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.8, ease: [0.215, 0.61, 0.355, 1] }}
+          className="wwa-founder-card"
           style={{
             marginTop: '44px',
+            borderRadius: '24px',
+            background:
+              'linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.015) 100%)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            overflow: 'hidden',
             display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: '22px',
+            gridTemplateColumns: '0.9fr 1.1fr',
+            gap: 0,
           }}
         >
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.6 }}
+          {/* Portrait */}
+          <div
+            className="wwa-founder-photo"
             style={{
-              padding: '40px 36px',
-              borderRadius: '20px',
+              position: 'relative',
+              minHeight: '560px',
               background:
-                'linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
-              border: '1px solid rgba(255,255,255,0.08)',
+                'linear-gradient(135deg, rgba(247,172,65,0.18) 0%, rgba(80,0,11,0.6) 50%, rgba(0,0,0,0.75) 100%)',
+              overflow: 'hidden',
+            }}
+          >
+            <img
+              src="/images/team/vishnu-das.jpg"
+              alt="Vishnu Das — Founder & CEO, Wall Street Jr. Academy"
+              loading="lazy"
+              onError={(e) => {
+                // graceful fallback: hide broken image, keep gradient backdrop
+                e.currentTarget.style.display = 'none';
+              }}
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center 20%',
+                filter: 'brightness(0.92) contrast(1.05)',
+              }}
+            />
+            {/* Subtle bottom gradient for caption legibility */}
+            <div
+              aria-hidden
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background:
+                  'linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.55) 100%)',
+                pointerEvents: 'none',
+              }}
+            />
+            {/* Photo caption */}
+            <div
+              style={{
+                position: 'absolute',
+                left: '28px',
+                bottom: '24px',
+                right: '28px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                zIndex: 2,
+              }}
+            >
+              <span
+                style={{
+                  width: '8px',
+                  height: '8px',
+                  borderRadius: '50%',
+                  background: gold,
+                  boxShadow: `0 0 12px ${gold}`,
+                  flexShrink: 0,
+                }}
+              />
+              <span
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  letterSpacing: '2.2px',
+                  textTransform: 'uppercase',
+                  color: '#FFF',
+                }}
+              >
+                Founder & CEO
+              </span>
+            </div>
+          </div>
+
+          {/* Bio */}
+          <div
+            className="wwa-founder-bio"
+            style={{
+              padding: '48px 44px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
             }}
           >
             <div
@@ -399,16 +484,17 @@ const WhoWeArePage = () => {
                 marginBottom: '10px',
               }}
             >
-              Founder
+              Founder · Wall Street Jr. Academy
             </div>
             <h3
               style={{
                 fontFamily: 'var(--font-hero)',
-                fontSize: 'clamp(1.6rem, 2.4vw, 2.2rem)',
+                fontSize: 'clamp(1.8rem, 3vw, 2.8rem)',
                 color: '#FFF',
                 fontWeight: 500,
-                margin: '0 0 8px',
-                letterSpacing: '-0.01em',
+                margin: '0 0 10px',
+                letterSpacing: '-0.02em',
+                lineHeight: 1.05,
               }}
             >
               Vishnu Das
@@ -416,11 +502,12 @@ const WhoWeArePage = () => {
             <p
               style={{
                 fontFamily: 'var(--font-hero)',
-                fontSize: '1rem',
+                fontSize: 'clamp(1rem, 1.15vw, 1.15rem)',
                 fontStyle: 'italic',
                 color: gold,
-                margin: '0 0 18px',
+                margin: '0 0 22px',
                 opacity: 0.95,
+                lineHeight: 1.5,
               }}
             >
               Harvard-educated capital architect. Institutional experience at JP Morgan and Bank
@@ -429,8 +516,8 @@ const WhoWeArePage = () => {
             <p
               style={{
                 fontSize: '15px',
-                lineHeight: 1.7,
-                color: 'rgba(255,255,255,0.78)',
+                lineHeight: 1.75,
+                color: 'rgba(255,255,255,0.82)',
                 margin: '0 0 14px',
               }}
             >
@@ -443,15 +530,26 @@ const WhoWeArePage = () => {
             <p
               style={{
                 fontSize: '15px',
-                lineHeight: 1.7,
-                color: 'rgba(255,255,255,0.78)',
+                lineHeight: 1.75,
+                color: 'rgba(255,255,255,0.82)',
                 margin: 0,
               }}
             >
               Under his leadership, Wall Street Jr. has grown from a single program into a
               multi-school academy operating across six locations globally.
             </p>
-          </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Faculty philosophy */}
+        <div
+          className="wwa-faculty-wrap"
+          style={{
+            marginTop: '22px',
+            display: 'grid',
+            gridTemplateColumns: '1fr',
+          }}
+        >
 
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -1004,6 +1102,9 @@ const WhoWeArePage = () => {
           .wwa-origin-grid { grid-template-columns: 1fr !important; gap: 22px !important; }
           .wwa-origin-callout { position: static !important; }
           .wwa-leadership-grid { grid-template-columns: 1fr !important; }
+          .wwa-founder-card { grid-template-columns: 1fr !important; }
+          .wwa-founder-photo { min-height: 440px !important; }
+          .wwa-founder-bio { padding: 40px 36px !important; }
           .wwa-mission-card { padding: 44px 36px !important; }
         }
 
@@ -1013,6 +1114,9 @@ const WhoWeArePage = () => {
           .wwa-tagline { font-size: clamp(1.05rem, 4vw, 1.35rem) !important; }
           .wwa-intro p { font-size: 0.98rem !important; }
           .wwa-cta-row button, .wwa-cta-row a { flex: 1 1 auto; }
+          .wwa-founder-photo { min-height: 380px !important; }
+          .wwa-founder-bio { padding: 32px 26px !important; }
+          .wwa-founder-bio h3 { font-size: clamp(1.6rem, 6vw, 2.2rem) !important; }
           .wwa-mission-card { padding: 36px 24px !important; }
           .wwa-mission-card p { font-size: clamp(1.05rem, 4.2vw, 1.3rem) !important; }
           .wwa-diff-card { padding: 22px 22px !important; gap: 14px !important; }
@@ -1029,6 +1133,8 @@ const WhoWeArePage = () => {
           .wwa-intro p { font-size: 0.95rem !important; line-height: 1.65 !important; }
           .wwa-cta-row { flex-direction: column !important; }
           .wwa-cta-row button, .wwa-cta-row a { width: 100% !important; text-align: center !important; }
+          .wwa-founder-photo { min-height: 320px !important; }
+          .wwa-founder-bio { padding: 26px 20px !important; }
           .wwa-mission-card { padding: 28px 20px !important; }
           .wwa-diff-card { padding: 20px 18px !important; }
           .wwa-value-card { padding: 22px 20px !important; }
