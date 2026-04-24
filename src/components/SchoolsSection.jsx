@@ -11,7 +11,7 @@ const schoolsData = [
         title: 'School of Finance',
         acronym: 'SOF',
         subtitle: 'Mastering Markets, Valuation &\nCapital Allocation',
-        desc: 'The School of Finance prepares students to think and act like institutional capital allocators. You will develop a deep understanding of financial modeling, asset management, and risk analysis to excel in global markets.',
+        desc: 'Learn to think and act like an institutional capital allocator. Master financial modeling, asset management, and risk analysis to excel in global markets.',
         ideal: 'Ideal for:\nAspiring analysts, investment\nprofessionals, and anyone building a robust foundation in corporate finance.',
         image: '/images/figma/school-finance.jpg'
     },
@@ -22,7 +22,7 @@ const schoolsData = [
         title: 'School of\nTechnology',
         acronym: 'SOT',
         subtitle: 'Building the Future with Code, AI &\nSystems Architecture',
-        desc: 'The School of Technology bridges the gap between software development and business impact. Students gain hands-on experience in full-stack engineering, artificial intelligence, and scalable cloud infrastructure.',
+        desc: 'Bridge the gap between software development and business impact. Gain hands-on experience in full-stack engineering, AI, and cloud infrastructure.',
         ideal: 'Ideal for:\nDevelopers, aspiring tech entrepreneurs,\nand professionals looking to integrate cutting-edge tech into modern workflows.',
         image: '/images/figma/bg-qatar-museum.jpg'
     },
@@ -33,7 +33,7 @@ const schoolsData = [
         title: 'School of Design',
         acronym: 'SOD',
         subtitle: 'Crafting Experiences That Shape\nHuman Behavior',
-        desc: 'Good design is not decoration. It is strategy made visible. The School of Design trains students to approach visual storytelling, UI/UX, and branding with a human-centric methodology that drives real engagement.',
+        desc: 'Good design is strategy made visible. Master visual storytelling, UI/UX, and branding through methodology that drives engagement.',
         ideal: 'Ideal for:\nAspiring designers, brand strategists,\nand product thinkers looking to elevate user experiences and digital brands.',
         image: '/images/figma/school-design.jpg'
     },
@@ -44,7 +44,7 @@ const schoolsData = [
         title: 'School of\nManagement',
         acronym: 'SOM',
         subtitle: 'Leading Teams & Organizations to\nGlobal Impact',
-        desc: 'The School of Management focuses on the human side of organizational performance. From strategic decision-making to leadership psychology, you will learn to build, scale, and lead high-performing teams globally.',
+        desc: 'Focus on the human side of organizational performance. Learn to build, scale, and lead high-performing teams through strategic decision-making.',
         ideal: 'Ideal for:\nCurrent and aspiring managers, team\nleads, and professionals building towards executive leadership roles.',
         image: '/images/figma/school-management.jpg'
     }
