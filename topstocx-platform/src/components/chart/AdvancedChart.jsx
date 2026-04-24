@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react'
 import { AdvancedRealTimeChart } from 'react-ts-tradingview-widgets';
 import { Maximize2, Minimize2 } from 'lucide-react';
 import { useLeverate } from '../../context/LeverateContext';
+import ExplainChartPanel from './ExplainChartPanel';
 
 const AdvancedChart = () => {
     const { selectedSymbol, selectedPeriod } = useLeverate();
@@ -146,6 +147,10 @@ const AdvancedChart = () => {
             >
                 {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
             </button>
+
+            {/* AI "Explain" overlay — sits left of the fullscreen button.
+                Lives inside the same wrapper so it follows into fullscreen. */}
+            <ExplainChartPanel />
         </div>
     );
 };

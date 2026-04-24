@@ -4,6 +4,7 @@ import TopBar from './layout/TopBar';
 import AdvancedChart from './chart/AdvancedChart';
 import BottomPanel from './panels/BottomPanel';
 import WatchlistWidget from './widgets/WatchlistWidget';
+import MarketBriefCard from './widgets/MarketBriefCard';
 
 const Workspace = () => {
     const [watchlistOpen, setWatchlistOpen] = useState(false);
@@ -67,6 +68,9 @@ const Workspace = () => {
                             <X size={18} color="var(--text-muted)" />
                         </div>
                     </div>
+                    {/* AI brief sits above the watchlist — first thing a user
+                        sees on page load. Self-fetching, web-grounded. */}
+                    <MarketBriefCard />
                     <div style={{ flex: 1, overflow: 'hidden' }}>
                         <WatchlistWidget />
                     </div>

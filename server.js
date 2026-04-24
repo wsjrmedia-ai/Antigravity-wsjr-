@@ -332,6 +332,211 @@ app.post('/api/chat', optionalAuth, tierMiddleware, async (req, res) => {
 });
 
 // ─────────────────────────────────────────────────────────────
+// POST /api/ai/analyze — intent-based AI for the trading platform.
+//
+// One endpoint powers every AI surface in Topstocx. The frontend
+// sends { intent, context, query? } and we route to a tuned system
+// prompt + sonar-pro call. Web-grounded, so every response reflects
+// *today's* market, not stale training data.
+//
+// Supported intents:
+//   explain_chart   — 3-sentence technical + fundamental read of the
+//                     symbol the user is staring at
+//   market_brief    — morning-brief style update personalised to the
+//                     user's watchlist / selected symbol
+//   trade_idea      — entry / stop / target with reasoning
+//   risk_check      — given positions array, flag correlation &
+//                     concentration risk
+//   parse_search    — turn natural language ("crypto over 1000")
+//                     into a structured filter the watchlist can run
+//
+// All intents are free for anon + free tier (counted against their
+// daily budget). Pro / Ultimate unlimited.
+// ─────────────────────────────────────────────────────────────
+const AI_INTENT_PROMPTS = {
+  explain_chart: ({ symbol, price, changePct, timeframe }) => `
+You are Atlas, a senior institutional market strategist.
+The user is looking at a ${timeframe || '15m'} chart of ${symbol}.
+Current price: $${price ?? 'unknown'} (${changePct >= 0 ? '+' : ''}${changePct ?? 0}% today).
+
+Give a DIRECT 3-sentence read. No filler. No disclaimers. No "as an AI".
+Sentence 1: Market structure — what the chart is doing (trend, key level, momentum).
+Sentence 2: Catalyst — what specifically is moving it today (news, macro, flow). Cite a source.
+Sentence 3: What to watch next — the one level or event that decides direction.
+
+Style: punchy, trader-desk tone. Use $ for price, % for moves. Never hedge.`,
+
+  market_brief: ({ symbol, price, watchlist, timeOfDay }) => `
+You are Atlas. Write a ${timeOfDay || 'morning'} briefing for a trader.
+Their current focus: ${symbol} at $${price ?? 'n/a'}.
+Their watchlist: ${(watchlist || []).join(', ')}.
+
+Format — exactly 3 bullets, ≤ 20 words each:
+• Market tone today (one line, data-grounded)
+• What matters for their focus symbol (one line, today's catalyst)
+• One opportunity or risk in their watchlist
+
+No preamble. No sign-off. No emojis. Start directly with the first bullet.`,
+
+  trade_idea: ({ symbol, price, timeframe }) => `
+You are Atlas. Generate ONE trade idea for ${symbol} on ${timeframe || 'the daily'} timeframe.
+Current price: $${price ?? 'unknown'}.
+
+Return in this exact format, nothing else:
+
+**${symbol} — [LONG/SHORT] setup**
+Entry: $X
+Stop: $Y (R: Z%)
+Target 1: $A
+Target 2: $B
+Reasoning: [2 sentences grounded in today's price action and news.]
+
+Use real levels from current price action. If setup isn't clean, say "No setup — wait."`,
+
+  risk_check: ({ positions = [] }) => `
+You are Atlas. A trader has these open positions:
+${JSON.stringify(positions, null, 2)}
+
+Analyze for:
+1. Concentration (too much in one sector/asset class)
+2. Correlation (positions that move together)
+3. Proximity to stops
+
+Return 2-3 bullets max. Each ≤ 15 words. Direct warnings, no fluff.
+If the book looks clean, say so in one line.`,
+
+  parse_search: ({ query, availableSymbols = [] }) => `
+You are a query parser. Turn the user's natural-language watchlist query into JSON.
+
+User query: "${query}"
+Available symbols: ${availableSymbols.join(', ')}
+
+Return ONLY valid JSON, no markdown, no explanation:
+{
+  "type": "crypto" | "stock" | "forex" | "all",
+  "priceMin": number | null,
+  "priceMax": number | null,
+  "changeMin": number | null,  // percent, e.g. 5 for +5%
+  "changeMax": number | null,
+  "symbols": string[]  // specific tickers mentioned, uppercase
+}
+
+Examples:
+"crypto over 1000" → {"type":"crypto","priceMin":1000,"priceMax":null,"changeMin":null,"changeMax":null,"symbols":[]}
+"biggest gainers" → {"type":"all","priceMin":null,"priceMax":null,"changeMin":2,"changeMax":null,"symbols":[]}
+"nvidia and tesla" → {"type":"all","priceMin":null,"priceMax":null,"changeMin":null,"changeMax":null,"symbols":["NVDA","TSLA"]}`,
+};
+
+app.post('/api/ai/analyze', optionalAuth, tierMiddleware, async (req, res) => {
+  const { intent, context = {}, query = '' } = req.body || {};
+  const { tier } = req.user;
+
+  if (!intent || !AI_INTENT_PROMPTS[intent]) {
+    return res.status(400).json({
+      error: 'Unknown intent',
+      supported: Object.keys(AI_INTENT_PROMPTS),
+    });
+  }
+
+  // parse_search: try local regex parse first — cheap, instant, no LLM cost.
+  // Only fall back to LLM if the local parse didn't yield a meaningful filter.
+  if (intent === 'parse_search') {
+    const local = localParseSearch(query, context.availableSymbols || []);
+    if (local) {
+      return res.json({ structured: local, source: 'local', text: null });
+    }
+  }
+
+  const systemPrompt = AI_INTENT_PROMPTS[intent](context);
+  const userMessage  = query || 'Proceed.';
+
+  try {
+    const result = await callPerplexity({
+      systemPrompt,
+      messages: [{ role: 'user', content: userMessage }],
+      tier,
+      userContext: '',
+    });
+
+    // For parse_search, extract JSON from the model's response.
+    if (intent === 'parse_search') {
+      const structured = extractJson(result.text);
+      return res.json({
+        structured: structured || null,
+        source:     structured ? 'llm' : 'fallback',
+        text:       result.text,
+      });
+    }
+
+    res.json({
+      text:      result.text,
+      citations: result.citations,
+      model:     result.model,
+      usage:     result.usage,
+      remaining: req.remaining,
+    });
+  } catch (err) {
+    console.error('[/api/ai/analyze]', intent, err?.response?.data || err.message);
+    res.status(500).json({
+      error: 'AI service error',
+      intent,
+      text:  'AI temporarily unavailable. Try again in a moment.',
+    });
+  }
+});
+
+// Local parser — catches ~80% of watchlist queries without an LLM hop.
+function localParseSearch(query, availableSymbols) {
+  if (!query) return null;
+  const q = query.toLowerCase();
+
+  const out = {
+    type: 'all',
+    priceMin: null, priceMax: null,
+    changeMin: null, changeMax: null,
+    symbols: [],
+  };
+
+  if (/\b(crypto|coin|coins|btc|eth)\b/.test(q)) out.type = 'crypto';
+  else if (/\b(stock|stocks|equit|share)/.test(q)) out.type = 'stock';
+  else if (/\b(forex|fx|currency|currencies)\b/.test(q)) out.type = 'forex';
+
+  // "over 100", "above 1000", ">500"
+  const overMatch = q.match(/(?:over|above|>|more than)\s*\$?(\d+(?:\.\d+)?)/);
+  if (overMatch) out.priceMin = parseFloat(overMatch[1]);
+  const underMatch = q.match(/(?:under|below|<|less than)\s*\$?(\d+(?:\.\d+)?)/);
+  if (underMatch) out.priceMax = parseFloat(underMatch[1]);
+
+  // "up 5%", "gaining", "biggest gainers"
+  if (/\b(gain|gainer|gaining|rallying|pump|mooning|up\b)/.test(q)) out.changeMin = 1;
+  if (/\b(loser|losers|dumping|crash|down\b|red)/.test(q))           out.changeMax = -1;
+  const pctMatch = q.match(/up\s+(\d+(?:\.\d+)?)\s*%/);
+  if (pctMatch) out.changeMin = parseFloat(pctMatch[1]);
+
+  // Direct symbol mentions from availableSymbols
+  const upper = query.toUpperCase();
+  out.symbols = (availableSymbols || []).filter(s => {
+    const pat = new RegExp(`\\b${s}\\b`);
+    return pat.test(upper);
+  });
+
+  const hasSignal =
+    out.type !== 'all' ||
+    out.priceMin !== null || out.priceMax !== null ||
+    out.changeMin !== null || out.changeMax !== null ||
+    out.symbols.length > 0;
+
+  return hasSignal ? out : null;
+}
+
+function extractJson(text) {
+  if (!text) return null;
+  const match = text.match(/\{[\s\S]*\}/);
+  if (!match) return null;
+  try { return JSON.parse(match[0]); } catch { return null; }
+}
+
+// ─────────────────────────────────────────────────────────────
 // POST /api/auth/register
 // ─────────────────────────────────────────────────────────────
 app.post('/api/auth/register', async (req, res) => {
