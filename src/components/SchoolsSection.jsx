@@ -88,12 +88,13 @@ const SchoolCard = ({ school, index, total }) => {
                 <div style={{
                     position: 'relative',
                     height: '60px',
-                    width: '100%'
+                    width: '100%',
+                    zIndex: 2
                 }}>
                     <div className={`school-tab school-tab-${school.id}`} style={{
                         position: 'absolute',
                         left: school.tabLeft,
-                        bottom: 0,
+                        top: 0,
                         width: '320px',
                         height: '100px', // slightly taller to blend into main body
                         backgroundColor: school.color,
