@@ -151,8 +151,8 @@ const HeroSection = () => {
                     }} className="hero-content-grid">
                         
                         {/* 1. Left: Subtitle H2 */}
-                        <div style={{ paddingRight: '20px' }}>
-                            <h2 style={{
+                        <div className="hero-subtitle-wrap" style={{ paddingRight: '20px' }}>
+                            <h2 className="hero-subtitle" style={{
                                 fontFamily: 'var(--font-body)',
                                 fontSize: 'clamp(1.5rem, 2.2vw, 34px)',
                                 lineHeight: '1.25',
@@ -340,6 +340,18 @@ const HeroSection = () => {
                         min-height: 100vh !important;
                         overflow: visible !important;
                     }
+
+                    /* Subtitle: shrink so "multidisciplinary" fits the line, allow soft hyphen wrap */
+                    .hero-subtitle-wrap { padding-right: 0 !important; }
+                    .hero-subtitle {
+                        font-size: clamp(1.1rem, 4.6vw, 1.5rem) !important;
+                        text-align: center !important;
+                        line-height: 1.3 !important;
+                        word-break: normal !important;
+                        hyphens: auto !important;
+                        -webkit-hyphens: auto !important;
+                    }
+                    .hero-subtitle br { display: none !important; }
 
                     /* Main Page Spacing */
                     .main-content-wrapper { padding: 0 5% !important; margin-top: 30px !important; padding-bottom: 30px !important; }

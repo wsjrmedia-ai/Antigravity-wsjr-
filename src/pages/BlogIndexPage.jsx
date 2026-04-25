@@ -194,7 +194,7 @@ const BlogIndexPage = () => {
                     maxWidth: '1400px',
                     margin: '0 auto',
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(min(300px, 100%), 1fr))',
                     gap: '28px',
                 }}
             >

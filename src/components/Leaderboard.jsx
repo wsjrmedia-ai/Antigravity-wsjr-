@@ -411,14 +411,27 @@ const Leaderboard = () => {
                     .lb-col-streak { display: none !important; }
                 }
                 @media (max-width: 600px) {
-                    .leaderboard-section { padding: 80px 5% !important; }
+                    .leaderboard-section { padding: 70px 4% !important; }
                     .leaderboard-row {
-                        grid-template-columns: 40px 1.6fr 80px !important;
-                        gap: 10px !important;
-                        padding: 14px 18px !important;
-                        font-size: 0.9rem !important;
+                        grid-template-columns: 36px 1.6fr 78px !important;
+                        gap: 8px !important;
+                        padding: 12px 14px !important;
+                        font-size: 0.85rem !important;
                     }
                     .lb-col-country { display: none !important; }
+                    .leaderboard-row span[style*="font-size: 1.6rem"] { font-size: 1.15rem !important; }
+                    .leaderboard-row span[style*="font-size: 1.05rem"] { font-size: 0.95rem !important; }
+                }
+                @media (max-width: 400px) {
+                    .leaderboard-row {
+                        grid-template-columns: 30px 1fr 60px !important;
+                        gap: 6px !important;
+                        padding: 10px 10px !important;
+                    }
+                    /* Hide the inline progress bar on very narrow screens — keep just the number */
+                    .leaderboard-row span[aria-hidden="true"][style*="width: 60px"] { display: none !important; }
+                    /* Drop the score-bar wrapper gap */
+                    .leaderboard-row > span:nth-of-type(4) { gap: 0 !important; }
                 }
             `}</style>
         </section>

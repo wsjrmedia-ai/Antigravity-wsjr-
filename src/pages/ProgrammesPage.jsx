@@ -104,11 +104,11 @@ const ProgrammesPage = () => {
                                 'linear-gradient(101deg, #F7AC41 8.57%, #BC7E26 48.6%, #FFBD5F 85.66%)',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
+                            whiteSpace: 'nowrap',
                         }}
                     >
-                        programme
+                        programme.
                     </span>
-                    .
                 </motion.h1>
 
                 <motion.p
@@ -142,7 +142,7 @@ const ProgrammesPage = () => {
                     maxWidth: '1600px',
                     margin: '0 auto',
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))',
                     gap: '32px',
                 }}
             >
