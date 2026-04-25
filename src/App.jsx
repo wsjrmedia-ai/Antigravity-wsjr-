@@ -10,6 +10,7 @@ import SyllabusPage from './pages/SyllabusPage'
 import WhoWeArePage from './pages/WhoWeArePage'
 import TopStocxPage from './pages/TopStocxPage'
 import EnrollPage from './pages/EnrollPage'
+import ProgrammesPage from './pages/ProgrammesPage'
 
 import CustomScrollbar from './components/CustomScrollbar'
 import FinAIChatbot from './components/FinAIChatbot'
@@ -81,6 +82,8 @@ function App() {
           <Route path="/school-of-finance/syllabus" element={<SyllabusPage />} />
           <Route path="/who-we-are" element={<WhoWeArePage />} />
           <Route path="/enroll" element={<EnrollPage />} />
+          <Route path="/programmes" element={<ProgrammesPage />} />
+          <Route path="/programs" element={<ProgrammesPage />} />
         </Routes>
       </main>
       <FinAIChatbot />

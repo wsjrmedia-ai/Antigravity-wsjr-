@@ -148,13 +148,15 @@ const HeroSection = () => {
                             </h2>
                         </div>
 
-                        {/* 2. Center: Enroll Button Dead-Center on the page */}
+                        {/* 2. Center: Enroll + Find Your Programme CTAs */}
                         <div style={{
                             display: 'flex',
+                            flexDirection: 'column',
                             justifyContent: 'center',
-                            alignItems: 'center'
+                            alignItems: 'center',
+                            gap: '14px'
                         }} className="enroll-button-container">
-                            <motion.button 
+                            <motion.button
                                 onClick={() => navigate('/enroll')}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
@@ -176,6 +178,26 @@ const HeroSection = () => {
                                 <svg width="22" height="22" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M15.0947 0C23.4312 8.14387e-05 30.1894 6.75827 30.1895 15.0947C30.1894 23.4311 23.4311 30.1894 15.0947 30.1895C6.75827 30.1894 8.14334e-05 23.4312 0 15.0947C2.23237e-05 6.75823 6.75823 2.23252e-05 15.0947 0ZM15.0947 1.4375C7.55219 1.43752 1.43752 7.55219 1.4375 15.0947C1.43758 22.6372 7.55222 28.7519 15.0947 28.752C22.6372 28.7519 28.7519 22.6372 28.752 15.0947C28.7519 7.55222 22.6372 1.43758 15.0947 1.4375ZM21.5645 19.0449H20.127V11.0791L9.85254 21.3535L9.34473 20.8457L8.83691 20.3369L19.1104 10.0635H11.1455V8.62598H21.5645V19.0449Z" fill="white"/>
                                 </svg>
+                            </motion.button>
+                            <motion.button
+                                onClick={() => navigate('/programmes')}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="find-programme-btn"
+                                style={{
+                                    display: 'flex',
+                                    width: '220px',
+                                    height: '48px',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    gap: '10px',
+                                    borderRadius: '100px',
+                                    background: 'transparent',
+                                    border: '1px solid rgba(247,172,65,0.6)',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                <span style={{ fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '15px', color: '#F7AC41', letterSpacing: '0.3px' }}>FIND YOUR PROGRAMME</span>
                             </motion.button>
                         </div>
 
