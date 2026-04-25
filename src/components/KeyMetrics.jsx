@@ -18,13 +18,7 @@ const metricsData = [
         desc: 'A growing community of learners from Dubai, India, and beyond, building careers with institutional-grade knowledge.'
     },
     {
-        num: 15,
-        suffix: '+ years',
-        title: 'MENTORSHIP EXPERIENCE',
-        desc: 'Faculty and mentors who have operated at leading global institutions and bring that experience directly into the classroom.'
-    },
-    {
-        num: 6,
+        num: 10,
         suffix: '+',
         title: 'GLOBAL LOCATIONS',
         desc: 'Dubai (HQ), Kerala, Mumbai, Bangalore, Delhi, and Chicago, creating a truly international learning network.'

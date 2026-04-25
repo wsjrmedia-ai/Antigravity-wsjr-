@@ -14,7 +14,7 @@ import TravelLearn from '../components/TravelLearn'
 const HomePage = () => {
     useEffect(() => {
         // SEO Initialization
-        document.title = "Wall Street Jr. Academy | Real-World Finance Mastery"
+        document.title = "Wall Street Jr. Academy"
         let metaDesc = document.querySelector('meta[name="description"]')
         if (!metaDesc) {
             metaDesc = document.createElement('meta')

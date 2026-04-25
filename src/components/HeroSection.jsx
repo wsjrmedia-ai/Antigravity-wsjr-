@@ -140,11 +140,11 @@ const HeroSection = () => {
                                 color: '#FFF'
                             }}>
                                 <span style={{ fontFamily: 'var(--font-hero)', color: '#CC972B', fontStyle: 'italic', fontWeight: 600 }}>Dubai’s </span>
-                                premier <span style={{ fontFamily: 'var(--font-hero)', color: '#CC972B', fontStyle: 'italic', fontWeight: 600 }}>multidisciplinary </span>
+                                first <span style={{ fontFamily: 'var(--font-hero)', color: '#CC972B', fontStyle: 'italic', fontWeight: 600 }}>multidisciplinary </span>
                                 <br />
                                 <span style={{ fontFamily: 'var(--font-hero)', color: '#CC972B', fontStyle: 'italic', fontWeight: 600 }}>academy </span>
                                 for finance, technology, design <br />
-                                & management.
+                                and management.
                             </h2>
                         </div>
 
@@ -196,9 +196,8 @@ const HeroSection = () => {
                         width: 'calc(50% - 140px)', /* A calculated match for the roughly 1fr space when button is 220px in center */
                         paddingRight: '20px'
                     }}>
-                        <p style={{ margin: 0 }}>Most finance courses teach you theory. We teach you how to think like an institutional investor, allocate capital with discipline, and lead with the kind of judgment that top firms actually value.</p>
-                        <p style={{ margin: 0 }}>At Wall Street Jr. Academy, we have built a multidisciplinary learning environment in the heart of Dubai — one that prepares students not just for their first role, but for a career defined by long-term impact. Whether your interest lies in markets and valuation, software and AI, design thinking, or organizational leadership, our specialized schools offer a structured path to real mastery.</p>
-                        <p style={{ margin: 0 }}>This is not a weekend workshop or a certification factory. It is a serious institution for people who are serious about building something lasting.</p>
+                        <p style={{ margin: 0 }}>Four schools. One integrated institution. Part of a broader ecosystem shaped by leadership with experience across global financial institutions and technology systems.</p>
+                        <p style={{ margin: 0 }}>Preparing you to think, interpret, and act with clarity in real-world environments.</p>
                     </div>
 
                 </div>
