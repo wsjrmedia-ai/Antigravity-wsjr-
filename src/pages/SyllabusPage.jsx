@@ -238,8 +238,8 @@ const SyllabusPage = () => {
             {/* Learning Structure & Delivery */}
             <section ref={el => contentRefs.current[syllabusLevels.length] = el} style={sectionStyle}>
                 <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-                    <h2 style={{ fontSize: '3rem', color: '#d4af37', marginBottom: '1rem' }}>Learning Structure & Delivery</h2>
-                    <h3 style={{ fontSize: '1.8rem', opacity: 0.9, marginBottom: '2rem' }}>One Academic Framework. Multiple Formats.</h3>
+                    <h2 style={{ fontSize: 'clamp(1.8rem, 5vw, 3rem)', color: '#d4af37', marginBottom: '1rem', lineHeight: 1.2 }}>Learning Structure & Delivery</h2>
+                    <h3 style={{ fontSize: 'clamp(1.2rem, 3vw, 1.8rem)', opacity: 0.9, marginBottom: '2rem', lineHeight: 1.3 }}>One Academic Framework. Multiple Formats.</h3>
                     <p style={{ maxWidth: '800px', margin: '0 auto', fontSize: '1.1rem', lineHeight: 1.8, opacity: 0.8 }}>
                         The School of Finance delivers its curriculum through a blended model — combining structured online learning with physical, campus-based instruction. Both formats are governed by the same academic philosophy, held to the same standards, and built around the same core conviction: that genuine understanding must come before execution.
                     </p>
