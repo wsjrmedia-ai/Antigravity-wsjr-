@@ -97,6 +97,30 @@ const HeroSection = () => {
                 {/* Earn Toggle - Routes to TopStocX */}
                 <LearnEarnToggle />
 
+                {/* Trust Line — visible above the fold */}
+                <div className="hero-trust-line" style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '14px',
+                    flexWrap: 'wrap',
+                    marginTop: '14px',
+                    marginBottom: '8px',
+                    padding: '0 8%',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 'clamp(0.72rem, 1vw, 0.85rem)',
+                    color: 'rgba(255,255,255,0.78)',
+                    letterSpacing: '0.18em',
+                    textTransform: 'uppercase',
+                    fontWeight: 500
+                }}>
+                    <span style={{ color: '#F7AC41', fontWeight: 600 }}>5,000+ learners</span>
+                    <span aria-hidden style={{ color: 'rgba(247,172,65,0.5)' }}>•</span>
+                    <span>Global presence</span>
+                    <span aria-hidden style={{ color: 'rgba(247,172,65,0.5)' }}>•</span>
+                    <span>Real-world frameworks</span>
+                </div>
+
                 {/* Main Title */}
                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '40px' }}>
                     <h1 style={{
@@ -356,10 +380,21 @@ const HeroSection = () => {
                     .explore-arrow { width: 80px !important; }
                 }
 
+                @media (max-width: 768px) {
+                    .hero-trust-line {
+                        gap: 8px !important;
+                        font-size: 0.62rem !important;
+                        letter-spacing: 0.14em !important;
+                        padding: 0 4% !important;
+                        margin-top: 10px !important;
+                    }
+                }
+
                 @media (max-width: 480px) {
                     .main-content-wrapper { padding: 0 4% !important; margin-top: 20px !important; }
                     .enroll-button-container button { width: 180px !important; height: 48px !important; }
                     .hero-paragraphs { display: none !important; } /* Hide long text on very small screens */
+                    .hero-trust-line { font-size: 0.55rem !important; gap: 6px !important; }
                 }
 
                 @media (max-width: 768px) {
