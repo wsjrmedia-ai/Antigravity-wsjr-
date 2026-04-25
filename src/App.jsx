@@ -11,6 +11,8 @@ import WhoWeArePage from './pages/WhoWeArePage'
 import TopStocxPage from './pages/TopStocxPage'
 import EnrollPage from './pages/EnrollPage'
 import ProgrammesPage from './pages/ProgrammesPage'
+import BlogIndexPage from './pages/BlogIndexPage'
+import BlogPostPage from './pages/BlogPostPage'
 
 import CustomScrollbar from './components/CustomScrollbar'
 import FinAIChatbot from './components/FinAIChatbot'
@@ -84,6 +86,8 @@ function App() {
           <Route path="/enroll" element={<EnrollPage />} />
           <Route path="/programmes" element={<ProgrammesPage />} />
           <Route path="/programs" element={<ProgrammesPage />} />
+          <Route path="/blog" element={<BlogIndexPage />} />
+          <Route path="/blog/:slug" element={<BlogPostPage />} />
         </Routes>
       </main>
       <FinAIChatbot />

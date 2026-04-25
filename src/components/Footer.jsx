@@ -90,8 +90,13 @@ const Footer = () => {
 
                     {/* Column 2 */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                        {['Newsletter & Insights', 'Community Events', 'Social Responsibility', 'Rewards Program'].map((link) => (
-                            <Link key={link} to="#" style={{
+                        {[
+                            { label: 'Insights & Resources', path: '/blog' },
+                            { label: 'Community Events', path: '#' },
+                            { label: 'Social Responsibility', path: '#' },
+                            { label: 'Rewards Program', path: '#' }
+                        ].map((link) => (
+                            <Link key={link.label} to={link.path} style={{
                                 fontFamily: 'var(--font-body)',
                                 fontSize: '1.2rem',
                                 color: '#FFF',
@@ -100,7 +105,7 @@ const Footer = () => {
                                 opacity: 0.8,
                                 transition: 'opacity 0.2s'
                             }} onMouseOver={e => e.target.style.opacity = 1} onMouseOut={e => e.target.style.opacity = 0.8}>
-                                {link}
+                                {link.label}
                             </Link>
                         ))}
                     </div>
