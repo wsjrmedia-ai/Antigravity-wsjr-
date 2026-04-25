@@ -410,28 +410,55 @@ const Leaderboard = () => {
                     .lb-col-school { display: none !important; }
                     .lb-col-streak { display: none !important; }
                 }
+
+                /* Phone: switch from a tight grid to a flex card-row so the
+                   rank + name + badges + score never collide. */
                 @media (max-width: 600px) {
                     .leaderboard-section { padding: 70px 4% !important; }
-                    .leaderboard-row {
-                        grid-template-columns: 36px 1.6fr 78px !important;
-                        gap: 8px !important;
-                        padding: 12px 14px !important;
-                        font-size: 0.85rem !important;
+                    .leaderboard-head { display: none !important; }
+                    .leaderboard-data {
+                        display: flex !important;
+                        align-items: center !important;
+                        gap: 14px !important;
+                        padding: 14px 14px !important;
                     }
-                    .lb-col-country { display: none !important; }
-                    .leaderboard-row span[style*="font-size: 1.6rem"] { font-size: 1.15rem !important; }
-                    .leaderboard-row span[style*="font-size: 1.05rem"] { font-size: 0.95rem !important; }
-                }
-                @media (max-width: 400px) {
-                    .leaderboard-row {
-                        grid-template-columns: 30px 1fr 60px !important;
+                    /* Rank */
+                    .leaderboard-data > span:nth-of-type(1) {
+                        flex: 0 0 auto !important;
+                        font-size: 1.4rem !important;
+                        min-width: 28px !important;
+                        text-align: center !important;
+                    }
+                    /* Name + badges block: fills available space, wraps badges */
+                    .leaderboard-data > span:nth-of-type(2) {
+                        flex: 1 1 auto !important;
+                        flex-wrap: wrap !important;
                         gap: 6px !important;
-                        padding: 10px 10px !important;
+                        min-width: 0 !important;
                     }
-                    /* Hide the inline progress bar on very narrow screens — keep just the number */
-                    .leaderboard-row span[aria-hidden="true"][style*="width: 60px"] { display: none !important; }
-                    /* Drop the score-bar wrapper gap */
-                    .leaderboard-row > span:nth-of-type(4) { gap: 0 !important; }
+                    .leaderboard-data > span:nth-of-type(2) > span:first-child {
+                        font-size: 0.95rem !important;
+                        flex: 0 1 auto !important;
+                    }
+                    /* Country pill — hide */
+                    .lb-col-country { display: none !important; }
+                    /* Score column: stays right-aligned, compact */
+                    .leaderboard-data > span:nth-of-type(5) {
+                        flex: 0 0 auto !important;
+                        gap: 6px !important;
+                    }
+                    .leaderboard-data > span:nth-of-type(5) > span:first-child {
+                        font-size: 1rem !important;
+                        min-width: 26px !important;
+                    }
+                    /* Hide the inline progress bar on phone — keep just the number */
+                    .leaderboard-data span[aria-hidden="true"][style*="width: 60px"] {
+                        display: none !important;
+                    }
+                }
+                @media (max-width: 380px) {
+                    .leaderboard-data { gap: 10px !important; padding: 12px 10px !important; }
+                    .leaderboard-data > span:nth-of-type(2) > span:first-child { font-size: 0.88rem !important; }
                 }
             `}</style>
         </section>

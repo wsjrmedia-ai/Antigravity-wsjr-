@@ -358,25 +358,21 @@ const SchoolsSection = () => {
                         padding-bottom: 12px !important;
                     }
                     .school-right-col > div:first-child {
-                        padding: 0 6% 16px !important;
+                        padding: 0 6% 24px !important;
                         gap: 16px !important;
                     }
                     .school-right-col > div:first-child p,
                     .school-right-col > div:first-child span {
                         font-size: clamp(1rem, 4vw, 1.2rem) !important;
                     }
-                    .school-right-col > div:last-child { min-height: 140px !important; }
-                    .school-right-col > div:last-child > div:last-child {
-                        font-size: clamp(5rem, 28vw, 9rem) !important;
-                        letter-spacing: -5px !important;
-                        top: 10% !important;
-                    }
+                    /* Hide the giant SOF/SOT/SOD/SOM acronym + image block
+                       on phones — it pushes the EXPLORE PROGRAM link off-screen. */
+                    .school-right-col > div:last-child { display: none !important; }
                 }
 
                 @media (max-width: 480px) {
                     .school-tab { left: 8% !important; width: 170px !important; height: 65px !important; }
                     .school-tab span { font-size: 1.4rem !important; }
-                    .school-right-col > div:last-child { min-height: 110px !important; }
                 }
             `}</style>
         </section>

@@ -351,8 +351,16 @@ img {
     min-height: calc(100vh - 60px) !important;
     padding-top: 40px !important;
   }
-  .school-right-col { display: none !important; }
-  .school-left-col { justify-content: flex-start !important; padding: 30px 5% !important; gap: 20px !important; }
+  /* Keep the right column visible BUT trim it down — hide the giant
+     SOF/SOT/SOD/SOM image block, keep the "Ideal for" + EXPLORE PROGRAM
+     so users can actually open each program from a phone. */
+  .school-right-col { width: 100% !important; min-width: 0 !important; flex: 0 0 auto !important; }
+  .school-right-col > div:first-child { padding: 0 5% 30px !important; gap: 20px !important; }
+  .school-right-col > div:first-child p { font-size: 1.05rem !important; line-height: 1.35 !important; }
+  .school-right-col > div:first-child span { font-size: 1.05rem !important; }
+  .school-right-col > div:last-child { display: none !important; }
+
+  .school-left-col { justify-content: flex-start !important; padding: 30px 5% 16px !important; gap: 20px !important; }
   .school-left-col h4 { font-size: 1.3rem !important; line-height: 1.3 !important; }
   .school-left-col p { font-size: 1.05rem !important; line-height: 1.35 !important; }
   .school-left-col h3 { font-size: 2rem !important; padding-bottom: 0 !important; letter-spacing: -1px !important; }

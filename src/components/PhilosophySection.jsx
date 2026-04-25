@@ -194,12 +194,49 @@ const PhilosophySection = () => {
             </div>
 
             <style>{`
+                /* Tablet & phone: convert the 3-card grid into a single
+                   horizontal-scroll rail. Each card snaps into place. */
+                @media (max-width: 992px) {
+                    .phil-cards-grid {
+                        display: flex !important;
+                        grid-template-columns: none !important;
+                        flex-wrap: nowrap !important;
+                        overflow-x: auto !important;
+                        overflow-y: hidden !important;
+                        scroll-snap-type: x mandatory !important;
+                        -webkit-overflow-scrolling: touch !important;
+                        gap: 20px !important;
+                        padding: 8px 4px 24px !important;
+                        margin: 0 -5% !important;
+                        scroll-padding-left: 5% !important;
+                    }
+                    .phil-cards-grid::-webkit-scrollbar { display: none; }
+                    .phil-card {
+                        flex: 0 0 86% !important;
+                        max-width: 86% !important;
+                        scroll-snap-align: start !important;
+                        scroll-snap-stop: always !important;
+                    }
+                    /* Add a left/right gutter sibling so the first/last card
+                       isn't flush against the viewport edge */
+                    .phil-cards-grid::before,
+                    .phil-cards-grid::after {
+                        content: '';
+                        flex: 0 0 5% !important;
+                    }
+                }
                 @media (max-width: 768px) {
                     .philosophy-section { padding: 60px 5% !important; }
-                    .philosophy-section h2 { font-size: clamp(2.2rem, 8vw, 3rem) !important; text-align: center; }
-                    .philosophy-section p { font-size: 1.1rem !important; text-align: center; }
-                    .phil-cards-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
-                    .phil-card { padding: 30px 20px !important; }
+                    .philosophy-section h2 { font-size: clamp(2.2rem, 8vw, 3rem) !important; text-align: left; }
+                    .philosophy-section h2 + p,
+                    .philosophy-section > div > div > p { font-size: 1rem !important; text-align: left; }
+                    .phil-card { padding: 32px 24px !important; flex: 0 0 88% !important; max-width: 88% !important; }
+                    .phil-card h3 { font-size: 1.5rem !important; }
+                    .phil-card h4 { font-size: 1.2rem !important; }
+                    .phil-card p { font-size: 0.98rem !important; }
+                }
+                @media (max-width: 480px) {
+                    .phil-card { flex: 0 0 92% !important; max-width: 92% !important; padding: 28px 20px !important; }
                 }
             `}</style>
         </section>
