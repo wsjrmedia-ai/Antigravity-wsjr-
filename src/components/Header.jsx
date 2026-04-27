@@ -66,7 +66,7 @@ const Header = () => {
             label: 'Products',
             href: '#products',
             dropdown: [
-                { label: 'TopStocX Platform', href: '/topstocx' },
+                { label: 'TopStocX Platform', href: 'https://topstocx.com', external: true },
                 { label: 'Copy Trade', href: '/topstocx?view=copytrade' },
             ]
         },

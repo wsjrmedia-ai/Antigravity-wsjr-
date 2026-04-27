@@ -88,32 +88,48 @@ const MobileMenu = ({ isOpen, onClose }) => {
                             { name: 'Home', path: '/' },
                             { name: 'School of Finance', path: '/school-of-finance' },
                             { name: 'Who We Are', path: '/who-we-are' },
-                            { name: 'TopStocX Platform', path: '/topstocx' }
-                        ].map((link, idx) => (
-                            <motion.div
-                                key={link.name}
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.1 + idx * 0.1 }}
-                            >
-                                <Link
-                                    to={link.path}
-                                    onClick={onClose}
-                                    className="mobile-menu-link"
-                                    style={{
-                                        fontFamily: 'var(--font-hero)',
-                                        fontSize: 'clamp(2rem, 5vw, 4rem)',
-                                        color: '#FFF',
-                                        textDecoration: 'none',
-                                        fontWeight: 500,
-                                        display: 'inline-block',
-                                        padding: '4px 0'
-                                    }}
+                            { name: 'TopStocX Platform', path: 'https://topstocx.com', external: true }
+                        ].map((link, idx) => {
+                            const linkStyle = {
+                                fontFamily: 'var(--font-hero)',
+                                fontSize: 'clamp(2rem, 5vw, 4rem)',
+                                color: '#FFF',
+                                textDecoration: 'none',
+                                fontWeight: 500,
+                                display: 'inline-block',
+                                padding: '4px 0'
+                            }
+                            return (
+                                <motion.div
+                                    key={link.name}
+                                    initial={{ opacity: 0, y: 30 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.1 + idx * 0.1 }}
                                 >
-                                    {link.name}
-                                </Link>
-                            </motion.div>
-                        ))}
+                                    {link.external ? (
+                                        <a
+                                            href={link.path}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            onClick={onClose}
+                                            className="mobile-menu-link"
+                                            style={linkStyle}
+                                        >
+                                            {link.name}
+                                        </a>
+                                    ) : (
+                                        <Link
+                                            to={link.path}
+                                            onClick={onClose}
+                                            className="mobile-menu-link"
+                                            style={linkStyle}
+                                        >
+                                            {link.name}
+                                        </Link>
+                                    )}
+                                </motion.div>
+                            )
+                        })}
                     </nav>
                 </motion.div>
             )}
