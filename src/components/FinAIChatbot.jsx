@@ -176,14 +176,43 @@ export default function AcademyChatbot() {
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs]);
 
-  /* Stop wheel events from reaching Lenis when scrolling inside the messages pane.
-     Lenis attaches a capture listener on window so we must also use capture to win. */
+  /* Manual wheel scroll — bypasses Lenis entirely.
+     stopPropagation can't beat Lenis (window capture runs first).
+     scrollTop assignment is plain JS and always executes regardless of
+     preventDefault or Lenis state. deltaMode 0=px, 1=lines, 2=pages. */
   useEffect(() => {
     const el = msgsRef.current;
     if (!el) return;
-    const stop = (e) => e.stopPropagation();
-    el.addEventListener("wheel", stop, { capture: true, passive: true });
-    return () => el.removeEventListener("wheel", stop, { capture: true });
+    const onWheel = (e) => {
+      e.preventDefault();
+      const px = e.deltaMode === 1 ? e.deltaY * 20
+               : e.deltaMode === 2 ? e.deltaY * el.clientHeight
+               : e.deltaY;
+      el.scrollTop += px;
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
+
+  /* Manual touch scroll for mobile — same reason: don't rely on native scroll
+     when body-level listeners may interfere. */
+  useEffect(() => {
+    const el = msgsRef.current;
+    if (!el) return;
+    let startY = 0;
+    const onTouchStart = (e) => { startY = e.touches[0].clientY; };
+    const onTouchMove  = (e) => {
+      e.stopPropagation();
+      const dy = startY - e.touches[0].clientY;
+      startY = e.touches[0].clientY;
+      el.scrollTop += dy;
+    };
+    el.addEventListener("touchstart", onTouchStart, { passive: true });
+    el.addEventListener("touchmove",  onTouchMove,  { passive: false });
+    return () => {
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchmove",  onTouchMove);
+    };
   }, []);
 
   const addMsg = (role, text) => setMsgs(prev => [...prev, { id: Date.now() + Math.random(), role, text }]);
