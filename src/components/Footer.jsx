@@ -70,28 +70,17 @@ const Footer = () => {
 
                 {/* Links Grids */}
                 <div className="footer-links" style={{ display: 'flex', gap: '80px', flexWrap: 'wrap' }}>
-                    
-                    {/* Column 1 */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                        {['Admissions', 'Student Portal', 'Research', 'Contact Us'].map((link) => (
-                            <Link key={link} to="#" style={{
-                                fontFamily: 'var(--font-body)',
-                                fontSize: '1.2rem', // 19px
-                                color: '#FFF',
-                                textDecoration: 'none',
-                                fontWeight: 500,
-                                opacity: 0.8,
-                                transition: 'opacity 0.2s'
-                            }} onMouseOver={e => e.target.style.opacity = 1} onMouseOut={e => e.target.style.opacity = 0.8}>
-                                {link}
-                            </Link>
-                        ))}
-                    </div>
 
-                    {/* Column 2 */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                        {['Newsletter & Insights', 'Community Events', 'Social Responsibility', 'Rewards Program'].map((link) => (
-                            <Link key={link} to="#" style={{
+                    {/* Column 1 — Explore */}
+                    <div className="footer-col" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                        <span className="footer-col-title" style={{ fontFamily: 'var(--font-body)', fontSize: '0.78rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--accent-gold)', fontWeight: 600 }}>Explore</span>
+                        {[
+                            { label: 'Programmes', path: '/programmes' },
+                            { label: 'Who We Are', path: '/who-we-are' },
+                            { label: 'Blog', path: '/blog' },
+                            { label: 'Enroll', path: '/enroll' }
+                        ].map((link) => (
+                            <Link key={link.label} to={link.path} className="footer-link" style={{
                                 fontFamily: 'var(--font-body)',
                                 fontSize: '1.2rem',
                                 color: '#FFF',
@@ -100,7 +89,30 @@ const Footer = () => {
                                 opacity: 0.8,
                                 transition: 'opacity 0.2s'
                             }} onMouseOver={e => e.target.style.opacity = 1} onMouseOut={e => e.target.style.opacity = 0.8}>
-                                {link}
+                                {link.label}
+                            </Link>
+                        ))}
+                    </div>
+
+                    {/* Column 2 — Schools */}
+                    <div className="footer-col" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                        <span className="footer-col-title" style={{ fontFamily: 'var(--font-body)', fontSize: '0.78rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--accent-gold)', fontWeight: 600 }}>Schools</span>
+                        {[
+                            { label: 'School of Finance', path: '/school-of-finance' },
+                            { label: 'School of AI & Automation', path: '/school-of-technology' },
+                            { label: 'School of Design', path: '/school-of-design' },
+                            { label: 'School of Management', path: '/school-of-management' }
+                        ].map((link) => (
+                            <Link key={link.label} to={link.path} className="footer-link" style={{
+                                fontFamily: 'var(--font-body)',
+                                fontSize: '1.2rem',
+                                color: '#FFF',
+                                textDecoration: 'none',
+                                fontWeight: 500,
+                                opacity: 0.8,
+                                transition: 'opacity 0.2s'
+                            }} onMouseOver={e => e.target.style.opacity = 1} onMouseOut={e => e.target.style.opacity = 0.8}>
+                                {link.label}
                             </Link>
                         ))}
                     </div>

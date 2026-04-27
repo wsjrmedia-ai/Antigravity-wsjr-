@@ -155,7 +155,8 @@ export default function AcademyChatbot() {
       `}</style>
 
       {/* FAB */}
-      <button 
+      <button
+        className="finai-fab"
         onClick={() => setIsOpen(!isOpen)}
         style={{
           position: 'fixed', bottom: 30, right: 30, zIndex: 9999,
@@ -178,8 +179,14 @@ export default function AcademyChatbot() {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-8px); }
           }
+          /* Tablet: shrink the launcher so it stops covering body copy */
+          @media (max-width: 768px) {
+            .finai-fab { width: 52px !important; height: 52px !important; bottom: 18px !important; right: 18px !important; border-width: 1.5px !important; }
+            .finai-wrap { right: 12px !important; left: 12px !important; width: auto !important; max-width: none !important; bottom: 80px !important; height: 70vh !important; }
+          }
+          /* Phone: even smaller, hugged into the corner */
           @media (max-width: 480px) {
-            .finai-wrap { right: 12px !important; left: 12px !important; width: auto !important; max-width: none !important; bottom: 90px !important; height: 70vh !important; }
+            .finai-fab { width: 46px !important; height: 46px !important; bottom: 14px !important; right: 14px !important; box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3) !important; }
           }
         `}</style>
         {isOpen ? (

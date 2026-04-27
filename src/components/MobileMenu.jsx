@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
+import LanguageDropdown from './LanguageDropdown';
 
 const MobileMenu = ({ isOpen, onClose }) => {
     // Lock page scroll (native + Lenis) while the menu is open.
@@ -62,8 +63,8 @@ const MobileMenu = ({ isOpen, onClose }) => {
                 >
                     {/* Header of Menu */}
                     <div className="mobile-menu-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span className="mobile-menu-en" style={{ fontSize: '1.5rem', fontWeight: 500, color: '#FFF' }}>EN</span>
+                         <div className="mobile-menu-lang" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <LanguageDropdown variant="menu" />
                         </div>
                         <div onClick={onClose} className="mobile-menu-close" style={{ cursor: 'pointer', padding: '10px', margin: '-10px' }} aria-label="Close menu">
                             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

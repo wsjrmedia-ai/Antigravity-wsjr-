@@ -123,7 +123,7 @@ const InstitutionalOverview = () => {
                             fontWeight: 600,
                             letterSpacing: '-0.4px'
                         }}>
-                            WallStreet Jr. Academy is a Dubai-based global institution that operates at the intersection of finance, technology, design and management. We believe that the most capable professionals of tomorrow will not be narrow specialists; they will be disciplined thinkers who understand how capital, technology and human behaviour interact.
+                            Built around relevance. Reflecting how modern institutions operate, not how subjects are traditionally taught.
                         </p>
                         <p ref={line3} style={{
                             fontFamily: 'var(--font-hero)',
@@ -133,7 +133,7 @@ const InstitutionalOverview = () => {
                             fontWeight: 600,
                             letterSpacing: '-0.4px'
                         }}>
-                            Our curriculum is built around one core idea: real-world relevance. Every program we offer is designed not around academic benchmarks, but around the demands of modern institutions; from investment banks and private equity firms to technology companies and designated organizations.
+                            AI and automation are integrated as tools for clarity, speed, and better decision-making.
                         </p>
                         <p ref={line4} style={{
                             fontFamily: 'var(--font-hero)',
@@ -143,7 +143,7 @@ const InstitutionalOverview = () => {
                             fontWeight: 600,
                             letterSpacing: '-0.4px'
                         }}>
-                            Led by a faculty with direct experience at institutions including JP Morgan and Bank of America, our academic framework brings banking-grade rigor into an education-first environment. Students graduate not just with knowledge, but with the mental models and practical tools they need to perform.
+                            Led by professionals with experience at institutions such as JP Morgan and Bank of America, preparing individuals to perform, not just understand.
                         </p>
                 </div>
             </div>
