@@ -140,6 +140,7 @@ export default function AcademyChatbot() {
   const [loading, setLoading] = useState(false);
   const [chipSet, setChipSet] = useState(0);
   const bottomRef = useRef(null);
+  const msgsRef   = useRef(null);
 
   useEffect(() => {
     if (isOpen && msgs.length === 0) {
@@ -147,30 +148,28 @@ export default function AcademyChatbot() {
     }
   }, [isOpen]);
 
-  /* Lock scroll */
+  /* Lock page scroll while chat is open.
+     Strategy: block touchmove on everything EXCEPT the messages pane
+     (position:fixed on body breaks nested touch-scroll on iOS Safari). */
   useEffect(() => {
     if (!isOpen) return;
-    const body  = document.body;
-    const html  = document.documentElement;
-    const scrollY = window.scrollY || 0;
-    const prev  = {
-      bodyPosition: body.style.position, bodyTop: body.style.top,
-      bodyWidth: body.style.width,       bodyOverflow: body.style.overflow,
-      htmlOverflow: html.style.overflow,
-    };
+
     window.__lenis?.stop?.();
-    body.style.position = "fixed";
-    body.style.top      = `-${scrollY}px`;
-    body.style.width    = "100%";
-    body.style.overflow = "hidden";
-    html.style.overflow = "hidden";
+
+    // Desktop: hide body scrollbar
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    // Mobile / iOS: prevent page touchmove everywhere except messages
+    const blockTouch = (e) => {
+      if (msgsRef.current && msgsRef.current.contains(e.target)) return;
+      e.preventDefault();
+    };
+    document.addEventListener("touchmove", blockTouch, { passive: false });
+
     return () => {
-      body.style.position = prev.bodyPosition;
-      body.style.top      = prev.bodyTop;
-      body.style.width    = prev.bodyWidth;
-      body.style.overflow = prev.bodyOverflow;
-      html.style.overflow = prev.htmlOverflow;
-      window.scrollTo(0, scrollY);
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener("touchmove", blockTouch);
       window.__lenis?.start?.();
     };
   }, [isOpen]);
@@ -416,7 +415,7 @@ export default function AcademyChatbot() {
           </div>
 
           {/* Messages */}
-          <div className="atlas-msgs" style={{
+          <div ref={msgsRef} className="atlas-msgs" style={{
             flex: 1, overflowY: "scroll",
             padding: "18px 16px",
             display: "flex", flexDirection: "column", gap: 11,
