@@ -22,7 +22,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, X, CornerDownLeft, Command as CommandIcon, ExternalLink, AlertCircle, Mic, MicOff } from 'lucide-react';
+import { TrendingUp, X, CornerDownLeft, Command as CommandIcon, ExternalLink, AlertCircle, Mic, MicOff } from 'lucide-react';
 import { useAI } from '../../context/AIContext';
 import { useLeverate } from '../../context/LeverateContext';
 import { analyzeWithAI, streamAIAnalysis } from '../../services/topstocxAI';
@@ -267,7 +267,7 @@ export default function AICommandPalette() {
           boxShadow: '0 10px 30px rgba(0, 90, 255, 0.35)',
         }}
       >
-        <Sparkles size={15} />
+        <TrendingUp size={15} />
         <span>Ask AI</span>
         <span
           style={{
@@ -343,7 +343,7 @@ export default function AICommandPalette() {
                 padding: '14px 18px',
                 borderBottom: '1px solid rgba(255,255,255,0.06)',
               }}>
-                <Sparkles size={16} color="#0084FF" />
+                <TrendingUp size={16} color="#0084FF" />
                 <input
                   ref={inputRef}
                   type="text"
