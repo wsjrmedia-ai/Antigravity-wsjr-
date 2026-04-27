@@ -178,7 +178,7 @@ export default function ClaudeFinanceChat({ symbol, timeframe }) {
     abortRef.current = ctrl;
 
     try {
-      const res = await fetch(`${API_BASE}/api/ai/analyze?stream=1`, {
+      const res = await fetch(`${API_BASE}/api/ai/analyze`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         signal: ctrl.signal,
@@ -189,57 +189,16 @@ export default function ClaudeFinanceChat({ symbol, timeframe }) {
         }),
       });
 
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-      const reader  = res.body.getReader();
-      const decoder = new TextDecoder();
-      let full = "";
-      let buf  = "";
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buf += decoder.decode(value, { stream: true });
-
-        // SSE blocks are separated by \n\n
-        const blocks = buf.split("\n\n");
-        buf = blocks.pop(); // keep incomplete trailing block
-
-        for (const block of blocks) {
-          if (!block.trim() || block.startsWith(":")) continue; // heartbeat
-          let event = "message";
-          let data  = "";
-          for (const line of block.split("\n")) {
-            if (line.startsWith("event: ")) event = line.slice(7).trim();
-            else if (line.startsWith("data: ")) data = line.slice(6).trim();
-          }
-          if (!data) continue;
-
-          try {
-            const parsed = JSON.parse(data);
-            if (event === "meta") {
-              setProvider(parsed.provider || null);
-            } else if (event === "delta") {
-              full += parsed.text || "";
-              setMsgs((prev) =>
-                prev.map((m) => (m.id === botId ? { ...m, content: full } : m))
-              );
-            } else if (event === "done") {
-              if (parsed.text) full = parsed.text;
-              setMsgs((prev) =>
-                prev.map((m) => (m.id === botId ? { ...m, content: full, streaming: false } : m))
-              );
-            } else if (event === "error") {
-              throw new Error(parsed.error || "AI service error");
-            }
-          } catch (parseErr) {
-            if (event === "error") throw parseErr;
-            // ignore malformed frames
-          }
-        }
+      if (!res.ok) {
+        let body;
+        try { body = await res.json(); } catch { body = {}; }
+        throw new Error(body.error || `HTTP ${res.status}`);
       }
 
-      // Ensure final state is clean
+      const data = await res.json();
+      const full = data.text || "";
+
+      setProvider(data.model?.includes("claude") ? "claude" : "perplexity");
       setMsgs((prev) =>
         prev.map((m) => (m.id === botId ? { ...m, content: full, streaming: false } : m))
       );
