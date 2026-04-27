@@ -247,9 +247,20 @@ export default function ClaudeFinanceChat({ symbol, timeframe }) {
         .cfc-chip:hover{background:rgba(0,245,160,.12)!important;border-color:#00f5a0!important;color:#00f5a0!important}
         .cfc-send:hover:not(:disabled){transform:scale(1.08)}
         .cfc-clear:hover{background:rgba(255,77,109,.15)!important;color:#ff4d6d!important}
+        /* Tablet */
+        @media (max-width: 768px) {
+          .cfc-panel { width: calc(100vw - 32px) !important; right: 16px !important; left: 16px !important; bottom: 82px !important; height: 70vh !important; max-height: 580px !important; }
+          .cfc-fab-wrap { bottom: 18px !important; right: 18px !important; }
+        }
+        /* Mobile */
         @media (max-width: 480px) {
-          .cfc-panel { width: calc(100vw - 24px) !important; right: 12px !important; left: 12px !important; bottom: 90px !important; height: 75vh !important; }
-          .cfc-fab-wrap { bottom: 16px !important; right: 16px !important; }
+          .cfc-panel { width: calc(100vw - 12px) !important; right: 6px !important; left: 6px !important; bottom: 74px !important; height: 80vh !important; max-height: none !important; border-radius: 16px !important; }
+          .cfc-fab-wrap { bottom: 14px !important; right: 14px !important; }
+          .cfc-fab-wrap button { width: 48px !important; height: 48px !important; }
+        }
+        /* Extra small phones */
+        @media (max-width: 360px) {
+          .cfc-panel { width: calc(100vw - 8px) !important; right: 4px !important; left: 4px !important; height: 85vh !important; }
         }
       `}</style>
 

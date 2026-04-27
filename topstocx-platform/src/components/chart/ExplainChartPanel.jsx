@@ -83,6 +83,40 @@ export default function ExplainChartPanel() {
 
   return (
     <>
+      <style>{`
+        .ep-btn { min-width: 34px; }
+        .ep-btn-label { display: inline; }
+        @media (max-width: 480px) {
+          .ep-btn { padding: 0 8px !important; }
+          .ep-btn-label { display: none; }
+        }
+        .ep-panel {
+          position: absolute;
+          top: 54px;
+          right: 12px;
+          z-index: 25;
+          width: min(360px, calc(100vw - 24px));
+          max-height: calc(100% - 70px);
+          overflow-y: auto;
+        }
+        @media (max-width: 480px) {
+          .ep-panel {
+            top: 54px !important;
+            right: 6px !important;
+            left: 6px !important;
+            width: calc(100vw - 12px) !important;
+            max-height: calc(100vh - 140px) !important;
+          }
+        }
+        @media (max-width: 360px) {
+          .ep-panel {
+            right: 4px !important;
+            left: 4px !important;
+            width: calc(100vw - 8px) !important;
+          }
+        }
+      `}</style>
+
       {/* Trigger button — sits on the chart, top-right corner under fullscreen */}
       <motion.button
         type="button"
@@ -90,10 +124,11 @@ export default function ExplainChartPanel() {
         whileTap={{ scale: 0.96 }}
         aria-label="Explain this chart with AI"
         title="AI read of the chart"
+        className="ep-btn"
         style={{
           position: 'absolute',
           top: 10,
-          right: 54, // sits to the LEFT of the fullscreen button (which is at right:12, width:34)
+          right: 54,
           zIndex: 20,
           height: 34,
           padding: '0 12px',
@@ -116,7 +151,7 @@ export default function ExplainChartPanel() {
         }}
       >
         <Sparkles size={14} />
-        <span>Explain</span>
+        <span className="ep-btn-label">Explain</span>
       </motion.button>
 
       {/* Slide-out panel */}
@@ -124,18 +159,12 @@ export default function ExplainChartPanel() {
         {open && (
           <motion.aside
             key="explain-panel"
+            className="ep-panel"
             initial={{ opacity: 0, x: 24 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 24 }}
             transition={{ type: 'spring', stiffness: 320, damping: 32 }}
             style={{
-              position: 'absolute',
-              top: 54,
-              right: 12,
-              zIndex: 25,
-              width: 'min(360px, calc(100vw - 24px))',
-              maxHeight: 'calc(100% - 70px)',
-              overflowY: 'auto',
               background: 'rgba(14, 18, 28, 0.96)',
               border: '1px solid rgba(0, 132, 255, 0.25)',
               borderRadius: 10,

@@ -268,7 +268,7 @@ export default function AICommandPalette() {
         }}
       >
         <TrendingUp size={15} />
-        <span>Ask AI</span>
+        <span className="ai-fab-text">Ask AI</span>
         <span
           style={{
             display: 'inline-flex',
@@ -287,6 +287,8 @@ export default function AICommandPalette() {
         </span>
         <style>{`
           @media (max-width: 600px) { .fab-kbd { display: none !important; } }
+          @media (max-width: 480px) { .ai-fab-text { display: none !important; } }
+          @media (max-width: 480px) { .ai-cp-modal { top: 8vh !important; max-height: 88vh !important; } }
         `}</style>
       </motion.button>
 
@@ -311,6 +313,7 @@ export default function AICommandPalette() {
             />
             <motion.div
               key="cp-modal"
+              className="ai-cp-modal"
               role="dialog"
               aria-label="AI command palette"
               initial={{ opacity: 0, y: -12, scale: 0.97 }}
