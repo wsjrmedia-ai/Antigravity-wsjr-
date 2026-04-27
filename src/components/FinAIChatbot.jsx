@@ -205,10 +205,19 @@ export default function AcademyChatbot() {
     }
 
     if (step === "ask_name") {
-      setLead(prev => ({ ...prev, name: text }));
+      const name = text.trim();
+      if (name.length < 2 || !/[a-zA-Z]/.test(name)) {
+        setLoading(true);
+        setTimeout(() => {
+          addMsg("assistant", "Please enter your **full name** (at least a first and last name) so we can address you properly.");
+          setLoading(false);
+        }, 400);
+        return;
+      }
+      setLead(prev => ({ ...prev, name }));
       setLoading(true);
       setTimeout(() => {
-        addMsg("assistant", `Thanks, ${text}! Please share your **phone number** (with country code) so we can send you the full program details.`);
+        addMsg("assistant", `Thanks, ${name}! Please share your **phone number with country code** — for example: +971 50 123 4567`);
         setStep("ask_phone");
         setLoading(false);
       }, 600);
@@ -216,6 +225,17 @@ export default function AcademyChatbot() {
     }
 
     if (step === "ask_phone") {
+      const digits = text.replace(/\D/g, "");
+      const hasCountryCode = /^\+/.test(text.trim()) || digits.length >= 11;
+      const validLength   = digits.length >= 7 && digits.length <= 15;
+      if (!validLength || !hasCountryCode) {
+        setLoading(true);
+        setTimeout(() => {
+          addMsg("assistant", "That doesn't look right. Please enter a valid phone number **including your country code** — for example:\n\n+971 50 123 4567 (UAE)\n+91 98765 43210 (India)\n+1 312 555 0100 (US)");
+          setLoading(false);
+        }, 400);
+        return;
+      }
       setLead(prev => ({ ...prev, phone: text }));
       setLoading(true);
       setTimeout(() => {
@@ -227,7 +247,16 @@ export default function AcademyChatbot() {
     }
 
     if (step === "ask_email") {
-      const finalLead = { ...lead, email: text };
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      if (!emailRegex.test(text.trim())) {
+        setLoading(true);
+        setTimeout(() => {
+          addMsg("assistant", "That doesn't look like a valid email address. Please enter a correct email — for example: **yourname@gmail.com**");
+          setLoading(false);
+        }, 400);
+        return;
+      }
+      const finalLead = { ...lead, email: text.trim() };
       setLead(finalLead);
       setLoading(true);
       console.log("ATLAS LEAD:", finalLead);
