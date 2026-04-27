@@ -188,6 +188,14 @@ export default function AcademyChatbot() {
 
   const addMsg = (role, text) => setMsgs(prev => [...prev, { id: Date.now() + Math.random(), role, text }]);
 
+  /* ── Input detectors ── */
+  const isEmail = (s) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s);
+  const isPhone = (s) => {
+    const d = s.replace(/\D/g, "");
+    return d.length >= 7 && d.length <= 15 && (/^\+/.test(s) || d.length >= 10);
+  };
+  const isName  = (s) => s.length >= 2 && /[a-zA-Z]/.test(s) && !isEmail(s) && !isPhone(s);
+
   const handleSend = (textOverride) => {
     const text = (textOverride ?? input).trim();
     if (!text) return;
@@ -205,19 +213,34 @@ export default function AcademyChatbot() {
     }
 
     if (step === "ask_name") {
-      const name = text.trim();
-      if (name.length < 2 || !/[a-zA-Z]/.test(name)) {
+      if (isEmail(text)) {
         setLoading(true);
         setTimeout(() => {
-          addMsg("assistant", "Please enter your **full name** (at least a first and last name) so we can address you properly.");
+          addMsg("assistant", "That looks like an email address — I'll ask for that shortly. Could you share your **full name** first?");
           setLoading(false);
         }, 400);
         return;
       }
-      setLead(prev => ({ ...prev, name }));
+      if (isPhone(text)) {
+        setLoading(true);
+        setTimeout(() => {
+          addMsg("assistant", "That looks like a phone number — I'll ask for that next. Could you share your **full name** first?");
+          setLoading(false);
+        }, 400);
+        return;
+      }
+      if (!isName(text)) {
+        setLoading(true);
+        setTimeout(() => {
+          addMsg("assistant", "Please enter your **full name** so we can address you properly.");
+          setLoading(false);
+        }, 400);
+        return;
+      }
+      setLead(prev => ({ ...prev, name: text }));
       setLoading(true);
       setTimeout(() => {
-        addMsg("assistant", `Thanks, ${name}! Please share your **phone number with country code** — for example: +971 50 123 4567`);
+        addMsg("assistant", `Thanks, ${text}! Please share your **phone number** including your country code.`);
         setStep("ask_phone");
         setLoading(false);
       }, 600);
@@ -225,13 +248,26 @@ export default function AcademyChatbot() {
     }
 
     if (step === "ask_phone") {
-      const digits = text.replace(/\D/g, "");
-      const hasCountryCode = /^\+/.test(text.trim()) || digits.length >= 11;
-      const validLength   = digits.length >= 7 && digits.length <= 15;
-      if (!validLength || !hasCountryCode) {
+      if (isEmail(text)) {
         setLoading(true);
         setTimeout(() => {
-          addMsg("assistant", "That doesn't look right. Please enter a valid phone number **including your country code** — for example:\n\n+971 50 123 4567 (UAE)\n+91 98765 43210 (India)\n+1 312 555 0100 (US)");
+          addMsg("assistant", "That looks like an email address — I'll ask for that next. Please share your **phone number** first, including your country code.");
+          setLoading(false);
+        }, 400);
+        return;
+      }
+      if (isName(text) && !isPhone(text)) {
+        setLoading(true);
+        setTimeout(() => {
+          addMsg("assistant", "Please enter your **phone number** including your country code.");
+          setLoading(false);
+        }, 400);
+        return;
+      }
+      if (!isPhone(text)) {
+        setLoading(true);
+        setTimeout(() => {
+          addMsg("assistant", "That doesn't look like a valid phone number. Please include your **country code** (e.g. +971, +91, +1).");
           setLoading(false);
         }, 400);
         return;
@@ -247,16 +283,31 @@ export default function AcademyChatbot() {
     }
 
     if (step === "ask_email") {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-      if (!emailRegex.test(text.trim())) {
+      if (isPhone(text)) {
         setLoading(true);
         setTimeout(() => {
-          addMsg("assistant", "That doesn't look like a valid email address. Please enter a correct email — for example: **yourname@gmail.com**");
+          addMsg("assistant", "That looks like a phone number — I already have that. Please share your **email address**.");
           setLoading(false);
         }, 400);
         return;
       }
-      const finalLead = { ...lead, email: text.trim() };
+      if (isName(text)) {
+        setLoading(true);
+        setTimeout(() => {
+          addMsg("assistant", "Please share your **email address** so our team can reach you.");
+          setLoading(false);
+        }, 400);
+        return;
+      }
+      if (!isEmail(text)) {
+        setLoading(true);
+        setTimeout(() => {
+          addMsg("assistant", "That doesn't look like a valid email address. Please enter a correct email.");
+          setLoading(false);
+        }, 400);
+        return;
+      }
+      const finalLead = { ...lead, email: text };
       setLead(finalLead);
       setLoading(true);
       console.log("ATLAS LEAD:", finalLead);
