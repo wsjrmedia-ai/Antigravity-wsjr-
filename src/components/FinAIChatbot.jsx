@@ -290,9 +290,12 @@ export default function AcademyChatbot() {
 
         .atlas-msg { animation: atlas-msg-in 0.28s ease forwards; }
 
-        .atlas-msgs::-webkit-scrollbar { width: 3px; }
-        .atlas-msgs::-webkit-scrollbar-track { background: transparent; }
-        .atlas-msgs::-webkit-scrollbar-thumb { background: rgba(247,172,65,0.2); border-radius: 10px; }
+        /* Override global scrollbar-hide for the messages pane */
+        .atlas-msgs { scrollbar-width: thin; scrollbar-color: rgba(247,172,65,0.35) rgba(255,255,255,0.04); -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+        .atlas-msgs::-webkit-scrollbar { display: block !important; width: 4px; }
+        .atlas-msgs::-webkit-scrollbar-track { background: rgba(255,255,255,0.04); border-radius: 10px; }
+        .atlas-msgs::-webkit-scrollbar-thumb { background: rgba(247,172,65,0.35); border-radius: 10px; }
+        .atlas-msgs::-webkit-scrollbar-thumb:hover { background: rgba(247,172,65,0.65); }
 
         .atlas-chip {
           flex-shrink: 0; padding: 6px 13px; border-radius: 20px;
@@ -414,9 +417,10 @@ export default function AcademyChatbot() {
 
           {/* Messages */}
           <div className="atlas-msgs" style={{
-            flex: 1, overflowY: "auto",
+            flex: 1, overflowY: "scroll",
             padding: "18px 16px",
-            display: "flex", flexDirection: "column", gap: 11
+            display: "flex", flexDirection: "column", gap: 11,
+            touchAction: "pan-y"
           }}>
             {msgs.map(m => (
               <div key={m.id} className="atlas-msg" style={{
