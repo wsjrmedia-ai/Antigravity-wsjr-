@@ -44,6 +44,13 @@ const INDEX_SEEDS = [
   { symbol: 'VIX',   name: 'CBOE VIX',      price: 14.82,    country: 'US' },
 ];
 
+const COMMODITY_SEEDS = [
+  { symbol: 'XAUUSD', name: 'Gold',    price: 2340.00 },
+  { symbol: 'XAGUSD', name: 'Silver',  price: 27.85 },
+  { symbol: 'USOIL',  name: 'WTI Oil', price: 78.40 },
+  { symbol: 'UKOIL',  name: 'Brent',   price: 82.10 },
+];
+
 const CRYPTO_SYMBOLS = [
   'btcusdt','ethusdt','bnbusdt','solusdt','xrpusdt',
   'adausdt','dogeusdt','avaxusdt','dotusdt','linkusdt',
@@ -82,6 +89,7 @@ export function MarketDataProvider({ children }) {
   const [stocks, setStocks]             = useState(() => STOCK_SEEDS.map(s => seedItem(s)));
   const [forex, setForex]               = useState(() => FOREX_SEEDS.map(s => seedItem(s, 4)));
   const [indices, setIndices]           = useState(() => INDEX_SEEDS.map(s => seedItem(s)));
+  const [commodities, setCommodities]   = useState(() => COMMODITY_SEEDS.map(s => seedItem(s, 2)));
   const [allInstruments, setAllInstruments] = useState([]);
   const [wsStatus, setWsStatus]         = useState('connecting');
 
@@ -201,6 +209,11 @@ export function MarketDataProvider({ children }) {
         const change = price - idx.open24h;
         return { ...idx, price, change, changePct: (change / idx.open24h) * 100 };
       }));
+      setCommodities(prev => prev.map(c => {
+        const price = randomWalk(c.price, 0.0003);
+        const change = price - c.open24h;
+        return { ...c, price, change, changePct: (change / c.open24h) * 100 };
+      }));
     }, 5000); // Poll every 5s
     return () => clearInterval(id);
   }, []);
@@ -233,7 +246,7 @@ export function MarketDataProvider({ children }) {
 
   const value = {
     cryptoPrices, cryptoList,
-    stocks, forex, indices,
+    stocks, forex, indices, commodities,
     topGainers, topLosers,
     tickerItems,
     wsStatus,

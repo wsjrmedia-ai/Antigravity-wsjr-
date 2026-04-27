@@ -1,30 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Activity, Lightbulb, LayoutList } from 'lucide-react';
+import { Activity, Lightbulb, LayoutList } from 'lucide-react';
 import { useLeverate } from '../../context/LeverateContext';
 import AlertsCenter from '../ai/AlertsCenter';
 
 const TopBar = ({ onToggleWatchlist, watchlistOpen }) => {
-    const { balance, connected, selectedSymbol, setSelectedSymbol, selectedPeriod, setSelectedPeriod } = useLeverate();
-    const [symbolEditing, setSymbolEditing] = useState(false);
-    const [symbolInput, setSymbolInput]     = useState('');
-    const inputRef = useRef(null);
-
-    useEffect(() => {
-        if (symbolEditing) inputRef.current?.focus();
-    }, [symbolEditing]);
-
-    const commitSymbol = () => {
-        const val = symbolInput.trim().toUpperCase();
-        if (val) setSelectedSymbol(val);
-        setSymbolInput('');
-        setSymbolEditing(false);
-    };
-
-    const handleSymbolKey = (e) => {
-        if (e.key === 'Enter')  commitSymbol();
-        if (e.key === 'Escape') { setSymbolInput(''); setSymbolEditing(false); }
-    };
+    const { balance, selectedSymbol, selectedPeriod, setSelectedPeriod } = useLeverate();
 
     const formatCurrency = (val) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
 
@@ -71,39 +52,11 @@ const TopBar = ({ onToggleWatchlist, watchlistOpen }) => {
                 backgroundColor: 'var(--bg-accent)',
                 padding: '6px 14px',
                 borderRadius: '6px',
-                cursor: symbolEditing ? 'text' : 'pointer',
                 gap: '10px',
-                transition: 'all 0.2s',
-                flexShrink: 0,
-                border: symbolEditing ? '1px solid var(--brand-blue)' : '1px solid transparent'
-            }} onClick={() => !symbolEditing && setSymbolEditing(true)}
-                onMouseEnter={e => !symbolEditing && (e.currentTarget.style.backgroundColor = '#363a45')}
-                onMouseLeave={e => !symbolEditing && (e.currentTarget.style.backgroundColor = 'var(--bg-accent)')}>
-                <Search size={16} color="var(--text-muted)" />
-                {symbolEditing ? (
-                    <input
-                        ref={inputRef}
-                        value={symbolInput}
-                        onChange={e => setSymbolInput(e.target.value)}
-                        onKeyDown={handleSymbolKey}
-                        onBlur={commitSymbol}
-                        placeholder={selectedSymbol}
-                        style={{
-                            background: 'transparent',
-                            border: 'none',
-                            outline: 'none',
-                            color: '#ffffff',
-                            fontWeight: '700',
-                            fontSize: '14px',
-                            width: '80px',
-                            padding: 0,
-                            caretColor: 'var(--brand-blue)'
-                        }}
-                    />
-                ) : (
-                    <span style={{ fontWeight: '700', fontSize: '14px' }}>{selectedSymbol}</span>
-                )}
-                <span className="topbar-status" style={{ color: 'var(--brand-green)', fontSize: '12px' }}>
+                flexShrink: 0
+            }}>
+                <span style={{ fontWeight: '700', fontSize: '14px', letterSpacing: '0.5px' }}>{selectedSymbol}</span>
+                <span className="topbar-status" style={{ color: 'var(--brand-green)', fontSize: '11px', fontWeight: 600 }}>
                     LIVE
                 </span>
             </div>

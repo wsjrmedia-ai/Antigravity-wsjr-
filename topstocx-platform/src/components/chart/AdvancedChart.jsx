@@ -5,9 +5,34 @@ import { useLeverate } from '../../context/LeverateContext';
 import ExplainChartPanel from './ExplainChartPanel';
 
 const AdvancedChart = () => {
-    const { selectedSymbol, selectedPeriod } = useLeverate();
+    const { selectedSymbol, selectedPeriod, setSelectedSymbol } = useLeverate();
     const wrapperRef = useRef(null);
     const [isFullscreen, setIsFullscreen] = useState(false);
+
+    // Best-effort: intercept TradingView's postMessage events to keep our
+    // context in sync when the user changes symbol inside the chart widget.
+    useEffect(() => {
+        const REVERSE_MAP = Object.fromEntries(
+            Object.entries(SYMBOL_MAP).map(([k, v]) => [v, k])
+        );
+        const handleMsg = (e) => {
+            try {
+                if (!e.data || typeof e.data !== 'object') return;
+                const name = e.data.name || e.data.type || '';
+                const sym  = e.data.symbol || e.data.ticker || e.data.value || '';
+                if (!sym) return;
+                const isSymChange = /symbol/i.test(name) || name === 'change';
+                if (!isSymChange) return;
+                // "FX:EURUSD" → "EURUSD", or just "EURUSD"
+                const canonical = REVERSE_MAP[sym] || (sym.includes(':') ? sym.split(':')[1] : sym);
+                if (canonical && canonical !== selectedSymbol) {
+                    setSelectedSymbol(canonical);
+                }
+            } catch {}
+        };
+        window.addEventListener('message', handleMsg);
+        return () => window.removeEventListener('message', handleMsg);
+    }, [selectedSymbol, setSelectedSymbol]);
 
     // Map Leverate periods to TradingView format
     const formatPeriod = (period) => {
@@ -125,7 +150,7 @@ const AdvancedChart = () => {
                 hide_top_toolbar={false}
                 hide_legend={false}
                 save_image={false}
-                allow_symbol_change={false}
+                allow_symbol_change={true}
                 container_id="tv_advanced_chart"
                 width="100%"
                 height="100%"
