@@ -1046,30 +1046,6 @@ app.get('/api/copy-trade/brief/:ticket', authMiddleware, async (req, res) => {
 // ─────────────────────────────────────────────────────────────
 app.get('/api/macro', macroHandler);
 
-// ─────────────────────────────────────────────────────────────
-// LEVERATE API PROXY
-// ─────────────────────────────────────────────────────────────
-app.post(/^\/api\/leverate\/(.*)/, async (req, res) => {
-  const path = req.params[0];
-  const baseUrl = process.env.LEVERATE_BASE_URL || 'https://restapi-real.sirixtrader.com:443';
-  const targetUrl = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}${path}`;
-
-  console.log(`Leverate Proxy Request: ${targetUrl}`);
-  
-  try {
-    const response = await axios.post(targetUrl, req.body, {
-      headers: {
-        'Authorization': `Bearer ${process.env.LEVERATE_BEARER_TOKEN}`,
-        'Content-Type': 'application/json'
-      },
-      timeout: 15000
-    });
-    res.json(response.data);
-  } catch (err) {
-    console.error(`Leverate Proxy Error [${path}]:`, err?.response?.data || err.message);
-    res.status(err.response?.status || 500).json(err.response?.data || { error: 'Leverate Proxy Error', message: err.message });
-  }
-});
 
 // ─────────────────────────────────────────────────────────────
 // POST /api/claude-stream — Perplexity financial analyst (SSE)

@@ -10,8 +10,6 @@ const TopBar = ({
     onSymbolChange,
     timeframe = '15m',
     onTimeframeChange,
-    equity = null,
-    connected = false,
 }) => {
     const [productsOpen, setProductsOpen] = useState(false);
     const [symbolEditing, setSymbolEditing] = useState(false);
@@ -112,16 +110,6 @@ const TopBar = ({
                         }}
                     >
                         <span style={{ fontWeight: 'bold', color: '#fff' }}>{symbol}</span>
-                        <span style={{
-                            fontSize: '10px',
-                            fontWeight: 'bold',
-                            color: connected ? '#26a69a' : '#868993',
-                            background: connected ? 'rgba(38,166,154,0.15)' : 'rgba(134,137,147,0.15)',
-                            padding: '1px 6px',
-                            borderRadius: '3px',
-                        }}>
-                            {connected ? 'CONNECTED' : 'OFFLINE'}
-                        </span>
                     </div>
                 )}
             </div>
@@ -236,16 +224,8 @@ const TopBar = ({
 
             <div className="topbar-divider" style={{ width: '1px', height: '24px', background: '#2a2e39' }} />
 
-            {/* Account equity */}
+            {/* Account avatar */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
-                <div style={{ textAlign: 'right' }}>
-                    <div className="topbar-equity-label" style={{ fontSize: '11px', color: '#868993' }}>EQUITY</div>
-                    <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#26a69a' }}>
-                        {equity != null
-                            ? `$${equity.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-                            : '—'}
-                    </div>
-                </div>
                 <div className="topbar-avatar" style={{
                     width: '30px',
                     height: '30px',
