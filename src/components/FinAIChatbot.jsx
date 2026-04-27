@@ -152,6 +152,16 @@ export default function AcademyChatbot() {
         @keyframes ac-pop { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: none; } }
         .ac-msg-in { animation: ac-in 0.3s ease forwards; }
         @keyframes ac-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+        /* Custom scrollbar inside the chat — visible affordance, native scroll */
+        .finai-messages { scrollbar-width: thin; scrollbar-color: rgba(212,175,55,0.45) transparent; }
+        .finai-messages::-webkit-scrollbar { width: 6px; }
+        .finai-messages::-webkit-scrollbar-track { background: transparent; }
+        .finai-messages::-webkit-scrollbar-thumb {
+          background: rgba(212,175,55,0.4);
+          border-radius: 6px;
+        }
+        .finai-messages::-webkit-scrollbar-thumb:hover { background: rgba(212,175,55,0.65); }
       `}</style>
 
       {/* FAB */}
@@ -205,19 +215,25 @@ export default function AcademyChatbot() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="academy-chat-pop finai-wrap" style={{
-          position: 'fixed', bottom: 110, right: 30, zIndex: 9998,
-          width: 380, height: '65vh', maxHeight: 580,
-          maxWidth: 'calc(100vw - 40px)',
-          background: 'rgba(10, 10, 15, 0.95)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(212, 175, 55, 0.3)',
-          borderRadius: 24,
-          display: 'flex', flexDirection: 'column',
-          boxShadow: '0 24px 64px rgba(0,0,0,0.8)',
-          overflow: 'hidden',
-          fontFamily: "'Inter', sans-serif",
-        }}>
+        <div
+          className="academy-chat-pop finai-wrap"
+          data-lenis-prevent
+          style={{
+            position: 'fixed', bottom: 110, right: 30, zIndex: 9998,
+            width: 380, height: '65vh', maxHeight: 580,
+            maxWidth: 'calc(100vw - 40px)',
+            background: 'rgba(10, 10, 15, 0.95)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(212, 175, 55, 0.3)',
+            borderRadius: 24,
+            display: 'flex', flexDirection: 'column',
+            boxShadow: '0 24px 64px rgba(0,0,0,0.8)',
+            overflow: 'hidden',
+            fontFamily: "'Inter', sans-serif",
+          }}
+          onWheelCapture={(e) => e.stopPropagation()}
+          onTouchMoveCapture={(e) => e.stopPropagation()}
+        >
           {/* Header */}
           <div style={{ padding: '20px 24px', background: 'rgba(212, 175, 55, 0.1)', borderBottom: '1px solid rgba(212, 175, 55, 0.2)', display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'rgba(212, 175, 55, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #d4af37', overflow: 'hidden', boxShadow: '0 0 15px rgba(212, 175, 55, 0.3)' }}>
@@ -230,7 +246,23 @@ export default function AcademyChatbot() {
           </div>
 
           {/* Messages */}
-          <div style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div
+            className="finai-messages"
+            data-lenis-prevent
+            style={{
+              flex: 1,
+              minHeight: 0,
+              overflowY: 'auto',
+              overflowX: 'hidden',
+              WebkitOverflowScrolling: 'touch',
+              overscrollBehavior: 'contain',
+              touchAction: 'pan-y',
+              padding: '20px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 12,
+            }}
+          >
             {msgs.map((m) => (
               <div key={m.id} className="ac-msg-in" style={{
                 alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
