@@ -39,7 +39,7 @@ const InstitutionalSignals = () => {
     }, [])
 
     return (
-        <section ref={sectionRef} style={{
+        <section ref={sectionRef} className="institutional-signals-section" style={{
             backgroundColor: '#EDEDED',
             padding: '120px 5%',
             display: 'flex',
@@ -129,7 +129,7 @@ const InstitutionalSignals = () => {
             </div>
             <style>{`
                 @media (max-width: 768px) {
-                    section { padding: 60px 5% !important; }
+                    .institutional-signals-section { padding: 60px 5% !important; }
                     .signal-fade { margin-top: 20px !important; }
                     h2.signal-fade { font-size: clamp(2.2rem, 8vw, 3rem) !important; background-image: radial-gradient(circle 2000px at 50% 50%, #C4C4C4 0%, #C4C4C4 100%) !important; }
                     .signal-fade > p { font-size: 1rem !important; }

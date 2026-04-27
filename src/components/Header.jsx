@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
+import logoSrc from '../assets/school of finance.png'
 
 const Header = () => {
     const [isScrolled, setIsScrolled] = useState(false)
@@ -138,7 +139,7 @@ const Header = () => {
             <div ref={logoRef} className="logo" style={{ display: 'flex', alignItems: 'center', zIndex: 1100 }}>
                 <Link to="/" style={{ display: 'flex', alignItems: 'center' }} className="logo-link">
                     <img
-                        src="/src/assets/school of finance.png"
+                        src={logoSrc}
                         alt="WALL STREET Jr. Logo"
                         style={{
                             height: isScrolled ? '70px' : '90px',

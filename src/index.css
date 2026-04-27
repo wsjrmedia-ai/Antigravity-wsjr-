@@ -374,10 +374,6 @@ img {
 }
 
 @media (max-width: 480px) {
-  .school-tab-sof { left: 5% !important; }
-  .school-tab-sot { left: 28% !important; }
-  .school-tab-sod { left: 51% !important; }
-  .school-tab-som { left: 74% !important; }
   .school-left-col h4 { font-size: 1.1rem !important; }
   .school-left-col p { font-size: 0.95rem !important; }
   .school-left-col h3 { font-size: 1.7rem !important; }

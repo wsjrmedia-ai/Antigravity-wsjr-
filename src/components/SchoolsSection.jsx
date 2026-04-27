@@ -309,9 +309,15 @@ const SchoolsSection = () => {
                  * Keep sticky positioning + 100vh container so the scroll-scrubbed
                  * darkening + folder peek animation still plays on every breakpoint.
                  * Only the INTERNAL two-column layout collapses on tablets & phones.
+                 *
+                 * TAB SIZING STRATEGY
+                 * Each tab uses width: calc(25% - 4px) so all four tabs fit in one
+                 * row without any overflowing the viewport at any breakpoint.
+                 * Per-tab left positions are defined here (not in index.css) so
+                 * there is a single source of truth and no competing !important rules.
                  */
 
-                /* Tablet: collapse the two-column folder into a stacked layout */
+                /* Tablet: collapse the two-column folder + fix tab overflow */
                 @media (max-width: 992px) {
                     .school-main-body {
                         flex-direction: column !important;
@@ -343,12 +349,22 @@ const SchoolsSection = () => {
                         margin-top: 12px !important;
                         min-height: 180px !important;
                     }
+                    /* Evenly distribute the four tabs so SOM no longer overflows */
+                    .school-tab { width: calc(25% - 4px) !important; }
+                    .school-tab-sof { left: 0% !important; }
+                    .school-tab-sot { left: 25% !important; }
+                    .school-tab-sod { left: 50% !important; }
+                    .school-tab-som { left: 75% !important; }
                 }
 
                 /* Phones: keep sticky animation intact, shrink the tab + acronym */
                 @media (max-width: 768px) {
-                    .school-tab { width: 220px !important; height: 80px !important; border-radius: 24px 24px 0 0 !important; }
-                    .school-tab span { font-size: 1.8rem !important; }
+                    .school-tab { width: calc(25% - 4px) !important; height: 72px !important; border-radius: 20px 20px 0 0 !important; }
+                    .school-tab span { font-size: clamp(1rem, 3.2vw, 1.5rem) !important; }
+                    .school-tab-sof { left: 0% !important; }
+                    .school-tab-sot { left: 25% !important; }
+                    .school-tab-sod { left: 50% !important; }
+                    .school-tab-som { left: 75% !important; }
                     .school-left-col { padding: 24px 6% 16px !important; gap: 20px !important; }
                     .school-left-col > div { gap: 20px !important; }
                     .school-left-col h4 { font-size: clamp(1rem, 4.2vw, 1.3rem) !important; }
@@ -371,8 +387,12 @@ const SchoolsSection = () => {
                 }
 
                 @media (max-width: 480px) {
-                    .school-tab { left: 8% !important; width: 170px !important; height: 65px !important; }
-                    .school-tab span { font-size: 1.4rem !important; }
+                    .school-tab { width: calc(25% - 3px) !important; height: 60px !important; border-radius: 14px 14px 0 0 !important; }
+                    .school-tab span { font-size: clamp(0.85rem, 3.5vw, 1.1rem) !important; letter-spacing: -0.5px !important; }
+                    .school-tab-sof { left: 0% !important; }
+                    .school-tab-sot { left: 25% !important; }
+                    .school-tab-sod { left: 50% !important; }
+                    .school-tab-som { left: 75% !important; }
                 }
             `}</style>
         </section>
