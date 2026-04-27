@@ -187,12 +187,16 @@ const CopyTradePanel = () => {
             : TRADERS.filter(t => t.tier === filter)
 
     return (
-        <div style={{
+        <div className="ctp-root" style={{
             flex: 1,
             overflowY: 'auto',
             background: '#0a0a0a',
             padding: '1.5rem',
         }}>
+            <style>{`
+                @media (max-width: 768px) { .ctp-root { padding: 1rem 0.85rem !important; } }
+                @media (max-width: 480px) { .ctp-root { padding: 0.75rem !important; } }
+            `}</style>
             {/* Header */}
             <div style={{ marginBottom: '1.5rem' }}>
                 <h2 style={{ color: '#d4af37', fontWeight: 700, fontSize: '1.3rem', margin: '0 0 0.3rem' }}>

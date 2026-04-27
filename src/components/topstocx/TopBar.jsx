@@ -59,6 +59,8 @@ const TopBar = ({
             }
             @media (max-width: 480px) {
                 .topbar-timeframes { display: none !important; }
+                .topbar-equity-value { font-size: 11px !important; }
+                .topbar-avatar { width: 24px !important; height: 24px !important; font-size: 9px !important; }
             }
         `}</style>
             {/* Logo */}
@@ -244,7 +246,7 @@ const TopBar = ({
                             : '—'}
                     </div>
                 </div>
-                <div style={{
+                <div className="topbar-avatar" style={{
                     width: '30px',
                     height: '30px',
                     borderRadius: '50%',
@@ -255,6 +257,7 @@ const TopBar = ({
                     fontWeight: 'bold',
                     fontSize: '11px',
                     color: '#fff',
+                    flexShrink: 0,
                 }}>
                     JD
                 </div>
