@@ -176,6 +176,16 @@ export default function AcademyChatbot() {
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs]);
 
+  /* Stop wheel events from reaching Lenis when scrolling inside the messages pane.
+     Lenis attaches a capture listener on window so we must also use capture to win. */
+  useEffect(() => {
+    const el = msgsRef.current;
+    if (!el) return;
+    const stop = (e) => e.stopPropagation();
+    el.addEventListener("wheel", stop, { capture: true, passive: true });
+    return () => el.removeEventListener("wheel", stop, { capture: true });
+  }, []);
+
   const addMsg = (role, text) => setMsgs(prev => [...prev, { id: Date.now() + Math.random(), role, text }]);
 
   const handleSend = (textOverride) => {
