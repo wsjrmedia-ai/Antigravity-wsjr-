@@ -3,15 +3,37 @@ import { useLocation } from "react-router-dom";
 
 const API_BASE = import.meta.env.VITE_API_URL || "";
 
-// Derive ticker from the current React Router location.
-// Handles: /stock/AAPL, /stocks/AAPL, /ticker/AAPL, ?ticker=AAPL
 function getTickerFromLocation(location) {
   const params = new URLSearchParams(location.search);
   if (params.get("ticker")) return params.get("ticker").toUpperCase();
-  const stockMatch = location.pathname.match(/\/(?:stocks?|ticker)\/([A-Z]{1,5})/i);
-  if (stockMatch) return stockMatch[1].toUpperCase();
+  const m = location.pathname.match(/\/(?:stocks?|ticker)\/([A-Z]{1,5})/i);
+  if (m) return m[1].toUpperCase();
   return null;
 }
+
+// Map user text to one of the 6 backend intents
+function detectIntent(text, hasTicker) {
+  const t = text.toLowerCase();
+  if (/explain|what.*chart|analys|pattern|trend|support|resistance|level|candle|indicator/.test(t))
+    return "explain_chart";
+  if (/market.*brief|overview|today.*market|morning|what.*happening|this week|news/.test(t))
+    return "market_brief";
+  if (/trade.*idea|should.*buy|should.*sell|entry|exit|setup|long|short|open.*position/.test(t))
+    return "trade_idea";
+  if (/risk|stop.*loss|drawdown|safe|dangerous|exposure|bet.*size|position.*size/.test(t))
+    return "risk_check";
+  if (/why.*move|why.*up|why.*down|reason|catalyst|what.*drove|what.*caused/.test(t))
+    return "why_moved";
+  return hasTicker ? "explain_chart" : "market_brief";
+}
+
+const INTENT_LABELS = {
+  explain_chart: "📊 Chart Analysis",
+  market_brief:  "🌐 Market Brief",
+  trade_idea:    "💡 Trade Idea",
+  risk_check:    "🛡️ Risk Check",
+  why_moved:     "🔍 Why Moved",
+};
 
 const QUICK_PROMPTS = [
   "Market overview today",
@@ -21,7 +43,6 @@ const QUICK_PROMPTS = [
   "Risk management tips",
 ];
 
-// ── Typing dots ───────────────────────────────────────────────
 function TypingIndicator() {
   return (
     <div style={{ display: "flex", gap: 5, padding: "10px 14px", alignItems: "center" }}>
@@ -36,7 +57,6 @@ function TypingIndicator() {
   );
 }
 
-// ── Single message bubble ─────────────────────────────────────
 function Message({ msg }) {
   const isUser = msg.role === "user";
   return (
@@ -72,58 +92,58 @@ function Message({ msg }) {
   );
 }
 
-// ── Main component ────────────────────────────────────────────
-export default function ClaudeFinanceChat() {
+export default function ClaudeFinanceChat({ symbol, timeframe }) {
   const location = useLocation();
-  const [isOpen, setIsOpen]     = useState(false);
-  const [msgs, setMsgs]         = useState([]);
-  const [history, setHistory]   = useState([]);
-  const [input, setInput]       = useState("");
-  const [streaming, setStreaming] = useState(false);
+  const [isOpen,        setIsOpen]        = useState(false);
+  const [msgs,          setMsgs]          = useState([]);
+  const [history,       setHistory]       = useState([]);
+  const [input,         setInput]         = useState("");
+  const [streaming,     setStreaming]     = useState(false);
+  const [activeIntent,  setActiveIntent]  = useState(null);
+  const [provider,      setProvider]      = useState(null);
 
   const bottomRef = useRef(null);
   const abortRef  = useRef(null);
   const idRef     = useRef(0);
 
-  // Derived from router location — reactive to navigation
-  const ticker = getTickerFromLocation(location);
+  const urlTicker = getTickerFromLocation(location);
+  const ticker    = symbol || urlTicker;
+  const tf        = timeframe || "15m";
 
-  // Scroll to bottom whenever messages update
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [msgs, streaming]);
 
-  // Show welcome message when the panel first opens
+  // Welcome message when panel opens
   useEffect(() => {
     if (!isOpen || msgs.length > 0) return;
     const welcome = ticker
-      ? `Hey! I'm your AI financial analyst.\n\nI can see you're viewing **${ticker}** — ask me anything about it, or any other market.`
-      : `Hey! I'm your AI financial analyst powered by Perplexity.\n\nAsk me about any stock, crypto, forex pair, or market concept.`;
+      ? `Hey! I'm Atlas, your AI market strategist powered by Claude.\n\nI can see you're viewing **${ticker}** on the ${tf} chart — ask me anything about it.`
+      : `Hey! I'm Atlas, your AI market strategist powered by Claude.\n\nAsk me about any stock, forex pair, crypto, or market concept.`;
     setMsgs([{ id: idRef.current++, role: "assistant", content: welcome }]);
-  }, [isOpen]);
+  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // If the user navigates to a stock page while the chat is open,
-  // inject a silent context note (no visible bubble, just history context)
+  // Notify on symbol change
   const prevTickerRef = useRef(ticker);
   useEffect(() => {
     if (!isOpen) return;
     if (ticker && ticker !== prevTickerRef.current && msgs.length > 0) {
       setMsgs((prev) => [...prev, {
         id: idRef.current++, role: "assistant",
-        content: `📍 Switched context to **${ticker}**. Ask me anything about it!`,
+        content: `📍 Switched context to **${ticker}** (${tf}). Ask me anything about it!`,
       }]);
     }
     prevTickerRef.current = ticker;
-  }, [ticker, isOpen]);
+  }, [ticker, isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ── Clear chat ──────────────────────────────────────────────
   const clearChat = useCallback(() => {
     abortRef.current?.abort();
     setStreaming(false);
+    setActiveIntent(null);
+    setProvider(null);
     setMsgs([]);
     setHistory([]);
     idRef.current = 0;
-    // Re-trigger welcome on next render cycle
     setTimeout(() => {
       const welcome = ticker
         ? `Chat cleared. Still on **${ticker}** — what do you want to know?`
@@ -132,14 +152,13 @@ export default function ClaudeFinanceChat() {
     }, 50);
   }, [ticker]);
 
-  // ── Stop streaming ──────────────────────────────────────────
   const stopStream = () => {
     abortRef.current?.abort();
     setStreaming(false);
+    setActiveIntent(null);
     setMsgs((prev) => prev.map((m) => (m.streaming ? { ...m, streaming: false } : m)));
   };
 
-  // ── Send message ────────────────────────────────────────────
   const sendMessage = useCallback(async (override) => {
     const text = (override ?? input).trim();
     if (!text || streaming) return;
@@ -147,6 +166,10 @@ export default function ClaudeFinanceChat() {
 
     setMsgs((prev) => [...prev, { id: idRef.current++, role: "user", content: text }]);
     setStreaming(true);
+    setProvider(null);
+
+    const intent = detectIntent(text, !!ticker);
+    setActiveIntent(intent);
 
     const botId = idRef.current++;
     setMsgs((prev) => [...prev, { id: botId, role: "assistant", content: "", streaming: true }]);
@@ -155,11 +178,15 @@ export default function ClaudeFinanceChat() {
     abortRef.current = ctrl;
 
     try {
-      const res = await fetch(`${API_BASE}/api/claude-stream`, {
+      const res = await fetch(`${API_BASE}/api/ai/analyze?stream=1`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         signal: ctrl.signal,
-        body: JSON.stringify({ message: text, history: history.slice(-10), ticker }),
+        body: JSON.stringify({
+          intent,
+          context: { symbol: ticker || "EURUSD", timeframe: tf, price: null, changePct: null },
+          query: text,
+        }),
       });
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -173,26 +200,46 @@ export default function ClaudeFinanceChat() {
         const { done, value } = await reader.read();
         if (done) break;
         buf += decoder.decode(value, { stream: true });
-        const lines = buf.split("\n");
-        buf = lines.pop();
 
-        for (const line of lines) {
-          if (!line.startsWith("data: ")) continue;
-          const raw = line.slice(6).trim();
-          if (raw === "[DONE]") break;
+        // SSE blocks are separated by \n\n
+        const blocks = buf.split("\n\n");
+        buf = blocks.pop(); // keep incomplete trailing block
+
+        for (const block of blocks) {
+          if (!block.trim() || block.startsWith(":")) continue; // heartbeat
+          let event = "message";
+          let data  = "";
+          for (const line of block.split("\n")) {
+            if (line.startsWith("event: ")) event = line.slice(7).trim();
+            else if (line.startsWith("data: ")) data = line.slice(6).trim();
+          }
+          if (!data) continue;
+
           try {
-            const parsed = JSON.parse(raw);
-            if (parsed.error) throw new Error(parsed.error);
-            if (parsed.text) {
-              full += parsed.text;
+            const parsed = JSON.parse(data);
+            if (event === "meta") {
+              setProvider(parsed.provider || null);
+            } else if (event === "delta") {
+              full += parsed.text || "";
               setMsgs((prev) =>
                 prev.map((m) => (m.id === botId ? { ...m, content: full } : m))
               );
+            } else if (event === "done") {
+              if (parsed.text) full = parsed.text;
+              setMsgs((prev) =>
+                prev.map((m) => (m.id === botId ? { ...m, content: full, streaming: false } : m))
+              );
+            } else if (event === "error") {
+              throw new Error(parsed.error || "AI service error");
             }
-          } catch {}
+          } catch (parseErr) {
+            if (event === "error") throw parseErr;
+            // ignore malformed frames
+          }
         }
       }
 
+      // Ensure final state is clean
       setMsgs((prev) =>
         prev.map((m) => (m.id === botId ? { ...m, content: full, streaming: false } : m))
       );
@@ -210,12 +257,24 @@ export default function ClaudeFinanceChat() {
       );
     } finally {
       setStreaming(false);
+      setActiveIntent(null);
     }
-  }, [input, streaming, history, ticker]);
+  }, [input, streaming, ticker, tf]);
 
   const quickChips = ticker
-    ? [`Analyse ${ticker}`, `${ticker} key levels`, `${ticker} latest news`, ...QUICK_PROMPTS.slice(0, 2)]
+    ? [
+        `Explain ${ticker} chart`,
+        `${ticker} trade idea`,
+        `Why did ${ticker} move?`,
+        `Risk check ${ticker}`,
+        "Market brief today",
+      ]
     : QUICK_PROMPTS;
+
+  const intentLabel  = activeIntent ? INTENT_LABELS[activeIntent] : null;
+  const providerBadge = provider === "claude"      ? "⚡ Claude"
+                      : provider === "perplexity"  ? "🔍 Perplexity"
+                      : null;
 
   return (
     <>
@@ -235,23 +294,20 @@ export default function ClaudeFinanceChat() {
         }
       `}</style>
 
-      {/* ── FAB with pulsing online dot ── */}
+      {/* FAB */}
       <div className="cfc-fab-wrap" style={{ position: "fixed", bottom: 90, right: 24, zIndex: 9000 }}>
-        {/* Pulsing green online indicator */}
         {!isOpen && (
           <span style={{
             position: "absolute", top: 2, right: 2,
             width: 11, height: 11, borderRadius: "50%",
-            background: "#00f5a0",
-            border: "2px solid #06080a",
-            animation: "cfc-pulse 2s ease-in-out infinite",
-            zIndex: 1,
+            background: "#00f5a0", border: "2px solid #06080a",
+            animation: "cfc-pulse 2s ease-in-out infinite", zIndex: 1,
           }} />
         )}
         <button
           className="cfc-fab"
           onClick={() => setIsOpen((o) => !o)}
-          aria-label="Financial analyst chat"
+          aria-label="Atlas AI analyst"
           style={{
             width: 56, height: 56, borderRadius: "50%", border: "none",
             cursor: "pointer", fontSize: 22,
@@ -268,7 +324,7 @@ export default function ClaudeFinanceChat() {
         </button>
       </div>
 
-      {/* ── Chat panel ── */}
+      {/* Chat panel */}
       {isOpen && (
         <div className="cfc-panel" style={{
           position: "fixed", bottom: 158, right: 20, zIndex: 8999,
@@ -292,7 +348,6 @@ export default function ClaudeFinanceChat() {
             borderBottom: "1px solid rgba(0,245,160,0.12)",
             display: "flex", alignItems: "center", gap: 10, flexShrink: 0,
           }}>
-            {/* Avatar with live pulse */}
             <div style={{ position: "relative", flexShrink: 0 }}>
               <div style={{
                 width: 36, height: 36, borderRadius: "50%",
@@ -310,15 +365,25 @@ export default function ClaudeFinanceChat() {
 
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 13, fontWeight: 700, color: "#e0fff4" }}>
-                FinAI Analyst
+                Atlas AI
               </div>
               <div style={{ fontSize: 9, letterSpacing: 2, color: "#00f5a066" }}>
-                ● ONLINE · {ticker ? `${ticker} CONTEXT` : "MARKET MODE"}
+                {intentLabel
+                  ? `● ${intentLabel.toUpperCase()}`
+                  : `● ONLINE · ${ticker ? `${ticker} · ${tf}` : "MARKET MODE"}`}
               </div>
             </div>
 
-            {/* Ticker badge */}
-            {ticker && (
+            {providerBadge && (
+              <div style={{
+                padding: "2px 7px", borderRadius: 10,
+                background: "rgba(0,196,255,0.1)",
+                border: "1px solid rgba(0,196,255,0.25)",
+                color: "#00c4ff", fontSize: 9, fontWeight: 700, letterSpacing: 1,
+              }}>{providerBadge}</div>
+            )}
+
+            {ticker && !providerBadge && (
               <div style={{
                 padding: "3px 9px", borderRadius: 20,
                 background: "rgba(0,245,160,0.12)",
@@ -327,7 +392,6 @@ export default function ClaudeFinanceChat() {
               }}>{ticker}</div>
             )}
 
-            {/* Clear chat button */}
             <button
               className="cfc-clear"
               onClick={clearChat}
@@ -370,7 +434,7 @@ export default function ClaudeFinanceChat() {
             ))}
           </div>
 
-          {/* Input row */}
+          {/* Input */}
           <div style={{
             padding: "10px 10px 14px",
             borderTop: "1px solid rgba(0,245,160,0.08)",
@@ -383,7 +447,7 @@ export default function ClaudeFinanceChat() {
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
               }}
-              placeholder="Ask about any stock, crypto, or market…"
+              placeholder="Ask about chart, market brief, trade idea…"
               rows={1}
               style={{
                 flex: 1,

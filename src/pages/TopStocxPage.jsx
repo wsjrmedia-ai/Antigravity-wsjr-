@@ -98,7 +98,7 @@ const TopStocxPage = () => {
                 )}
             </div>
 
-            <ClaudeFinanceChat />
+            <ClaudeFinanceChat symbol={symbol} timeframe={timeframe} />
         </div>
     );
 };
