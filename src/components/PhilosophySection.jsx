@@ -290,9 +290,14 @@ const PhilosophySection = () => {
                 .phil-swipe-hint { display: none; }
 
                 @media (max-width: 768px) {
-                    .philosophy-section { padding: 60px 5% !important; }
-                    .philosophy-section h2 { font-size: clamp(2.2rem, 8vw, 3rem) !important; text-align: center; }
-                    .philosophy-section p { font-size: 1.1rem !important; text-align: center; }
+                    .philosophy-section {
+                        padding: 56px 5% 48px !important;
+                        min-height: auto !important;
+                    }
+                    .philosophy-section h2 { font-size: clamp(2rem, 7.5vw, 2.6rem) !important; text-align: left; letter-spacing: -1px !important; }
+                    .philosophy-section p { font-size: 1rem !important; text-align: left; line-height: 1.55 !important; }
+                    .philosophy-section .phil-cards-wrap + style,
+                    .philosophy-section > div > div:first-child { margin-bottom: 36px !important; gap: 20px !important; }
 
                     /* Convert grid -> horizontal scroll-snap carousel */
                     .phil-cards-grid {
@@ -304,18 +309,113 @@ const PhilosophySection = () => {
                         scroll-snap-type: x mandatory !important;
                         -webkit-overflow-scrolling: touch;
                         scroll-behavior: smooth;
-                        gap: 16px !important;
+                        gap: 14px !important;
                         padding: 4px 8% 8px 8% !important;
                         margin: 0 -5% !important;
                         scrollbar-width: none;
+                        align-items: stretch;
                     }
                     .phil-cards-grid::-webkit-scrollbar { display: none; }
 
+                    /* Compact, structured card with internal scroll + fade mask
+                       so it never overflows the screen */
                     .phil-card {
                         flex: 0 0 84% !important;
                         scroll-snap-align: center !important;
-                        padding: 30px 22px !important;
-                        min-height: auto;
+                        padding: 26px 22px 22px !important;
+                        gap: 18px !important;
+                        border-radius: 26px !important;
+                        border: 1px solid rgba(247, 172, 65, 0.18) !important;
+                        background:
+                            linear-gradient(180deg, rgba(247,172,65,0.06) 0%, rgba(217,217,217,0.05) 60%) !important;
+                        box-shadow:
+                            0 18px 40px rgba(0,0,0,0.28),
+                            inset 0 1px 0 rgba(255,255,255,0.04);
+                        max-height: min(72vh, 560px);
+                        overflow: hidden;
+                        position: relative;
+                    }
+
+                    /* Card title — smaller, tighter, with gold underline accent */
+                    .phil-card h3 {
+                        font-size: 1.15rem !important;
+                        line-height: 1.25 !important;
+                        letter-spacing: 0.5px !important;
+                        font-weight: 600 !important;
+                        text-align: left !important;
+                        position: relative;
+                        padding-bottom: 12px;
+                        margin: 0 !important;
+                    }
+                    .phil-card h3::after {
+                        content: '';
+                        position: absolute;
+                        left: 0;
+                        bottom: 0;
+                        width: 36px;
+                        height: 2px;
+                        background: var(--accent-gold);
+                        border-radius: 2px;
+                    }
+                    .phil-card[style*="text-align: center"] h3,
+                    .phil-card[style*="text-align:center"] h3 { text-align: left !important; }
+
+                    /* Inner scroll body so card height stays bounded */
+                    .phil-card > div:not(.phil-card-fade) {
+                        gap: 16px !important;
+                        text-align: left !important;
+                        width: 100% !important;
+                        overflow-y: auto;
+                        -webkit-overflow-scrolling: touch;
+                        flex: 1 1 auto;
+                        padding-right: 4px;
+                        padding-bottom: 18px;
+                        scrollbar-width: thin;
+                        scrollbar-color: rgba(247,172,65,0.35) transparent;
+                    }
+                    .phil-card > div:not(.phil-card-fade)::-webkit-scrollbar { width: 3px; }
+                    .phil-card > div:not(.phil-card-fade)::-webkit-scrollbar-thumb {
+                        background: rgba(247,172,65,0.35);
+                        border-radius: 3px;
+                    }
+
+                    /* Each item gets a thin gold rail on the left for rhythm */
+                    .phil-card > div:not(.phil-card-fade) > div {
+                        position: relative;
+                        padding-left: 14px;
+                        border-left: 2px solid rgba(247,172,65,0.35);
+                    }
+                    .phil-card h4 {
+                        font-size: 1rem !important;
+                        line-height: 1.3 !important;
+                        margin: 0 0 6px 0 !important;
+                        color: var(--accent-gold) !important;
+                        font-weight: 600 !important;
+                        letter-spacing: 0.2px;
+                    }
+                    .phil-card p {
+                        font-size: 0.88rem !important;
+                        line-height: 1.55 !important;
+                        text-align: left !important;
+                        margin: 0 !important;
+                        color: rgba(255,255,255,0.78) !important;
+                    }
+
+                    /* Bottom fade hinting more content */
+                    .phil-card::after {
+                        content: '';
+                        position: absolute;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        height: 36px;
+                        background: linear-gradient(180deg,
+                            rgba(80, 0, 11, 0) 0%,
+                            rgba(80, 0, 11, 0.85) 70%,
+                            rgba(80, 0, 11, 0.95) 100%);
+                        pointer-events: none;
+                        border-bottom-left-radius: 26px;
+                        border-bottom-right-radius: 26px;
                     }
 
                     /* Carousel controls bar */
@@ -323,14 +423,14 @@ const PhilosophySection = () => {
                         display: flex !important;
                         align-items: center;
                         justify-content: center;
-                        gap: 18px;
-                        margin-top: 22px;
+                        gap: 16px;
+                        margin-top: 20px;
                         width: 100%;
                     }
 
                     .phil-arrow {
-                        width: 44px;
-                        height: 44px;
+                        width: 40px;
+                        height: 40px;
                         border-radius: 50%;
                         border: 1px solid rgba(247, 172, 65, 0.45);
                         background: rgba(247, 172, 65, 0.08);
@@ -358,8 +458,8 @@ const PhilosophySection = () => {
                         gap: 8px;
                     }
                     .phil-dot {
-                        width: 8px;
-                        height: 8px;
+                        width: 7px;
+                        height: 7px;
                         border-radius: 50%;
                         border: 0;
                         padding: 0;
@@ -369,10 +469,10 @@ const PhilosophySection = () => {
                         -webkit-tap-highlight-color: transparent;
                     }
                     .phil-dot.is-active {
-                        width: 26px;
+                        width: 22px;
                         border-radius: 4px;
                         background: var(--accent-gold);
-                        box-shadow: 0 0 12px rgba(247, 172, 65, 0.55);
+                        box-shadow: 0 0 10px rgba(247, 172, 65, 0.55);
                     }
 
                     /* Swipe hint */
@@ -381,9 +481,9 @@ const PhilosophySection = () => {
                         align-items: center;
                         justify-content: center;
                         gap: 10px;
-                        margin-top: 14px;
+                        margin-top: 12px;
                         font-family: var(--font-body);
-                        font-size: 0.78rem;
+                        font-size: 0.72rem;
                         letter-spacing: 2px;
                         text-transform: uppercase;
                         color: rgba(247, 172, 65, 0.75);
@@ -397,7 +497,7 @@ const PhilosophySection = () => {
                         animation: none;
                     }
                     .phil-swipe-hint-arrow {
-                        font-size: 1.2rem;
+                        font-size: 1.1rem;
                         line-height: 1;
                         color: var(--accent-gold);
                     }
@@ -406,6 +506,17 @@ const PhilosophySection = () => {
                         0%, 100% { transform: translateX(0); }
                         50%      { transform: translateX(6px); }
                     }
+                }
+
+                @media (max-width: 480px) {
+                    .phil-card {
+                        flex: 0 0 88% !important;
+                        max-height: min(68vh, 520px);
+                        padding: 22px 18px 18px !important;
+                    }
+                    .phil-card h3 { font-size: 1.05rem !important; }
+                    .phil-card h4 { font-size: 0.95rem !important; }
+                    .phil-card p { font-size: 0.84rem !important; }
                 }
             `}</style>
         </section>
