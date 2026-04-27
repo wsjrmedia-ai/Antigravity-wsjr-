@@ -1,11 +1,30 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Activity, Lightbulb, LayoutList } from 'lucide-react';
 import { useLeverate } from '../../context/LeverateContext';
 import AlertsCenter from '../ai/AlertsCenter';
 
 const TopBar = ({ onToggleWatchlist, watchlistOpen }) => {
-    const { balance, connected, selectedSymbol, selectedPeriod, setSelectedPeriod } = useLeverate();
+    const { balance, connected, selectedSymbol, setSelectedSymbol, selectedPeriod, setSelectedPeriod } = useLeverate();
+    const [symbolEditing, setSymbolEditing] = useState(false);
+    const [symbolInput, setSymbolInput]     = useState('');
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+        if (symbolEditing) inputRef.current?.focus();
+    }, [symbolEditing]);
+
+    const commitSymbol = () => {
+        const val = symbolInput.trim().toUpperCase();
+        if (val) setSelectedSymbol(val);
+        setSymbolInput('');
+        setSymbolEditing(false);
+    };
+
+    const handleSymbolKey = (e) => {
+        if (e.key === 'Enter')  commitSymbol();
+        if (e.key === 'Escape') { setSymbolInput(''); setSymbolEditing(false); }
+    };
 
     const formatCurrency = (val) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
 
@@ -52,16 +71,40 @@ const TopBar = ({ onToggleWatchlist, watchlistOpen }) => {
                 backgroundColor: 'var(--bg-accent)',
                 padding: '6px 14px',
                 borderRadius: '6px',
-                cursor: 'pointer',
+                cursor: symbolEditing ? 'text' : 'pointer',
                 gap: '10px',
                 transition: 'all 0.2s',
-                flexShrink: 0
-            }} onMouseEnter={e => e.currentTarget.style.backgroundColor = '#363a45'}
-                onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--bg-accent)'}>
+                flexShrink: 0,
+                border: symbolEditing ? '1px solid var(--brand-blue)' : '1px solid transparent'
+            }} onClick={() => !symbolEditing && setSymbolEditing(true)}
+                onMouseEnter={e => !symbolEditing && (e.currentTarget.style.backgroundColor = '#363a45')}
+                onMouseLeave={e => !symbolEditing && (e.currentTarget.style.backgroundColor = 'var(--bg-accent)')}>
                 <Search size={16} color="var(--text-muted)" />
-                <span style={{ fontWeight: '700', fontSize: '14px' }}>{selectedSymbol}</span>
-                <span className="topbar-status" style={{ color: connected ? 'var(--brand-green)' : 'var(--brand-red)', fontSize: '12px' }}>
-                    {connected ? 'CONNECTED' : 'OFFLINE'}
+                {symbolEditing ? (
+                    <input
+                        ref={inputRef}
+                        value={symbolInput}
+                        onChange={e => setSymbolInput(e.target.value)}
+                        onKeyDown={handleSymbolKey}
+                        onBlur={commitSymbol}
+                        placeholder={selectedSymbol}
+                        style={{
+                            background: 'transparent',
+                            border: 'none',
+                            outline: 'none',
+                            color: '#ffffff',
+                            fontWeight: '700',
+                            fontSize: '14px',
+                            width: '80px',
+                            padding: 0,
+                            caretColor: 'var(--brand-blue)'
+                        }}
+                    />
+                ) : (
+                    <span style={{ fontWeight: '700', fontSize: '14px' }}>{selectedSymbol}</span>
+                )}
+                <span className="topbar-status" style={{ color: 'var(--brand-green)', fontSize: '12px' }}>
+                    LIVE
                 </span>
             </div>
 
@@ -117,6 +160,7 @@ const TopBar = ({ onToggleWatchlist, watchlistOpen }) => {
                 {/* Mobile watchlist toggle */}
                 <div className="ws-mobile-toggle" onClick={onToggleWatchlist}
                     style={{ width: 40, height: 40, cursor: 'pointer', borderRadius: 8,
+                        display: 'flex',
                         alignItems: 'center', justifyContent: 'center',
                         backgroundColor: watchlistOpen ? 'rgba(0, 90, 255,0.15)' : 'transparent' }}>
                     <LayoutList size={18} color={watchlistOpen ? 'var(--brand-blue)' : 'var(--text-muted)'} />

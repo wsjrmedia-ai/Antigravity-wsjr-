@@ -45,6 +45,25 @@ const AdvancedChart = () => {
         AUDUSD: 'FX:AUDUSD',
         USDCHF: 'FX:USDCHF',
         USDCAD: 'FX:USDCAD',
+        NZDUSD: 'FX:NZDUSD',
+        EURGBP: 'FX:EURGBP',
+        EURJPY: 'FX:EURJPY',
+        GBPJPY: 'FX:GBPJPY',
+        // Commodities
+        XAUUSD: 'TVC:GOLD',
+        GOLD: 'TVC:GOLD',
+        XAGUSD: 'TVC:SILVER',
+        SILVER: 'TVC:SILVER',
+        USOIL: 'TVC:USOIL',
+        OIL: 'TVC:USOIL',
+        // Indices
+        US30: 'TVC:DJI',
+        NAS100: 'NASDAQ:NDX',
+        SPX: 'SP:SPX',
+        US500: 'SP:SPX',
+        GER40: 'XETR:DAX',
+        DAX: 'XETR:DAX',
+        UK100: 'LSE:UKX',
     };
 
     const tvSymbol = useMemo(() => {
@@ -106,6 +125,7 @@ const AdvancedChart = () => {
                 hide_top_toolbar={false}
                 hide_legend={false}
                 save_image={false}
+                allow_symbol_change={false}
                 container_id="tv_advanced_chart"
                 width="100%"
                 height="100%"

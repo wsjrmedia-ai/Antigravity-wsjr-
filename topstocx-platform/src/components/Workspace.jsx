@@ -22,6 +22,39 @@ const Workspace = () => {
             color: 'var(--text-primary)',
             overflow: 'hidden'
         }} className="animate-fade-in">
+            <style>{`
+                /* Mobile watchlist: hidden off-screen, slides in when open */
+                .ws-watchlist {
+                    transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+                }
+                @media (max-width: 768px) {
+                    .ws-watchlist {
+                        position: fixed !important;
+                        top: 0 !important;
+                        right: 0 !important;
+                        bottom: 0 !important;
+                        width: min(340px, 90vw) !important;
+                        z-index: 200 !important;
+                        transform: translateX(100%);
+                    }
+                    .ws-watchlist.mobile-open {
+                        transform: translateX(0);
+                    }
+                    .ws-mobile-toggle {
+                        display: flex !important;
+                    }
+                    .ws-bottom-panel {
+                        max-height: 220px;
+                    }
+                    .ws-bottom-panel.expanded {
+                        max-height: 55vh;
+                    }
+                }
+                @media (min-width: 769px) {
+                    /* On desktop, watchlist toggle button in TopBar is hidden */
+                    .topbar-ws-toggle { display: none !important; }
+                }
+            `}</style>
             <TopBar onToggleWatchlist={() => setWatchlistOpen(v => !v)} watchlistOpen={watchlistOpen} />
             <LiveTickerTape />
 
@@ -67,7 +100,7 @@ const Workspace = () => {
                     }}>
                         Watchlist
                         <div className="ws-mobile-toggle" onClick={() => setWatchlistOpen(false)}
-                            style={{ cursor: 'pointer', padding: 4, alignItems: 'center', justifyContent: 'center' }}>
+                            style={{ cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <X size={18} color="var(--text-muted)" />
                         </div>
                     </div>
@@ -82,10 +115,10 @@ const Workspace = () => {
 
             {/* Mobile backdrop when watchlist open */}
             {watchlistOpen && (
-                <div className="ws-mobile-toggle" onClick={() => setWatchlistOpen(false)} style={{
+                <div onClick={() => setWatchlistOpen(false)} style={{
                     position: 'fixed', inset: 0, zIndex: 199,
                     backgroundColor: 'rgba(0,0,0,0.5)',
-                    alignItems: 'stretch', justifyContent: 'stretch'
+                    display: 'flex'
                 }} />
             )}
 

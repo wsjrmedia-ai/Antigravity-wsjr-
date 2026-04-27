@@ -239,6 +239,13 @@ export default function AICommandPalette() {
   return (
     <>
       {/* Floating "Ask AI" button — always visible, bottom-right */}
+      <style>{`
+        .ai-fab { bottom: 20px; right: 20px; }
+        @media (max-width: 768px) { .ai-fab { bottom: 72px !important; right: 14px !important; } }
+        @media (max-width: 600px) { .fab-kbd { display: none !important; } }
+        @media (max-width: 480px) { .ai-fab-text { display: none !important; } }
+        @media (max-width: 480px) { .ai-cp-modal { top: 6vh !important; max-height: 90vh !important; } }
+      `}</style>
       <motion.button
         type="button"
         onClick={() => setOpen(true)}
@@ -246,10 +253,9 @@ export default function AICommandPalette() {
         whileTap={{ scale: 0.96 }}
         aria-label="Open AI command palette"
         title="Ask AI  (⌘K)"
+        className="ai-fab"
         style={{
           position: 'fixed',
-          right: 20,
-          bottom: 20,
           zIndex: 90,
           display: 'flex',
           alignItems: 'center',
@@ -285,11 +291,6 @@ export default function AICommandPalette() {
         >
           <CommandIcon size={10} />K
         </span>
-        <style>{`
-          @media (max-width: 600px) { .fab-kbd { display: none !important; } }
-          @media (max-width: 480px) { .ai-fab-text { display: none !important; } }
-          @media (max-width: 480px) { .ai-cp-modal { top: 8vh !important; max-height: 88vh !important; } }
-        `}</style>
       </motion.button>
 
       <AnimatePresence>
