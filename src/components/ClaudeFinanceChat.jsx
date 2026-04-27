@@ -35,6 +35,24 @@ const INTENT_LABELS = {
   why_moved:     "🔍 Why Moved",
 };
 
+// Chat bubble + trend line — trading AI brand icon
+const TradingAIIcon = ({ size = 22, color = "white" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <path
+      d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+      fill="rgba(255,255,255,0.15)"
+      stroke={color} strokeWidth="1.6"
+      strokeLinecap="round" strokeLinejoin="round"
+    />
+    <polyline
+      points="5.5,13.5 8.5,9.5 12,11.5 16,7"
+      stroke={color} strokeWidth="1.8"
+      strokeLinecap="round" strokeLinejoin="round"
+    />
+    <circle cx="16" cy="7" r="1.6" fill={color} />
+  </svg>
+);
+
 const QUICK_PROMPTS = [
   "Market overview today",
   "Best sectors to watch",
@@ -71,8 +89,7 @@ function Message({ msg }) {
           width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
           background: "linear-gradient(135deg,#00f5a0,#00d4ff)",
           display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 14,
-        }}>📊</div>
+        }}><TradingAIIcon size={16} /></div>
       )}
       <div style={{
         maxWidth: "82%", padding: "10px 14px",
@@ -290,7 +307,10 @@ export default function ClaudeFinanceChat({ symbol, timeframe }) {
             display: "flex", alignItems: "center", justifyContent: "center",
           }}
         >
-          {isOpen ? "✕" : "📊"}
+          {isOpen
+            ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            : <TradingAIIcon size={24} />
+          }
         </button>
       </div>
 
@@ -323,8 +343,7 @@ export default function ClaudeFinanceChat({ symbol, timeframe }) {
                 width: 36, height: 36, borderRadius: "50%",
                 background: "linear-gradient(135deg,#00f5a0,#00c4ff)",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 17,
-              }}>📊</div>
+              }}><TradingAIIcon size={20} /></div>
               <span style={{
                 position: "absolute", bottom: 0, right: 0,
                 width: 9, height: 9, borderRadius: "50%",
