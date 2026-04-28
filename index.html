@@ -5,99 +5,101 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/png" href="/favicon.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a0a0a" />
 
   <!-- Primary Meta Tags -->
-  <!-- Google Analytics Tracking -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PLACEHOLDER"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-PLACEHOLDER');
-  </script>
-
-  <title>Wall Street Jr. Academy</title>
-  <meta name="title" content="Wall Street Jr. Academy" />
+  <title>Wall Street Jr. Academy — Finance, AI, Business & Design Courses (Dubai)</title>
+  <meta name="title" content="Wall Street Jr. Academy — Finance, AI, Business & Design Courses (Dubai)" />
   <meta name="description"
-    content="UAE's premier academy for finance, technology, design & management. We teach real-world mastery, going beyond theory at Wall Street Jr." />
-  <meta name="keywords"
-    content="Dubai-based global academy, practical finance education Dubai, real-world skill development, finance education academy, business intelligence programs, AI and automation school, design intelligence & media school, career-focused learning, industry-aligned curriculum, applied learning programs, global professional academy" />
+    content="Dubai-based global academy for Indian and UAE students. Practical, mentor-led courses in finance, AI, business intelligence, and design — built for real-world careers." />
   <link rel="canonical" href="https://wsjrschool.com/" />
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://wallstreetjracademy.com/" />
-  <meta property="og:title" content="WALL STREET Jr Academy | Financial Education & Investment Courses" />
-  <meta property="og:description"
-    content="Master financial markets with expert-led courses in finance, AI, business intelligence, and design." />
-  <meta property="og:image" content="/favicon.png" />
+  <!-- Locale targeting (India + UAE primary, English fallback) -->
+  <link rel="alternate" hreflang="en-in" href="https://wsjrschool.com/" />
+  <link rel="alternate" hreflang="en-ae" href="https://wsjrschool.com/" />
+  <link rel="alternate" hreflang="x-default" href="https://wsjrschool.com/" />
 
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="https://wallstreetjracademy.com/" />
-  <meta property="twitter:title" content="WALL STREET Jr Academy | Financial Education" />
-  <meta property="twitter:description"
-    content="Transform your career with world-class financial education and investment courses." />
-  <meta property="twitter:image" content="/favicon.png" />
+  <!-- Open Graph / Facebook / WhatsApp / LinkedIn -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://wsjrschool.com/" />
+  <meta property="og:site_name" content="Wall Street Jr. Academy" />
+  <meta property="og:title" content="Wall Street Jr. Academy — Finance, AI, Business & Design Courses" />
+  <meta property="og:description"
+    content="Dubai-based global academy for Indian and UAE students. Practical, mentor-led courses in finance, AI, business intelligence, and design." />
+  <meta property="og:image" content="https://wsjrschool.com/og-default.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="en_IN" />
+  <meta property="og:locale:alternate" content="en_AE" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://wsjrschool.com/" />
+  <meta name="twitter:title" content="Wall Street Jr. Academy — Finance, AI, Business & Design Courses" />
+  <meta name="twitter:description"
+    content="Dubai-based global academy for Indian and UAE students. Practical, mentor-led courses in finance, AI, business intelligence, and design." />
+  <meta name="twitter:image" content="https://wsjrschool.com/og-default.jpg" />
 
   <!-- Schema.org JSON-LD -->
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": ["EducationalOrganization", "LocalBusiness"],
-      "name": "WALL STREET Jr Academy",
-      "telephone": "+971 00 000 0000",
-      "description": "Premier financial education institution offering courses in finance, investment strategies, AI, business intelligence, and design.",
-      "url": "https://wallstreetjracademy.com",
-      "logo": "/favicon.png",
-      "sameAs": [
-        "https://wallstreetjrinvestments.com"
-      ],
+      "@type": "EducationalOrganization",
+      "@id": "https://wsjrschool.com/#organization",
+      "name": "Wall Street Jr. Academy",
+      "alternateName": ["WSJR Academy", "WSJR School"],
+      "url": "https://wsjrschool.com/",
+      "logo": "https://wsjrschool.com/jus.the.emblem.frame.red.whyte.highlights.png",
+      "description": "Dubai-headquartered global academy delivering practical, mentor-led courses in finance, AI, business intelligence, and design — for Indian and UAE students.",
       "address": {
         "@type": "PostalAddress",
         "addressCountry": "AE",
         "addressLocality": "Dubai"
       },
-      "areaServed": ["Dubai", "Chicago", "Cochin", "Bangalore", "Mumbai", "Delhi"],
+      "areaServed": [
+        { "@type": "Country", "name": "India" },
+        { "@type": "Country", "name": "United Arab Emirates" },
+        { "@type": "City", "name": "Dubai" },
+        { "@type": "City", "name": "Mumbai" },
+        { "@type": "City", "name": "Delhi" },
+        { "@type": "City", "name": "Bangalore" },
+        { "@type": "City", "name": "Cochin" }
+      ],
+      "sameAs": [
+        "https://wallstreetjrinvestments.com"
+      ],
       "hasOfferCatalog": {
         "@type": "OfferCatalog",
-        "name": "Financial Education Courses",
+        "name": "Wall Street Jr. Academy Programs",
         "itemListElement": [
           {
             "@type": "Course",
             "name": "School of Finance",
-            "description": "Master financial markets with expert-led investment strategies and financial analysis",
-            "provider": {
-              "@type": "Organization",
-              "name": "WALL STREET Jr Academy"
-            }
-          },
-          {
-            "@type": "Course",
-            "name": "School of Business Intelligence & Management",
-            "description": "Data-driven decision making and strategic management",
-            "provider": {
-              "@type": "Organization",
-              "name": "WALL STREET Jr Academy"
-            }
+            "description": "Master financial markets, investment strategy, and applied financial analysis.",
+            "url": "https://wsjrschool.com/school-of-finance",
+            "provider": { "@id": "https://wsjrschool.com/#organization" }
           },
           {
             "@type": "Course",
             "name": "School of AI & Automation",
-            "description": "Harness artificial intelligence and automation technologies",
-            "provider": {
-              "@type": "Organization",
-              "name": "WALL STREET Jr Academy"
-            }
+            "description": "Build with modern AI tools, automation, and data systems for finance and business.",
+            "url": "https://wsjrschool.com/school-of-technology",
+            "provider": { "@id": "https://wsjrschool.com/#organization" }
+          },
+          {
+            "@type": "Course",
+            "name": "School of Business Intelligence & Management",
+            "description": "Strategic management, analytics, and data-driven decision making.",
+            "url": "https://wsjrschool.com/school-of-management",
+            "provider": { "@id": "https://wsjrschool.com/#organization" }
           },
           {
             "@type": "Course",
             "name": "School of Design Intelligence & Media",
-            "description": "Creative technology and digital media design",
-            "provider": {
-              "@type": "Organization",
-              "name": "WALL STREET Jr Academy"
-            }
+            "description": "Creative technology, brand systems, and modern digital media design.",
+            "url": "https://wsjrschool.com/school-of-design",
+            "provider": { "@id": "https://wsjrschool.com/#organization" }
           }
         ]
       }

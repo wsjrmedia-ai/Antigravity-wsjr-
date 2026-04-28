@@ -1,4 +1,11 @@
 User-agent: *
 Allow: /
 
+# Auth pages — no value to index
+Disallow: /login
+Disallow: /signup
+
+# Topstocx is a separate product surface, served from its own domain
+Disallow: /topstocx
+
 Sitemap: https://wsjrschool.com/sitemap.xml
