@@ -14,6 +14,10 @@
       "destination": "https://antigravity-wsjr.vercel.app/api/chat"
     },
     {
+      "source": "/api/perplexity-proxy",
+      "destination": "https://antigravity-wsjr.vercel.app/api/perplexity-proxy"
+    },
+    {
       "source": "/((?!api/).*)",
       "destination": "/index.html"
     }

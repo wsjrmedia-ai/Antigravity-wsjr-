@@ -880,11 +880,21 @@ export default function TopstockXVoiceBot() {
             content: `User_context: ${JSON.stringify(userContext, null, 2)}\n\nMarket_data: { "note": "No live OHLCV data available from platform yet. Use your knowledge of current market conditions and state assumptions clearly if data is missing." }`,
         };
 
-        const res = await fetch("https://api.perplexity.ai/chat/completions", {
+        // Route through the backend proxy so the Perplexity key stays
+        // server-side. Same body shape as Perplexity's chat-completions —
+        // /api/perplexity-proxy forwards as-is after auth + rate-limit.
+        // No Authorization header from the browser; the server attaches it.
+        const sessionId =
+            typeof window !== 'undefined'
+                ? (window.__tsx_session_id ||= `s_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`)
+                : 'anon';
+        const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+        const res = await fetch("/api/perplexity-proxy", {
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${import.meta.env.VITE_PERPLEXITY_API_KEY}`,
                 "Content-Type": "application/json",
+                "x-session-id": sessionId,
+                ...(token ? { Authorization: `Bearer ${token}` } : {}),
             },
             body: JSON.stringify({
                 model: "sonar-pro",
@@ -892,9 +902,9 @@ export default function TopstockXVoiceBot() {
                     ...systemMessages,
                     contextMessage,
                     ...apiHistory.slice(0, -1),
-                    { 
-                        role: "user", 
-                        content: txt + ` (STRICT: For this specific query, answer ONLY in ${language}. Do not use English.)` 
+                    {
+                        role: "user",
+                        content: txt + ` (STRICT: For this specific query, answer ONLY in ${language}. Do not use English.)`
                     }
                 ],
                 max_tokens: plan === "pro" ? 400 : 250,
@@ -971,7 +981,7 @@ export default function TopstockXVoiceBot() {
             console.error(err);
             setMsgs((prev) => [...prev, {
                 role: "assistant",
-                text: "⚠️ Network error — check API key or connection.",
+                text: `⚠️ Error: ${err.message || 'Check API key or connection.'}`,
                 card: null,
                 id: idRef.current++,
             }]);

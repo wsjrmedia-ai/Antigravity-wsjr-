@@ -622,6 +622,62 @@ app.post('/api/chat', optionalAuth, tierMiddleware, async (req, res) => {
 });
 
 // ─────────────────────────────────────────────────────────────
+// POST /api/perplexity-proxy
+//
+// Thin server-side proxy that forwards a Perplexity chat-completions
+// request as-is, but injects the API key on the server so it never
+// touches the browser bundle. Used by FinAIChatbot, which builds its
+// own elaborate persona/locale system prompts client-side and just
+// needs a secure transport.
+//
+// Hardening:
+//   • optionalAuth + tierMiddleware so anonymous abuse is rate-limited
+//     by sessionId (same 100/day quota as /api/chat).
+//   • Allowlist on `model` to prevent callers from upgrading to a more
+//     expensive variant (e.g. someone passing model: "sonar-deep-research").
+//   • Cap on max_tokens so an attacker can't request 100k-token replies
+//     to drain credits.
+//   • Body shape is validated minimally — Perplexity itself rejects
+//     malformed requests.
+// ─────────────────────────────────────────────────────────────
+const PERPLEXITY_PROXY_ALLOWED_MODELS = new Set([
+  'sonar', 'sonar-pro',
+]);
+
+app.post('/api/perplexity-proxy', optionalAuth, tierMiddleware, async (req, res) => {
+  if (!PERPLEXITY_API_KEY) {
+    return res.status(503).json({ error: { message: 'Perplexity not configured on server' } });
+  }
+  const body = req.body || {};
+  const model = body.model || 'sonar-pro';
+  if (!PERPLEXITY_PROXY_ALLOWED_MODELS.has(model)) {
+    return res.status(400).json({ error: { message: `model not allowed: ${model}` } });
+  }
+  // Cap tokens — chatbot wants 250–400, we hard-cap at 800 just in case.
+  const maxTokens = Math.min(Number(body.max_tokens) || 400, 800);
+
+  try {
+    const upstream = await fetch(`${PERPLEXITY_BASE}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${PERPLEXITY_API_KEY}`,
+        'Content-Type':  'application/json',
+      },
+      body: JSON.stringify({
+        ...body,
+        model,
+        max_tokens: maxTokens,
+      }),
+    });
+    const text = await upstream.text();
+    res.status(upstream.status).type(upstream.headers.get('content-type') || 'application/json').send(text);
+  } catch (err) {
+    console.error('[/api/perplexity-proxy]', err.message);
+    res.status(502).json({ error: { message: 'Upstream Perplexity error' } });
+  }
+});
+
+// ─────────────────────────────────────────────────────────────
 // POST /api/ai/analyze — intent-based AI for the trading platform.
 //
 // One endpoint powers every AI surface in Topstocx. The frontend
