@@ -1,21 +1,34 @@
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import Lenis from 'lenis'
 import Footer from './components/Footer'
-import LoginPage from './pages/LoginPage'
-import SignupPage from './pages/SignupPage'
 import HomePage from './pages/HomePage'
-import SchoolProgramPage from './pages/SchoolProgramPage'
-import SyllabusPage from './pages/SyllabusPage'
-import WhoWeArePage from './pages/WhoWeArePage'
-import TopStocxPage from './pages/TopStocxPage'
-import EnrollPage from './pages/EnrollPage'
-import ProgrammesPage from './pages/ProgrammesPage'
-import BlogIndexPage from './pages/BlogIndexPage'
-import BlogPostPage from './pages/BlogPostPage'
+
+// Lazy-load every non-home route. The home page is the dominant entry
+// point (ad traffic, organic search, direct loads); shipping the rest
+// only when the user navigates keeps initial JS small. React.lazy +
+// Suspense pairs cleanly with Vite's rollup chunk splitter so each
+// page becomes its own chunk.
+const LoginPage          = lazy(() => import('./pages/LoginPage'))
+const SignupPage         = lazy(() => import('./pages/SignupPage'))
+const SchoolProgramPage  = lazy(() => import('./pages/SchoolProgramPage'))
+const SyllabusPage       = lazy(() => import('./pages/SyllabusPage'))
+const WhoWeArePage       = lazy(() => import('./pages/WhoWeArePage'))
+const TopStocxPage       = lazy(() => import('./pages/TopStocxPage'))
+const EnrollPage         = lazy(() => import('./pages/EnrollPage'))
+const ProgrammesPage     = lazy(() => import('./pages/ProgrammesPage'))
+const BlogIndexPage      = lazy(() => import('./pages/BlogIndexPage'))
+const BlogPostPage       = lazy(() => import('./pages/BlogPostPage'))
 
 import CustomScrollbar from './components/CustomScrollbar'
 import FinAIChatbot from './components/FinAIChatbot'
+
+// Minimal fallback for lazy routes — matches the brand background so
+// the swap is invisible on slow networks. No spinner; the chunks load
+// fast enough on warm caches that a spinner just adds visual noise.
+const RouteFallback = () => (
+  <div style={{ minHeight: '100vh', background: 'var(--bg-primary)' }} />
+)
 
 function App() {
   const location = useLocation()
@@ -56,18 +69,22 @@ function App() {
 
   if (isAuthPage) {
     return (
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-      </Routes>
+      <Suspense fallback={<RouteFallback />}>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+        </Routes>
+      </Suspense>
     )
   }
 
   if (isTopStocx) {
     return (
-      <Routes>
-        <Route path="/topstocx/*" element={<TopStocxPage />} />
-      </Routes>
+      <Suspense fallback={<RouteFallback />}>
+        <Routes>
+          <Route path="/topstocx/*" element={<TopStocxPage />} />
+        </Routes>
+      </Suspense>
     )
   }
 
@@ -75,20 +92,22 @@ function App() {
     <div className="layout" style={{ background: 'var(--bg-primary)', minHeight: '100vh', position: 'relative' }}>
       <CustomScrollbar />
       <main style={{ position: 'relative', zIndex: 1 }}>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/school-of-finance" element={<SchoolProgramPage schoolId="sof" />} />
-          <Route path="/school-of-technology" element={<SchoolProgramPage schoolId="sot" />} />
-          <Route path="/school-of-design" element={<SchoolProgramPage schoolId="sod" />} />
-          <Route path="/school-of-management" element={<SchoolProgramPage schoolId="som" />} />
-          <Route path="/school-of-finance/syllabus" element={<SyllabusPage />} />
-          <Route path="/who-we-are" element={<WhoWeArePage />} />
-          <Route path="/enroll" element={<EnrollPage />} />
-          <Route path="/programmes" element={<ProgrammesPage />} />
-          <Route path="/programs" element={<ProgrammesPage />} />
-          <Route path="/blog" element={<BlogIndexPage />} />
-          <Route path="/blog/:slug" element={<BlogPostPage />} />
-        </Routes>
+        <Suspense fallback={<RouteFallback />}>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/school-of-finance" element={<SchoolProgramPage schoolId="sof" />} />
+            <Route path="/school-of-technology" element={<SchoolProgramPage schoolId="sot" />} />
+            <Route path="/school-of-design" element={<SchoolProgramPage schoolId="sod" />} />
+            <Route path="/school-of-management" element={<SchoolProgramPage schoolId="som" />} />
+            <Route path="/school-of-finance/syllabus" element={<SyllabusPage />} />
+            <Route path="/who-we-are" element={<WhoWeArePage />} />
+            <Route path="/enroll" element={<EnrollPage />} />
+            <Route path="/programmes" element={<ProgrammesPage />} />
+            <Route path="/programs" element={<ProgrammesPage />} />
+            <Route path="/blog" element={<BlogIndexPage />} />
+            <Route path="/blog/:slug" element={<BlogPostPage />} />
+          </Routes>
+        </Suspense>
       </main>
       <FinAIChatbot />
       <Footer />

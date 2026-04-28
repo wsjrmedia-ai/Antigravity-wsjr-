@@ -200,6 +200,8 @@ const ProgrammesPage = () => {
                             <img
                                 src={school.image}
                                 alt={school.name}
+                                loading="lazy"
+                                decoding="async"
                                 style={{
                                     width: '100%',
                                     height: '100%',

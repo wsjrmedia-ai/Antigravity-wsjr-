@@ -50,9 +50,11 @@ const InstitutionalOverview = () => {
                 backgroundColor: '#050505',
                 overflow: 'hidden'
             }}>
-                <img 
-                    src="/images/figma/bg-qatar-museum.jpg" 
-                    alt="National Museum of Qatar Architecture" 
+                <img
+                    src="/images/figma/bg-qatar-museum.jpg"
+                    alt="National Museum of Qatar Architecture"
+                    loading="lazy"
+                    decoding="async"
                     style={{
                         width: '100%',
                         height: '100%',

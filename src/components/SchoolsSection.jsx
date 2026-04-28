@@ -259,9 +259,11 @@ const SchoolCard = ({ school, index, total }) => {
                                 borderTopLeftRadius: '50px',
                                 overflow: 'hidden'
                             }}>
-                                <img 
-                                    src={school.image} 
-                                    alt={school.title} 
+                                <img
+                                    src={school.image}
+                                    alt={school.title}
+                                    loading="lazy"
+                                    decoding="async"
                                     style={{
                                         width: '100%',
                                         height: '100%',
