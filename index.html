@@ -7,6 +7,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0a0a0a" />
 
+  <!-- Google Analytics 4 — page_view fired manually by AnalyticsTracker
+       on each React Router navigation (SPAs don't trigger auto-pageviews
+       on client-side route changes). -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-02KM81WRSX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-02KM81WRSX', { send_page_view: false });
+  </script>
+
   <!-- Primary Meta Tags -->
   <title>Wall Street Jr. Academy — Finance, AI, Business & Design Courses (Dubai)</title>
   <meta name="title" content="Wall Street Jr. Academy — Finance, AI, Business & Design Courses (Dubai)" />

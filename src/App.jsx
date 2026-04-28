@@ -22,6 +22,7 @@ const BlogPostPage       = lazy(() => import('./pages/BlogPostPage'))
 
 import CustomScrollbar from './components/CustomScrollbar'
 import FinAIChatbot from './components/FinAIChatbot'
+import AnalyticsTracker from './components/AnalyticsTracker'
 
 // Minimal fallback for lazy routes — matches the brand background so
 // the swap is invisible on slow networks. No spinner; the chunks load
@@ -69,27 +70,34 @@ function App() {
 
   if (isAuthPage) {
     return (
-      <Suspense fallback={<RouteFallback />}>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-        </Routes>
-      </Suspense>
+      <>
+        <AnalyticsTracker />
+        <Suspense fallback={<RouteFallback />}>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+          </Routes>
+        </Suspense>
+      </>
     )
   }
 
   if (isTopStocx) {
     return (
-      <Suspense fallback={<RouteFallback />}>
-        <Routes>
-          <Route path="/topstocx/*" element={<TopStocxPage />} />
-        </Routes>
-      </Suspense>
+      <>
+        <AnalyticsTracker />
+        <Suspense fallback={<RouteFallback />}>
+          <Routes>
+            <Route path="/topstocx/*" element={<TopStocxPage />} />
+          </Routes>
+        </Suspense>
+      </>
     )
   }
 
   return (
     <div className="layout" style={{ background: 'var(--bg-primary)', minHeight: '100vh', position: 'relative' }}>
+      <AnalyticsTracker />
       <CustomScrollbar />
       <main style={{ position: 'relative', zIndex: 1 }}>
         <Suspense fallback={<RouteFallback />}>

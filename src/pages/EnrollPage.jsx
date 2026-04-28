@@ -36,7 +36,18 @@ const EnrollPage = () => {
         }]);
 
       if (error) throw error;
-      
+
+      // GA4 conversion event — `generate_lead` is a standard GA4 event
+      // name and is auto-recommended as a conversion. We attach the
+      // course + country so we can later split conversion volume by
+      // program and target geo.
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+        window.gtag('event', 'generate_lead', {
+          course: formData.course || '(none)',
+          country: formData.country || '(unknown)',
+        });
+      }
+
       setIsSubmitted(true);
     } catch (error) {
       console.error('Error submitting application:', error);

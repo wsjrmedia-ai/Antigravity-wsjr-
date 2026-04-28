@@ -99,6 +99,15 @@ const Footer = () => {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     aria-label={`${label} — Wall Street Jr. Academy`}
+                                    onClick={() => {
+                                        if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+                                            window.gtag('event', 'click', {
+                                                event_category: 'outbound_social',
+                                                event_label: label,
+                                                transport_type: 'beacon',
+                                            });
+                                        }
+                                    }}
                                     style={{
                                         width: 40,
                                         height: 40,
