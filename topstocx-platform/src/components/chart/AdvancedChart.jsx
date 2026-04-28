@@ -5,7 +5,7 @@ import { useLeverate } from '../../context/LeverateContext';
 import ExplainChartPanel from './ExplainChartPanel';
 
 const AdvancedChart = () => {
-    const { selectedSymbol, selectedPeriod, setSelectedSymbol } = useLeverate();
+    const { selectedSymbol, selectedPeriod, setSelectedSymbol, studies } = useLeverate();
     const wrapperRef = useRef(null);
     const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -139,7 +139,7 @@ const AdvancedChart = () => {
             }}
         >
             <AdvancedRealTimeChart
-                key={`${tvSymbol}-${selectedPeriod}`}
+                key={`${tvSymbol}-${selectedPeriod}-${(studies || []).join('|')}`}
                 theme="dark"
                 symbol={tvSymbol}
                 interval={formatPeriod(selectedPeriod)}
@@ -151,6 +151,7 @@ const AdvancedChart = () => {
                 hide_legend={false}
                 save_image={false}
                 allow_symbol_change={true}
+                studies={studies && studies.length ? studies : undefined}
                 container_id="tv_advanced_chart"
                 width="100%"
                 height="100%"

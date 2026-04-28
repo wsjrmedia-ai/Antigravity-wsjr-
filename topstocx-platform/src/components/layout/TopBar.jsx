@@ -1,25 +1,31 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Activity, Lightbulb, LayoutList } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Lightbulb, LayoutList } from 'lucide-react';
 import { useLeverate } from '../../context/LeverateContext';
 import AlertsCenter from '../ai/AlertsCenter';
+import SymbolPicker from './SymbolPicker';
+import IndicatorsMenu from './IndicatorsMenu';
+import LivePriceBadge from './LivePriceBadge';
 
 const TopBar = ({ onToggleWatchlist, watchlistOpen }) => {
-    const { balance, selectedSymbol, selectedPeriod, setSelectedPeriod } = useLeverate();
+    const { balance, selectedPeriod, setSelectedPeriod } = useLeverate();
+    const navigate = useNavigate();
 
     const formatCurrency = (val) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
 
     return (
         <>
         <style>{`
+            @media (max-width: 1024px) {
+                .topbar-tradeideas, .topbar-equity { display: none !important; }
+            }
+            @media (max-width: 900px) {
+                .topbar-liveprice { display: none !important; }
+            }
             @media (max-width: 768px) {
-                .topbar-indicators, .topbar-tradeideas, .topbar-divider, .topbar-equity { display: none !important; }
+                .topbar-indicators, .topbar-divider { display: none !important; }
                 .topbar-timeframes { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; flex-shrink: 0; }
                 .topbar-timeframes::-webkit-scrollbar { display: none; }
-                .topbar-symbol .topbar-status { display: none; }
-            }
-            @media (max-width: 480px) {
-                .topbar-symbol { max-width: 120px; }
             }
         `}</style>
         <div style={{
@@ -46,20 +52,9 @@ const TopBar = ({ onToggleWatchlist, watchlistOpen }) => {
                 TOP<span style={{ color: 'var(--brand-blue)' }}>STOCX</span>
             </Link>
 
-            <div className="topbar-symbol" style={{
-                display: 'flex',
-                alignItems: 'center',
-                backgroundColor: 'var(--bg-accent)',
-                padding: '6px 14px',
-                borderRadius: '6px',
-                gap: '10px',
-                flexShrink: 0
-            }}>
-                <span style={{ fontWeight: '700', fontSize: '14px', letterSpacing: '0.5px' }}>{selectedSymbol}</span>
-                <span className="topbar-status" style={{ color: 'var(--brand-green)', fontSize: '11px', fontWeight: 600 }}>
-                    LIVE
-                </span>
-            </div>
+            <SymbolPicker />
+
+            <LivePriceBadge />
 
             <div className="topbar-timeframes" style={{ display: 'flex', gap: '4px' }}>
                 {[
@@ -90,17 +85,28 @@ const TopBar = ({ onToggleWatchlist, watchlistOpen }) => {
 
             <div className="topbar-divider" style={{ width: '1px', height: '20px', backgroundColor: 'var(--border-color)' }} />
 
-            <div className="topbar-indicators" style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: 'var(--text-secondary)' }}>
-                <span style={{ fontSize: '14px', fontWeight: '500' }}>Indicators</span>
-                <Activity size={16} />
+            <div className="topbar-indicators">
+                <IndicatorsMenu />
             </div>
 
             <div className="topbar-divider" style={{ width: '1px', height: '20px', backgroundColor: 'var(--border-color)', margin: '0 8px' }} />
 
-            <div className="topbar-tradeideas" style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: 'var(--text-secondary)' }}>
-                <span style={{ fontSize: '14px', fontWeight: '500' }}>Trade Ideas</span>
+            <button
+                type="button"
+                className="topbar-tradeideas"
+                onClick={() => navigate('/trade-ideas')}
+                style={{
+                    display: 'flex', alignItems: 'center', gap: '6px',
+                    cursor: 'pointer', color: 'var(--text-secondary)',
+                    background: 'none', border: 'none', padding: '6px 8px', borderRadius: 6,
+                    fontSize: 14, fontWeight: 500,
+                }}
+                onMouseEnter={e => e.currentTarget.style.color = 'var(--text-primary)'}
+                onMouseLeave={e => e.currentTarget.style.color = 'var(--text-secondary)'}
+            >
+                <span>Trade Ideas</span>
                 <Lightbulb size={16} />
-            </div>
+            </button>
 
             <div style={{ flex: 1 }} />
 

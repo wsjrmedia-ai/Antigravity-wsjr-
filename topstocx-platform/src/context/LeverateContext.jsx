@@ -9,8 +9,36 @@ export const LeverateProvider = ({ children }) => {
     const [positions, setPositions] = useState([]);
     const [marketSummary, setMarketSummary] = useState({ indices: [], forex: [], crypto: [] });
     const [connected, setConnected] = useState(false);
-    const [selectedSymbol, setSelectedSymbol] = useState('EURUSD');
-    const [selectedPeriod, setSelectedPeriod] = useState(15);
+    const [selectedSymbol, setSelectedSymbol] = useState(() => {
+        try { return localStorage.getItem('tsx.symbol') || 'EURUSD'; } catch { return 'EURUSD'; }
+    });
+    const [selectedPeriod, setSelectedPeriod] = useState(() => {
+        try {
+            const v = parseInt(localStorage.getItem('tsx.period'), 10);
+            return Number.isFinite(v) ? v : 15;
+        } catch { return 15; }
+    });
+    const [studies, setStudies] = useState(() => {
+        try {
+            const raw = localStorage.getItem('tsx.studies');
+            const parsed = raw ? JSON.parse(raw) : null;
+            return Array.isArray(parsed) ? parsed : [];
+        } catch { return []; }
+    });
+
+    useEffect(() => {
+        try { localStorage.setItem('tsx.symbol', selectedSymbol); } catch {}
+    }, [selectedSymbol]);
+    useEffect(() => {
+        try { localStorage.setItem('tsx.period', String(selectedPeriod)); } catch {}
+    }, [selectedPeriod]);
+    useEffect(() => {
+        try { localStorage.setItem('tsx.studies', JSON.stringify(studies)); } catch {}
+    }, [studies]);
+
+    const toggleStudy = useCallback((id) => {
+        setStudies(prev => prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]);
+    }, []);
 
     const refreshData = useCallback(async () => {
         if (!userID) return;
@@ -79,6 +107,7 @@ export const LeverateProvider = ({ children }) => {
             connected,
             selectedSymbol, setSelectedSymbol,
             selectedPeriod, setSelectedPeriod,
+            studies, setStudies, toggleStudy,
             refreshData
         }}>
             {children}
