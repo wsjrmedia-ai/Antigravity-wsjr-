@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import prerender from '@prerenderer/rollup-plugin'
 
 /**
  * Vendor chunking strategy:
@@ -30,101 +29,15 @@ function manualChunks(id) {
   return 'vendor';
 }
 
-/**
- * Routes to prerender into static HTML at build time.
- *
- * Why prerender (Phase 4): Helmet writes meta via JS at runtime — Google
- * runs JS so it sees correct titles, but social crawlers (WhatsApp, FB,
- * LinkedIn, X) do NOT execute JS. Without prerender every shared link
- * shows the homepage OG card. Prerendering bakes per-route meta into the
- * static HTML so social previews are correct on every page.
- *
- * Skipped: /login, /signup (noindex anyway), /topstocx (separate product).
- */
-const PRERENDER_ROUTES = [
-  '/',
-  '/programmes',
-  '/school-of-finance',
-  '/school-of-finance/syllabus',
-  '/school-of-technology',
-  '/school-of-management',
-  '/school-of-design',
-  '/who-we-are',
-  '/enroll',
-  '/blog',
-  '/blog/real-financial-markets-education-2026',
-  '/blog/ai-and-automation-in-finance-practical-guide',
-  '/blog/multidisciplinary-education-beyond-a-single-subject',
-];
+// Note: per-route prerendering (@prerenderer/rollup-plugin + puppeteer)
+// was attempted here but Vercel's Linux build container is missing the
+// shared libraries Chromium needs (libnspr4 et al.), so the build fails
+// with "Failed to launch the browser process: Code 127". Removed for
+// now — see Phase 4 follow-up for a jsdom-based renderer that doesn't
+// need a real browser.
 
 export default defineConfig({
-  plugins: [
-    react(),
-    prerender({
-      routes: PRERENDER_ROUTES,
-      // Use puppeteer to spin up a headless Chrome and snapshot each
-      // route's HTML after the SPA has rendered.
-      renderer: '@prerenderer/renderer-puppeteer',
-      rendererOptions: {
-        // Wait for Helmet + lazy chunks to settle. 2.5s is enough for
-        // lazy route chunks + Helmet flush; the cost is build-time only.
-        renderAfterTime: 2500,
-        maxConcurrentRoutes: 4,
-        skipThirdPartyRequests: false,
-        headless: true,
-      },
-      // Helmet appends its per-route SEO meta tags AFTER the static ones
-      // from index.html, so the page ends up with two of each og:title /
-      // description / canonical. Keep the LAST occurrence (Helmet's) and
-      // drop the static fallbacks — that gives us the correct page-
-      // specific values for crawlers.
-      // Note: <title> is special — Helmet replaces the element in the
-      // DOM, so there's only one in the snapshot. The first-seen logic
-      // works there but we use the same "keep last" pass for symmetry.
-      postProcess(route) {
-        // react-helmet-async (with prioritizeSeoTags) prepends <title>
-        // to the head, so Helmet's title appears FIRST and the static
-        // index.html title appears second. For meta tags + canonical
-        // it's the opposite — Helmet appends them at the END of head,
-        // after the modulepreload links.
-        //
-        // Browsers and crawlers honor the LAST occurrence of each. So
-        // for <title> we keep FIRST (Helmet's), and for meta/canonical
-        // we keep LAST (Helmet's).
-        let html = route.html;
-
-        const keepBy = (re, getKey, mode /* 'first' | 'last' */) => {
-          const targets = new Map(); // key -> index to keep
-          let i = 0;
-          for (const m of html.matchAll(re)) {
-            const key = getKey(m);
-            if (mode === 'first') {
-              if (!targets.has(key)) targets.set(key, i);
-            } else {
-              targets.set(key, i);
-            }
-            i += 1;
-          }
-          let idx = 0;
-          html = html.replace(re, (full, ...rest) => {
-            const m = [full, ...rest.slice(0, -2)];
-            const key = getKey(m);
-            const keep = targets.get(key) === idx;
-            idx += 1;
-            return keep ? full : '';
-          });
-        };
-
-        keepBy(/<title>[^<]*<\/title>/g, () => '__title__', 'first');
-        keepBy(/<meta\s+name="([^"]+)"[^>]*>/g, (m) => `n:${m[1]}`, 'last');
-        keepBy(/<meta\s+property="([^"]+)"[^>]*>/g, (m) => `p:${m[1]}`, 'last');
-        keepBy(/<link\s+rel="canonical"[^>]*>/g, () => '__canon__', 'last');
-
-        route.html = html;
-        return route;
-      },
-    }),
-  ],
+  plugins: [react()],
   build: {
     chunkSizeWarningLimit: 800,
     rollupOptions: {
