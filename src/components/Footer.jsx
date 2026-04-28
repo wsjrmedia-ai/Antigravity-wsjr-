@@ -1,4 +1,23 @@
 import { Link } from 'react-router-dom'
+import { Linkedin, Facebook, Instagram } from 'lucide-react'
+
+const SOCIAL_LINKS = [
+    {
+        label: 'LinkedIn',
+        href: 'https://www.linkedin.com/company/wall-street-jr-school/',
+        Icon: Linkedin,
+    },
+    {
+        label: 'Facebook',
+        href: 'https://www.facebook.com/share/1KWoWotoNW/',
+        Icon: Facebook,
+    },
+    {
+        label: 'Instagram',
+        href: 'https://www.instagram.com/wsjrschool/',
+        Icon: Instagram,
+    },
+]
 
 const Footer = () => {
     return (
@@ -65,6 +84,51 @@ const Footer = () => {
                         <p style={{ color: '#FFF', fontSize: '1.1rem', margin: 0, fontFamily: 'var(--font-body)', fontWeight: 600 }}>Dubai - Global Headquarters</p>
                         <p style={{ color: '#FFF', fontSize: '1.1rem', margin: 0, fontFamily: 'var(--font-body)', fontWeight: 600 }}>Chicago - Wall Street Jr Investments Ltd.</p>
                         <p style={{ color: '#FFF', fontSize: '1.1rem', margin: 0, fontFamily: 'var(--font-body)', fontWeight: 600 }}>India - Cochin, Bangalore, Mumbai, Delhi</p>
+                    </div>
+
+                    {/* Social */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '8px' }}>
+                        <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.78rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--accent-gold)', fontWeight: 600 }}>
+                            Follow
+                        </span>
+                        <div style={{ display: 'flex', gap: '12px' }}>
+                            {SOCIAL_LINKS.map(({ label, href, Icon }) => (
+                                <a
+                                    key={label}
+                                    href={href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label={`${label} — Wall Street Jr. Academy`}
+                                    style={{
+                                        width: 40,
+                                        height: 40,
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        borderRadius: '50%',
+                                        border: '1px solid rgba(247, 172, 65, 0.35)',
+                                        color: 'var(--accent-gold)',
+                                        backgroundColor: 'rgba(247, 172, 65, 0.04)',
+                                        transition: 'background-color 0.2s, color 0.2s, transform 0.2s, border-color 0.2s',
+                                        textDecoration: 'none',
+                                    }}
+                                    onMouseOver={(e) => {
+                                        e.currentTarget.style.backgroundColor = 'var(--accent-gold)';
+                                        e.currentTarget.style.color = '#040001';
+                                        e.currentTarget.style.borderColor = 'var(--accent-gold)';
+                                        e.currentTarget.style.transform = 'translateY(-2px)';
+                                    }}
+                                    onMouseOut={(e) => {
+                                        e.currentTarget.style.backgroundColor = 'rgba(247, 172, 65, 0.04)';
+                                        e.currentTarget.style.color = 'var(--accent-gold)';
+                                        e.currentTarget.style.borderColor = 'rgba(247, 172, 65, 0.35)';
+                                        e.currentTarget.style.transform = 'translateY(0)';
+                                    }}
+                                >
+                                    <Icon size={18} strokeWidth={1.8} />
+                                </a>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
