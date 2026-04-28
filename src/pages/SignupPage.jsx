@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import GalaxyBackground from '../components/GalaxyBackground'
+import SEO from '../components/SEO'
 
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
@@ -139,6 +140,12 @@ const SignupPage = () => {
             overflow: 'hidden',
             fontFamily: 'Inter, sans-serif'
         }}>
+            <SEO
+                title="Create Account"
+                description="Create your Wall Street Jr. Academy account."
+                path="/signup"
+                noindex
+            />
             <GalaxyBackground />
 
             {/* Back to Home Link */}

@@ -3,26 +3,13 @@ import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import GalaxyBackground from '../components/GalaxyBackground'
+import SEO from '../components/SEO'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const SyllabusPage = () => {
     const pageRef = useRef(null)
     const contentRefs = useRef([])
-
-    // Update document title and meta description for SEO
-    useEffect(() => {
-        document.title = "School of Finance Curriculum | Wall Street Jr. Academy UAE"
-        const metaDescription = document.querySelector('meta[name="description"]')
-        if (metaDescription) {
-            metaDescription.setAttribute("content", "Explore the Wall Street Jr. School of Finance curriculum — 14 modules across Finance, Trading, AI, and Wealth Planning. UAE's most rigorous finance education.")
-        } else {
-            const meta = document.createElement('meta')
-            meta.name = "description"
-            meta.content = "Explore the Wall Street Jr. School of Finance curriculum — 14 modules across Finance, Trading, AI, and Wealth Planning. UAE's most rigorous finance education."
-            document.head.appendChild(meta)
-        }
-    }, [])
 
     useEffect(() => {
         window.scrollTo(0, 0)
@@ -185,6 +172,21 @@ const SyllabusPage = () => {
 
     return (
         <div ref={pageRef} className="syllabus-root" style={{ background: 'var(--bg-primary)', color: 'white', minHeight: '100vh', position: 'relative', overflowX: 'hidden' }}>
+            <SEO
+                title="School of Finance Curriculum"
+                description="Wall Street Jr. School of Finance curriculum: 14 modules across 4 levels — markets, quantitative analysis, AI in finance, and wealth planning. Dubai-based, built for Indian and UAE students."
+                path="/school-of-finance/syllabus"
+                schema={{
+                    '@context': 'https://schema.org',
+                    '@type': 'Course',
+                    name: 'Wall Street Jr. School of Finance — Curriculum',
+                    description: '14-module curriculum across foundations, markets, quantitative analysis, AI in finance, and wealth planning.',
+                    url: 'https://wsjrschool.com/school-of-finance/syllabus',
+                    provider: { '@id': 'https://wsjrschool.com/#organization' },
+                    educationalCredentialAwarded: 'Wall Street Jr. School of Finance Certificate',
+                    inLanguage: 'en',
+                }}
+            />
             <GalaxyBackground />
 
             {/* Hero Section */}

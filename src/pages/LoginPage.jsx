@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import GalaxyBackground from '../components/GalaxyBackground'
+import SEO from '../components/SEO'
 
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
@@ -50,6 +51,12 @@ const LoginPage = () => {
             background: 'var(--bg-primary)',
             overflow: 'hidden'
         }}>
+            <SEO
+                title="Sign In"
+                description="Sign in to your Wall Street Jr. Academy account."
+                path="/login"
+                noindex
+            />
             {/* Background */}
             <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
                 <GalaxyBackground />

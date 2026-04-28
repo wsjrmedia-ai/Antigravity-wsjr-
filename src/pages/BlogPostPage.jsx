@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { findPostBySlug, BLOG_POSTS } from '../data/blogPosts';
+import SEO from '../components/SEO';
 
 const formatDate = (iso) => {
     try {
@@ -13,36 +14,6 @@ const formatDate = (iso) => {
     } catch {
         return iso;
     }
-};
-
-const setMeta = (name, content) => {
-    let el = document.querySelector(`meta[name="${name}"]`);
-    if (!el) {
-        el = document.createElement('meta');
-        el.setAttribute('name', name);
-        document.head.appendChild(el);
-    }
-    el.setAttribute('content', content);
-};
-
-const setOgMeta = (property, content) => {
-    let el = document.querySelector(`meta[property="${property}"]`);
-    if (!el) {
-        el = document.createElement('meta');
-        el.setAttribute('property', property);
-        document.head.appendChild(el);
-    }
-    el.setAttribute('content', content);
-};
-
-const setCanonical = (href) => {
-    let el = document.querySelector('link[rel="canonical"]');
-    if (!el) {
-        el = document.createElement('link');
-        el.setAttribute('rel', 'canonical');
-        document.head.appendChild(el);
-    }
-    el.setAttribute('href', href);
 };
 
 const Section = ({ section }) => {
@@ -144,54 +115,25 @@ const BlogPostPage = () => {
     const post = findPostBySlug(slug);
 
     useEffect(() => {
-        if (!post) return;
-        window.scrollTo(0, 0);
-        document.title = `${post.title} — Wall Street Jr. Academy`;
-        setMeta('description', post.excerpt);
-        setMeta('author', post.author);
-        setOgMeta('og:title', post.title);
-        setOgMeta('og:description', post.excerpt);
-        setOgMeta('og:type', 'article');
-        setOgMeta('article:published_time', post.date);
-        setCanonical(`https://wsjrschool.com/blog/${post.slug}`);
-
-        // JSON-LD Article schema for SEO
-        const ldId = 'blog-post-jsonld';
-        let ld = document.getElementById(ldId);
-        if (!ld) {
-            ld = document.createElement('script');
-            ld.type = 'application/ld+json';
-            ld.id = ldId;
-            document.head.appendChild(ld);
-        }
-        ld.textContent = JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'Article',
-            headline: post.title,
-            description: post.excerpt,
-            datePublished: post.date,
-            author: { '@type': 'Person', name: post.author },
-            publisher: {
-                '@type': 'Organization',
-                name: 'Wall Street Jr. Academy',
-                logo: {
-                    '@type': 'ImageObject',
-                    url: 'https://wsjrschool.com/favicon.png',
-                },
-            },
-            mainEntityOfPage: `https://wsjrschool.com/blog/${post.slug}`,
-            keywords: post.tags.join(', '),
-        });
-
-        return () => {
-            const stale = document.getElementById(ldId);
-            if (stale) stale.remove();
-        };
+        if (post) window.scrollTo(0, 0);
     }, [post]);
 
     if (!post) return <Navigate to="/blog" replace />;
 
     const related = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 2);
+
+    const articleSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: post.title,
+        description: post.excerpt,
+        datePublished: post.date,
+        author: { '@type': 'Person', name: post.author },
+        publisher: { '@id': 'https://wsjrschool.com/#organization' },
+        mainEntityOfPage: `https://wsjrschool.com/blog/${post.slug}`,
+        keywords: post.tags.join(', '),
+        image: 'https://wsjrschool.com/og-default.jpg',
+    };
 
     return (
         <div
@@ -220,6 +162,14 @@ const BlogPostPage = () => {
                     pointerEvents: 'none',
                     zIndex: 0,
                 }}
+            />
+
+            <SEO
+                title={post.title}
+                description={post.excerpt}
+                path={`/blog/${post.slug}`}
+                type="article"
+                schema={articleSchema}
             />
 
             <article

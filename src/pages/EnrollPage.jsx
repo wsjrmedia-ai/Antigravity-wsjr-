@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import SEO from '../components/SEO';
 
 const EnrollPage = () => {
   const [formData, setFormData] = useState({
@@ -76,6 +77,11 @@ const EnrollPage = () => {
       overflow: 'hidden',
       padding: '120px 5% 60px'
     }}>
+      <SEO
+        title="Apply & Enroll"
+        description="Apply for the next cohort at Wall Street Jr. Academy. Programs in Finance, AI, Business Intelligence, and Design — Dubai-based, built for Indian and UAE students."
+        path="/enroll"
+      />
       <style>{focusStyle}</style>
 
       {/* Subtle Background Glow to match institutional aesthetic */}

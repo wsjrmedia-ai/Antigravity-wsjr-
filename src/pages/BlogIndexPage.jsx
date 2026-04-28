@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { BLOG_POSTS, BLOG_TAGS } from '../data/blogPosts';
+import SEO from '../components/SEO';
 
 const formatDate = (iso) => {
     try {
@@ -20,16 +21,6 @@ const BlogIndexPage = () => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        document.title = 'Insights & Resources — Wall Street Jr. Academy';
-        const desc =
-            'Articles, frameworks, and resources from Wall Street Jr. Academy on finance, AI, design, and modern business.';
-        let metaDesc = document.querySelector('meta[name="description"]');
-        if (!metaDesc) {
-            metaDesc = document.createElement('meta');
-            metaDesc.name = 'description';
-            document.head.appendChild(metaDesc);
-        }
-        metaDesc.content = desc;
     }, []);
 
     const filtered = useMemo(() => {
@@ -52,6 +43,18 @@ const BlogIndexPage = () => {
                 overflow: 'hidden',
             }}
         >
+            <SEO
+                title="Insights & Resources"
+                description="Articles, frameworks, and resources from Wall Street Jr. Academy on finance, AI, design, and modern business — written for Indian and UAE professionals."
+                path="/blog"
+                schema={{
+                    '@context': 'https://schema.org',
+                    '@type': 'Blog',
+                    name: 'Wall Street Jr. Academy — Insights & Resources',
+                    url: 'https://wsjrschool.com/blog',
+                    publisher: { '@id': 'https://wsjrschool.com/#organization' },
+                }}
+            />
             {/* Ambient glow */}
             <div
                 aria-hidden

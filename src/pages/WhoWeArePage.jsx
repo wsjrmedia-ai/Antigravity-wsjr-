@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import SEO from '../components/SEO';
 
 /**
  * WhoWeArePage
@@ -15,17 +16,6 @@ const WhoWeArePage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = 'Who We Are | Wall Street Jr. Academy';
-    const meta = document.querySelector('meta[name="description"]');
-    const content =
-      'Wall Street Jr. Academy is a UAE-headquartered global institution preparing finance, technology, design, and management professionals for real-world leadership.';
-    if (meta) meta.setAttribute('content', content);
-    else {
-      const m = document.createElement('meta');
-      m.name = 'description';
-      m.content = content;
-      document.head.appendChild(m);
-    }
   }, []);
 
   const gold = 'var(--accent-gold)';
@@ -42,6 +32,18 @@ const WhoWeArePage = () => {
         fontFamily: 'var(--font-body)',
       }}
     >
+      <SEO
+        title="Who We Are"
+        description="Wall Street Jr. Academy is a Dubai-headquartered global institution preparing Indian and UAE students for real-world careers in finance, AI, design, and management."
+        path="/who-we-are"
+        schema={{
+          '@context': 'https://schema.org',
+          '@type': 'AboutPage',
+          name: 'Who We Are — Wall Street Jr. Academy',
+          url: 'https://wsjrschool.com/who-we-are',
+          mainEntity: { '@id': 'https://wsjrschool.com/#organization' },
+        }}
+      />
       {/* Ambient gold glow */}
       <div
         aria-hidden

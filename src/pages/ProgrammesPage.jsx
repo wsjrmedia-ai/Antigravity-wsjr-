@@ -2,14 +2,26 @@ import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { schoolsList } from '../data/schools';
+import SEO from '../components/SEO';
 
 const ProgrammesPage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        document.title = 'Programmes — Wall Street Jr. Academy';
     }, []);
+
+    const itemListSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: 'Wall Street Jr. Academy Programs',
+        itemListElement: (schoolsList || []).map((s, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            url: `https://wsjrschool.com${s.path}`,
+            name: s.name,
+        })),
+    };
 
     return (
         <div
@@ -23,6 +35,12 @@ const ProgrammesPage = () => {
                 overflow: 'hidden',
             }}
         >
+            <SEO
+                title="Programmes"
+                description="Explore Wall Street Jr. Academy's programmes — Schools of Finance, AI & Automation, Business Intelligence, and Design Intelligence. Built for Indian and UAE students."
+                path="/programmes"
+                schema={itemListSchema}
+            />
             {/* Ambient glow */}
             <div
                 aria-hidden

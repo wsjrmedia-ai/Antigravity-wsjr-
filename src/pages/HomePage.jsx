@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import EmblemAnimation from '../components/animations/EmblemAnimation'
+import SEO from '../components/SEO'
 
 // Components
 import HeroSection from '../components/HeroSection'
@@ -12,24 +13,30 @@ import InstitutionalSignals from '../components/InstitutionalSignals'
 import Leaderboard from '../components/Leaderboard'
 import LearnBeyond from '../components/LearnBeyond'
 import TravelLearn from '../components/TravelLearn'
-const HomePage = () => {
-    useEffect(() => {
-        // SEO Initialization
-        document.title = "Wall Street Jr. Academy"
-        let metaDesc = document.querySelector('meta[name="description"]')
-        if (!metaDesc) {
-            metaDesc = document.createElement('meta')
-            metaDesc.name = "description"
-            document.head.appendChild(metaDesc)
-        }
-        metaDesc.content = "UAE's premier academy for finance, technology, design & management. We teach real-world mastery, going beyond theory at Wall Street Jr."
-    }, [])
 
+const HOME_SCHEMA = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Wall Street Jr. Academy',
+    url: 'https://wsjrschool.com/',
+    potentialAction: {
+        '@type': 'SearchAction',
+        target: 'https://wsjrschool.com/programmes?q={search_term_string}',
+        'query-input': 'required name=search_term_string',
+    },
+};
+
+const HomePage = () => {
     const scrollTrackerRef = useRef(null);
 
     return (
         <div style={{ background: 'var(--bg-primary)' }}>
-            
+            <SEO
+                description="Dubai-based global academy for Indian and UAE students. Practical, mentor-led courses in finance, AI, business intelligence, and design — built for real-world careers."
+                path="/"
+                schema={HOME_SCHEMA}
+            />
+
             {/* Context wrapper grouping the sections where the Emblem should exist */}
             <div ref={scrollTrackerRef} style={{ position: 'relative' }}>
                 <EmblemAnimation targetRef={scrollTrackerRef} />

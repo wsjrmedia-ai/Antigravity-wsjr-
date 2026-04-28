@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { schools } from '../data/schools';
+import SEO from '../components/SEO';
 
 /**
  * SchoolProgramPage
@@ -34,6 +35,12 @@ const SchoolProgramPage = ({ schoolId }) => {
   if (!school) {
     return (
       <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', color: '#FFF', padding: '160px 5% 80px', fontFamily: 'var(--font-body)' }}>
+        <SEO
+          title="School not found"
+          description="The school program you’re looking for doesn’t exist at Wall Street Jr. Academy."
+          path="/programmes"
+          noindex
+        />
         <h1 style={{ fontFamily: 'var(--font-hero)' }}>School not found</h1>
         <Link to="/" style={{ color: 'var(--accent-gold)' }}>← Back to home</Link>
       </div>
@@ -41,6 +48,18 @@ const SchoolProgramPage = ({ schoolId }) => {
   }
 
   const gold = 'var(--accent-gold)';
+  const seoDescription = (school.intro || school.focus || '').slice(0, 200);
+  const courseSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Course',
+    name: school.name,
+    description: seoDescription,
+    url: `https://wsjrschool.com${school.path}`,
+    provider: { '@id': 'https://wsjrschool.com/#organization' },
+    inLanguage: 'en',
+    educationalLevel: 'Professional',
+    audience: { '@type': 'EducationalAudience', educationalRole: 'student' },
+  };
 
   return (
     <div
@@ -54,6 +73,12 @@ const SchoolProgramPage = ({ schoolId }) => {
         fontFamily: 'var(--font-body)',
       }}
     >
+      <SEO
+        title={school.name.replace('Wall Street Jr. ', '')}
+        description={seoDescription}
+        path={school.path}
+        schema={courseSchema}
+      />
       {/* Ambient gold glow — same language as Enroll / landing */}
       <div
         aria-hidden
