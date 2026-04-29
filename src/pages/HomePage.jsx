@@ -12,6 +12,8 @@ import PhilosophySection from '../components/PhilosophySection'
 import Leaderboard from '../components/Leaderboard'
 import LearnBeyond from '../components/LearnBeyond'
 import TravelLearn from '../components/TravelLearn'
+import TestimonialsSection from '../components/TestimonialsSection'
+import FAQSection from '../components/FAQSection'
 
 const HOME_SCHEMA = {
     '@context': 'https://schema.org',
@@ -52,6 +54,8 @@ const HomePage = () => {
                 <Leaderboard />
                 <LearnBeyond />
                 <TravelLearn />
+                <TestimonialsSection />
+                <FAQSection />
             </div>
         </div>
     )

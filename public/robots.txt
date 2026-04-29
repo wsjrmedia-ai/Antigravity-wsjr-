@@ -5,6 +5,9 @@ Allow: /
 Disallow: /login
 Disallow: /signup
 
+# Thank-you is a private post-conversion page (also noindex via meta)
+Disallow: /thank-you
+
 # Topstocx is a separate product surface, served from its own domain
 Disallow: /topstocx
 

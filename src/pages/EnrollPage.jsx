@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { getAttribution } from '../lib/tracking';
 import SEO from '../components/SEO';
 
 const EnrollPage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -37,7 +39,6 @@ const EnrollPage = () => {
     { code: "+973", label: "BHR (+973)" }
   ];
 
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -45,6 +46,7 @@ const EnrollPage = () => {
     setIsSubmitting(true);
     
     try {
+      const attribution = getAttribution();
       const { error } = await supabase
         .from('leads')
         .insert([{
@@ -54,23 +56,56 @@ const EnrollPage = () => {
           phone: `${formData.countryCode} ${formData.phone}`,
           country: formData.country,
           dob: formData.dob || null,
-          course: formData.course
+          course: formData.course,
+          utm_source: attribution.utm_source || null,
+          utm_medium: attribution.utm_medium || null,
+          utm_campaign: attribution.utm_campaign || null,
+          utm_term: attribution.utm_term || null,
+          utm_content: attribution.utm_content || null,
+          referrer: attribution.referrer || null,
+          landing_page: attribution.landing_page || null,
         }]);
 
       if (error) throw error;
 
       // GA4 conversion event — `generate_lead` is a standard GA4 event
-      // name and is auto-recommended as a conversion. We attach the
-      // course + country so we can later split conversion volume by
-      // program and target geo.
+      // name and is auto-recommended as a conversion. Course/country
+      // split conversion volume by program and target geo; UTM fields
+      // let us tie conversions back to ad creatives in GA4 reports.
       if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
         window.gtag('event', 'generate_lead', {
           course: formData.course || '(none)',
           country: formData.country || '(unknown)',
+          source: attribution.utm_source || '(direct)',
+          medium: attribution.utm_medium || '(none)',
+          campaign: attribution.utm_campaign || '(none)',
         });
       }
 
-      setIsSubmitted(true);
+      // Meta Pixel — only fires when the pixel is actually initialized
+      // (post pixel-ID injection in index.html). Standard `Lead` event
+      // is what Meta's optimizer keys off.
+      if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
+        window.fbq('track', 'Lead', {
+          content_name: formData.course || 'enrollment',
+          content_category: formData.country || 'unknown',
+        });
+      }
+
+      navigate('/thank-you', {
+        replace: true,
+        state: {
+          lead: {
+            firstName: formData.firstName,
+            email: formData.email,
+            course: formData.course,
+            country: formData.country,
+            utm_source: attribution.utm_source,
+            utm_medium: attribution.utm_medium,
+            utm_campaign: attribution.utm_campaign,
+          }
+        }
+      });
     } catch (error) {
       console.error('Error submitting application:', error);
       alert('There was an issue submitting your application. Please try again.');
@@ -183,13 +218,10 @@ const EnrollPage = () => {
             position: 'relative'
           }}
         >
-          <AnimatePresence mode="wait">
-            {!isSubmitted ? (
-              <motion.form 
+              <motion.form
                 key="enroll-form"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                exit={{ opacity: 0, y: -20 }}
                 onSubmit={handleSubmit}
                 style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}
               >
@@ -264,66 +296,6 @@ const EnrollPage = () => {
                   {isSubmitting ? 'PROCESSING...' : 'SUBMIT APPLICATION'}
                 </motion.button>
               </motion.form>
-            ) : (
-              <motion.div
-                key="success-state"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  textAlign: 'center',
-                  padding: '40px 20px',
-                  minHeight: '400px'
-                }}
-              >
-                <div style={{
-                  width: '80px', height: '80px',
-                  borderRadius: '50%',
-                  background: 'rgba(247, 172, 65, 0.1)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  marginBottom: '25px',
-                  border: '1px solid rgba(247, 172, 65, 0.3)'
-                }}>
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                </div>
-                
-                <h3 style={{ fontFamily: 'var(--font-hero)', fontSize: '32px', color: 'var(--accent-gold)', margin: '0 0 15px' }}>
-                  Application Received
-                </h3>
-                <p style={{ fontFamily: 'var(--font-body)', color: 'rgba(255,255,255,0.8)', fontSize: '16px', lineHeight: 1.6, margin: 0 }}>
-                  Thank you for applying to WallStreet Jr. Academy. Our admissions team will review your profile and contact you regarding the next steps in the selection process.
-                </p>
-                <div style={{ marginTop: '30px', marginBottom: '30px', width: '40px', height: '2px', background: 'var(--accent-gold)', opacity: 0.5 }}></div>
-                <Link to="/" style={{
-                  display: 'inline-block',
-                  padding: '12px 30px',
-                  borderRadius: '100px',
-                  border: '1px solid rgba(247, 172, 65, 0.5)',
-                  color: 'var(--accent-gold)',
-                  textDecoration: 'none',
-                  fontFamily: 'var(--font-body)',
-                  fontWeight: '600',
-                  fontSize: '14px',
-                  transition: 'all 0.3s ease',
-                  cursor: 'pointer'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.background = 'rgba(247, 172, 65, 0.1)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = 'transparent';
-                }}
-                >
-                  RETURN TO HOME
-                </Link>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </motion.div>
       </div>
 

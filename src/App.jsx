@@ -16,6 +16,7 @@ const SyllabusPage       = lazy(() => import('./pages/SyllabusPage'))
 const WhoWeArePage       = lazy(() => import('./pages/WhoWeArePage'))
 const TopStocxPage       = lazy(() => import('./pages/TopStocxPage'))
 const EnrollPage         = lazy(() => import('./pages/EnrollPage'))
+const ThankYouPage       = lazy(() => import('./pages/ThankYouPage'))
 const ProgrammesPage     = lazy(() => import('./pages/ProgrammesPage'))
 const BlogIndexPage      = lazy(() => import('./pages/BlogIndexPage'))
 const BlogPostPage       = lazy(() => import('./pages/BlogPostPage'))
@@ -23,6 +24,7 @@ const BlogPostPage       = lazy(() => import('./pages/BlogPostPage'))
 import CustomScrollbar from './components/CustomScrollbar'
 import FinAIChatbot from './components/FinAIChatbot'
 import AnalyticsTracker from './components/AnalyticsTracker'
+import { captureAttribution } from './lib/tracking'
 
 // Minimal fallback for lazy routes — matches the brand background so
 // the swap is invisible on slow networks. No spinner; the chunks load
@@ -35,6 +37,8 @@ function App() {
   const location = useLocation()
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup'
   const isTopStocx = location.pathname.startsWith('/topstocx')
+
+  useEffect(() => { captureAttribution() }, [])
 
   useEffect(() => {
     if (isTopStocx) return // TopStocx has its own layout, skip Lenis
@@ -110,6 +114,7 @@ function App() {
             <Route path="/school-of-finance/syllabus" element={<SyllabusPage />} />
             <Route path="/who-we-are" element={<WhoWeArePage />} />
             <Route path="/enroll" element={<EnrollPage />} />
+            <Route path="/thank-you" element={<ThankYouPage />} />
             <Route path="/programmes" element={<ProgrammesPage />} />
             <Route path="/programs" element={<ProgrammesPage />} />
             <Route path="/blog" element={<BlogIndexPage />} />
