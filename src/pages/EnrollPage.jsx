@@ -9,11 +9,33 @@ const EnrollPage = () => {
     firstName: '',
     lastName: '',
     email: '',
+    countryCode: '+971',
     phone: '',
     country: '',
     dob: '',
     course: ''
   });
+
+  const COUNTRIES = [
+    "United Arab Emirates", "India", "United States", "United Kingdom", "Canada", "Australia", 
+    "Singapore", "Saudi Arabia", "Qatar", "Oman", "Kuwait", "Bahrain", "Malaysia", "New Zealand",
+    "South Africa", "Germany", "France", "Italy", "Spain", "Netherlands", "Switzerland", "Japan", 
+    "South Korea", "China", "Hong Kong", "Other"
+  ];
+
+  const COUNTRY_CODES = [
+    { code: "+971", label: "UAE (+971)" },
+    { code: "+91", label: "IND (+91)" },
+    { code: "+1", label: "USA/CAN (+1)" },
+    { code: "+44", label: "UK (+44)" },
+    { code: "+61", label: "AUS (+61)" },
+    { code: "+65", label: "SGP (+65)" },
+    { code: "+966", label: "KSA (+966)" },
+    { code: "+974", label: "QAT (+974)" },
+    { code: "+968", label: "OMN (+968)" },
+    { code: "+965", label: "KWT (+965)" },
+    { code: "+973", label: "BHR (+973)" }
+  ];
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,7 +51,7 @@ const EnrollPage = () => {
           first_name: formData.firstName,
           last_name: formData.lastName,
           email: formData.email,
-          phone: formData.phone,
+          phone: `${formData.countryCode} ${formData.phone}`,
           country: formData.country,
           dob: formData.dob || null,
           course: formData.course
@@ -184,8 +206,20 @@ const EnrollPage = () => {
                 <input type="email" name="email" placeholder="Email Address" required className="form-input" style={inputStyle} onChange={handleChange} />
                 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                  <input type="tel" name="phone" placeholder="Phone Number" required className="form-input" style={inputStyle} onChange={handleChange} />
-                  <input type="text" name="country" placeholder="Country of Residence" required className="form-input" style={inputStyle} onChange={handleChange} />
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <select name="countryCode" required className="form-input form-select" style={{...inputStyle, width: '45%', appearance: 'none' }} onChange={handleChange} value={formData.countryCode}>
+                      {COUNTRY_CODES.map((c, i) => (
+                        <option key={i} value={c.code}>{c.label}</option>
+                      ))}
+                    </select>
+                    <input type="tel" name="phone" placeholder="Phone Number" required className="form-input" style={{...inputStyle, width: '55%'}} onChange={handleChange} value={formData.phone} />
+                  </div>
+                  <select name="country" required className="form-input form-select" style={{...inputStyle, color: formData.country ? '#FFF' : 'rgba(255,255,255,0.5)', appearance: 'none' }} onChange={handleChange} value={formData.country || ''}>
+                    <option value="" disabled>Country of Residence</option>
+                    {COUNTRIES.map((country, i) => (
+                      <option key={i} value={country}>{country}</option>
+                    ))}
+                  </select>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', alignItems: 'center' }}>
