@@ -9,7 +9,6 @@ import SchoolsHeader from '../components/SchoolsHeader'
 import SchoolsSection from '../components/SchoolsSection'
 import KeyMetrics from '../components/KeyMetrics'
 import PhilosophySection from '../components/PhilosophySection'
-import InstitutionalSignals from '../components/InstitutionalSignals'
 import Leaderboard from '../components/Leaderboard'
 import LearnBeyond from '../components/LearnBeyond'
 import TravelLearn from '../components/TravelLearn'
@@ -50,7 +49,6 @@ const HomePage = () => {
                 <SchoolsSection />
                 <KeyMetrics />
                 <PhilosophySection />
-                <InstitutionalSignals />
                 <Leaderboard />
                 <LearnBeyond />
                 <TravelLearn />
