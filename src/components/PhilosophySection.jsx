@@ -21,7 +21,7 @@ const cardsData = [
     },
     {
         title: 'INSTITUTIONAL\nHERITAGE',
-        body: `Wall Street Jr. Academy is led by Vishnu Das, a Harvard educated capital architect with direct institutional experience at JP Morgan and Bank of America.\n\nWith a career built at the intersection of finance, leadership, and education, Vishnu founded the Academy to give the next generation of professionals the kind of training that was once reserved for the most elite institutions in the world.\n\nHis approach is direct: build the mental models first, develop the skills second, and always anchor everything to long-term value creation. That philosophy runs through every program we offer.`
+        body: `Who built this and why it matters.\n\nVishnu Das\nFounder, Harvard-educated Wealth Strategist. JP Morgan · Bank of America.\n\nMr Vishnu Das has built the Wall Street Jr. academy with one purpose: to give the next generation of professionals the caliber of training that was once limited to the world's most elite institutions. His method is deliberate, to build the mental model first, develop the skill second, anchor everything to long-term value. That sequence is non-negotiable across every program we offer.`
     }
 ]
 
@@ -232,7 +232,7 @@ const PhilosophySection = () => {
 
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', textAlign: 'left' }}>
                                 {cardsData[2].body.split('\n\n').map((paragraph, idx) => (
-                                    <p key={idx} style={{ fontFamily: 'var(--font-hero)', fontSize: '1.1rem', fontWeight: 500, color: 'rgba(255,255,255,0.9)', margin: 0, lineHeight: 1.6 }}>{paragraph}</p>
+                                    <p key={idx} style={{ fontFamily: 'var(--font-hero)', fontSize: '1.1rem', fontWeight: 500, color: 'rgba(255,255,255,0.9)', margin: 0, lineHeight: 1.6, whiteSpace: 'pre-line' }}>{paragraph}</p>
                                 ))}
                             </div>
                         </div>
