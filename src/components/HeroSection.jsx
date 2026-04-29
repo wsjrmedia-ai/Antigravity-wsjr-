@@ -202,7 +202,7 @@ const HeroSection = () => {
                                 </svg>
                             </motion.button>
                             <motion.button
-                                onClick={() => navigate('/programmes')}
+                                onClick={() => window.open('https://wa.me/971525121393', '_blank')}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 className="find-programme-btn"
@@ -219,7 +219,7 @@ const HeroSection = () => {
                                     cursor: 'pointer'
                                 }}
                             >
-                                <span style={{ fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '15px', color: '#F7AC41', letterSpacing: '0.3px' }}>FIND YOUR PROGRAMME</span>
+                                <span style={{ fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '15px', color: '#F7AC41', letterSpacing: '0.3px' }}>CHAT ON WHATSAPP</span>
                             </motion.button>
                         </div>
 
@@ -263,7 +263,9 @@ const HeroSection = () => {
                     flexDirection: 'column'
                 }}>
                     {/* Link 1 */}
-                    <div style={{
+                    <div 
+                        onClick={() => navigate('/programmes')}
+                        style={{
                         display: 'flex',
                         justifyContent: 'center',
                         padding: '10px 0',
