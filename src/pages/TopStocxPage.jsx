@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import SEO from '../components/SEO';
 import TopBar from '../components/topstocx/TopBar';
 import TradingChart from '../components/topstocx/TradingChart';
 import BottomPanel from '../components/topstocx/BottomPanel';
@@ -30,6 +31,12 @@ const TopStocxPage = () => {
             overflow: 'hidden',
             fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
         }}>
+            <SEO
+                title="Trading Platform"
+                description="Topstocx trading platform — internal product surface."
+                path="/topstocx"
+                noindex
+            />
             <TopBar
                 activeView={activeView}   onViewChange={setActiveView}
                 symbol={symbol}           onSymbolChange={setSymbol}

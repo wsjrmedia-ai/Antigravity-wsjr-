@@ -35,7 +35,7 @@ const Section = ({ children, className = '', id = '', style = {} }) => {
             ref={sectionRef}
             className={className}
             style={{
-                minHeight: '100vh',
+                minHeight: '100dvh',
                 padding: '0 2rem var(--section-spacing) 2rem',
                 display: 'flex',
                 flexDirection: 'column',

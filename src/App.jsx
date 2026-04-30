@@ -24,6 +24,7 @@ const BlogPostPage       = lazy(() => import('./pages/BlogPostPage'))
 import CustomScrollbar from './components/CustomScrollbar'
 import FinAIChatbot from './components/FinAIChatbot'
 import AnalyticsTracker from './components/AnalyticsTracker'
+import SiteHeader from './components/SiteHeader'
 import { captureAttribution } from './lib/tracking'
 
 // Minimal fallback for lazy routes — matches the brand background so
@@ -37,6 +38,7 @@ function App() {
   const location = useLocation()
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup'
   const isTopStocx = location.pathname.startsWith('/topstocx')
+  const isHome = location.pathname === '/'
 
   useEffect(() => { captureAttribution() }, [])
 
@@ -103,6 +105,7 @@ function App() {
     <div className="layout" style={{ background: 'var(--bg-primary)', minHeight: '100vh', position: 'relative' }}>
       <AnalyticsTracker />
       <CustomScrollbar />
+      {!isHome && <SiteHeader />}
       <main style={{ position: 'relative', zIndex: 1 }}>
         <Suspense fallback={<RouteFallback />}>
           <Routes>
